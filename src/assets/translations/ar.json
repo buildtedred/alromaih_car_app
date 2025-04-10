@@ -1,0 +1,36 @@
+{
+  "common": {
+    "search_placeholder": "ابحث عن سيارتك...",
+    "see_all": "عرض الكل",
+    "year": "سنة",
+    "seats": "مقاعد",
+    "fuel": "وقود",
+    "price": "السعر: {{price}}"
+  },
+  "screens": {
+    "home": {
+      "title": "سيارات مميزة"
+    },
+    "search": {
+      "title": "بحث"
+    },
+    "all_cars": {
+      "title": "جميع السيارات",
+      "no_cars": "لا توجد سيارات"
+    }
+  },
+  "car_specs": {
+    "gasoline": "بنزين",
+    "automatic": "أوتوماتيك"
+  },
+  "contact_us": {
+    "title": "اتصل بنا",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "address": "العنوان",
+    "working_hours": "ساعات العمل",
+    "facebook": "فيسبوك",
+    "linkedin": "لينكدإن",
+    "instagram": "انستغرام"
+  }
+}
