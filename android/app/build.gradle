@@ -1,10 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
-<<<<<<< HEAD
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
-=======
->>>>>>> f4585def32592b32667740560dd4d93c555d22d8
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -81,15 +78,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-<<<<<<< HEAD
     namespace "com.alromaih_car_app"
     defaultConfig {
         applicationId "com.alromaih_car_app"
-=======
-    namespace "com.alromaih_cars_app"
-    defaultConfig {
-        applicationId "com.alromaih_cars_app"
->>>>>>> f4585def32592b32667740560dd4d93c555d22d8
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -120,10 +111,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-<<<<<<< HEAD
     implementation project(':react-native-vector-icons')
-=======
->>>>>>> f4585def32592b32667740560dd4d93c555d22d8
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

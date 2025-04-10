@@ -1,7 +1,3 @@
 <resources>
-<<<<<<< HEAD
     <string name="app_name">alromaih_car_app</string>
-=======
-    <string name="app_name">alromaih_cars_app</string>
->>>>>>> f4585def32592b32667740560dd4d93c555d22d8
 </resources>
