@@ -1,0 +1,36 @@
+{
+  "common": {
+    "search_placeholder": "Search your car...",
+    "see_all": "See All",
+    "year": "Year",
+    "seats": "Seats",
+    "fuel": "Fuel",
+    "price": "SAR {{price}}"
+  },
+  "screens": {
+    "home": {
+      "title": "Featured Cars"
+    },
+    "search": {
+      "title": "Search"
+    },
+    "all_cars": {
+      "title": "All Cars",
+      "no_cars": "No cars available"
+    }
+  },
+  "car_specs": {
+    "gasoline": "Gasoline",
+    "automatic": "Automatic"
+  },
+  "contact_us": {
+    "title": "Contact Us",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "working_hours": "Working Hours",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram"
+  }
+}
