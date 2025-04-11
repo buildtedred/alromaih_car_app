@@ -1,15 +1,20 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import HomeScreen from '../../screens/HomeScreen';
 import MoreScreen from '../../screens/MoreScreen';
 import FindCarScreen from '../../screens/FindCarsScreen';
 import ContactUsScreen from '../../screens/ContectUsScreen';
 import AllCarScreen from '../../screens/AllCarsScreen';
+import Gallery from '../../screens/Gallery';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-export default function StackNavigator() {
+// Bottom Tab Navigator
+function BottomTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -33,52 +38,57 @@ export default function StackNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="home" color={color} size={30} />
           ),
-          tabBarLabel: 'Home',
         }}
       />
       <Tab.Screen
         name="All Cars"
         component={AllCarScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="car-sport" color={color} size={30} />
           ),
-          tabBarLabel: 'All Cars',
         }}
       />
       <Tab.Screen
         name="Find Car"
         component={FindCarScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="search" color={color} size={30} />
           ),
-          tabBarLabel: 'Find Car',
         }}
       />
       <Tab.Screen
         name="Contact Us"
         component={ContactUsScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="call" color={color} size={30} />
           ),
-          tabBarLabel: 'Contact Us',
         }}
       />
       <Tab.Screen
         name="More"
         component={MoreScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="menu" color={color} size={30} />
           ),
-          tabBarLabel: 'More',
         }}
       />
     </Tab.Navigator>
+  );
+}
+
+// Main Stack Navigator
+export default function MainNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }} />
+      <Stack.Screen name="Gallery" component={Gallery} options={{ title: 'Gallery' }} />
+    </Stack.Navigator>
   );
 }

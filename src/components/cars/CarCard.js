@@ -1,182 +1,110 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { useLocale } from '../../contexts/LocaleContext';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { useState } from "react";
+import { View, Text, Image, TouchableOpacity, Animated } from "react-native";
+import { useLocale } from "../../contexts/LocaleContext";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
+
 
 export default function CarCard({ car }) {
   const { locale, direction } = useLocale();
-  const [isDetailsVisible, setIsDetailsVisible] = useState(false);
-  const { width } = useWindowDimensions();
-  
-  // Calculate responsive dimensions
-  const cardWidth = width * 0.85; // 85% of screen width
-  const imageHeight = cardWidth * 0.6; // 60% of card width
+  const navigation = useNavigation();
+  const isRTL = direction === "rtl";
 
-  const getLang = (field) => (locale === 'en' ? field?.en : field?.ar);
+  const [scale] = useState(new Animated.Value(1));
+  const getLang = (field) => (locale === "en" ? field?.en : field?.ar);
 
-  const toggleDetails = () => {
-    setIsDetailsVisible(!isDetailsVisible);
+  const onPressIn = () => {
+    Animated.spring(scale, {
+      toValue: 1.05,
+      useNativeDriver: true,
+    }).start();
   };
 
-  // RTL/LTR styling
-  const flexDir = direction === 'rtl' ? 'flex-row-reverse' : 'flex-row';
-  const textAlign = direction === 'rtl' ? 'text-right' : 'text-left';
-  const marginDir = direction === 'rtl' ? 'mr-2' : 'ml-2';
-  const cardMargin = direction === 'rtl' ? 'mr-4 ml-0' : 'ml-4 mr-0';
+  const onPressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const goToGallery = () => {
+    navigation.navigate("Gallery", { car }); // Pass the car object to Gallery screen
+  };
 
   return (
-    <View 
-      className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6"
-      style={{ 
-        width: cardWidth,
-        marginHorizontal: cardMargin 
-      }}
+    <TouchableOpacity
+      activeOpacity={0.97}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      onPress={goToGallery}
+      style={{ transform: [{ scale }] }}
+      className="w-full bg-white rounded-2xl shadow-md mb-5 overflow-hidden"
     >
-     <View className="w-full bg-gray-100 rounded-t-2xl overflow-hidden" 
-      style={{ height: imageHeight }}>
-  <Image
-    source={car.image}
-    className="w-full h-full"
-    resizeMode="contain"
-    style={{
-      backgroundColor: 'transparent',
-    }}
-  />
-</View>
-      {/* Car Info */}
-      <View className="p-4 space-y-3">
-        {/* Car Title and Brand */}
-        <View className={`${flexDir} justify-between items-center`}>
-          <Text className={`text-xl font-bold text-gray-800 ${textAlign} flex-1`}>
-            {getLang(car.name)}
-          </Text>
-          <Image 
-            source={car.brandLogo} 
-            className="w-12 h-12"
-            resizeMode="contain" 
-          />
-        </View>
-
-        {/* Price and Installment Price */}
-        <View className={`${flexDir} justify-between items-center`}>
-          <Text className={`text-lg font-semibold text-green-600 ${textAlign}`}>
-            {car.cashPrice?.toLocaleString()} {locale === 'en' ? 'SAR' : 'ر.س'}
-          </Text>
-          <Text className={`text-sm text-gray-600 ${textAlign}`}>
-            {locale === 'en' ? 'Installment' : 'أقساط'}: {car.installmentPrice} {locale === 'en' ? 'SAR/month' : 'ر.س/شهر'}
-          </Text>
-        </View>
-
-        {/* Model Year and Year */}
-        <View className={`${flexDir} justify-between border-t border-gray-200 pt-2`}>
-          <Text className={`text-sm text-gray-600 ${textAlign}`}>{getLang(car.modelYear)}</Text>
-          <Text className={`text-sm text-gray-600 ${textAlign}`}>{car.specs.year}</Text>
-        </View>
-
-        {/* Specs Section */}
-        {isDetailsVisible && (
-          <View className="space-y-2">
-            {/* Fuel, Seats, Transmission */}
-            <View className={`${flexDir} justify-between`}>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="tint" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.fuelType)}
-                </Text>
-              </View>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="users" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.seats)}
-                </Text>
-              </View>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="cogs" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.transmission)}
-                </Text>
-              </View>
-            </View>
-
-            {/* Drive Type, Mode */}
-            <View className={`${flexDir} justify-between`}>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="car" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.driveType)}
-                </Text>
-              </View>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="road" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.drivingMode)}
-                </Text>
-              </View>
-            </View>
-
-            {/* Engine, Power, Torque */}
-            <View className={`${flexDir} justify-between`}>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="rocket" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.engine)}
-                </Text>
-              </View>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="bolt" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.power)}
-                </Text>
-              </View>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="tachometer" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.torque)}
-                </Text>
-              </View>
-            </View>
-
-            {/* Dimensions */}
-            <View className={`${flexDir} justify-between`}>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="ravelry" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.length)}
-                </Text>
-              </View>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="arrows-alt-h" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.width)}
-                </Text>
-              </View>
-              <View className={`${flexDir} items-center`}>
-                <Icon name="arrows-alt-v" size={20} color="gray" />
-                <Text className={`text-sm text-gray-700 ${marginDir} ${textAlign}`}>
-                  {getLang(car.specs.height)}
-                </Text>
-              </View>
-            </View>
-          </View>
-        )}
-
-        {/* View More/Less Button */}
-        <TouchableOpacity 
-          className={`${flexDir} justify-between items-center mt-4`} 
-          onPress={toggleDetails}
-        >
-          <Text className="text-sm font-semibold text-blue-500">
-            {isDetailsVisible ? 
-              (locale === 'en' ? 'View Less' : 'عرض أقل') : 
-              (locale === 'en' ? 'View More Details' : 'عرض المزيد')}
-          </Text>
-          <Icon 
-            name={isDetailsVisible ? "chevron-up" : "chevron-down"} 
-            size={20} 
-            color="blue" 
-          />
-        </TouchableOpacity>
+      {/* Car Image Section */}
+      <View className="relative w-full h-40 bg-white px-4 py-2">
+        <Image
+          source={car.image}
+          className="w-full h-full"
+          resizeMode="contain"
+        />
       </View>
-    </View>
+
+      {/* Car Info */}
+      <View className="p-4">
+        <Text
+          className={`text-lg font-bold text-gray-800 mb-2 ${isRTL ? "text-right" : "text-left"}`}
+        >
+          {getLang(car.name)}
+        </Text>
+
+        <View
+          className={`flex flex-row items-center justify-between mb-3 ${isRTL ? "flex-row-reverse" : ""}`}
+        >
+          <Text
+            className={`text-lg font-bold text-[#46194F] ${isRTL ? "text-right" : "text-left"}`}
+          >
+            {car.cashPrice?.toLocaleString()} {locale === "en" ? "SAR" : "ر.س"}
+          </Text>
+          <View className="bg-[#f0e6f5] px-2.5 py-1 rounded-md">
+            <Text className="text-xs font-semibold text-[#46194F]">
+              {locale === "en" ? "From" : "من"} {car.installmentPrice}{" "}
+              {locale === "en" ? "/mo" : "/شهر"}
+            </Text>
+          </View>
+        </View>
+
+        <View
+          className={`flex flex-row items-center justify-between py-3 border-t border-b border-gray-100 mb-3 ${isRTL ? "flex-row-reverse" : ""}`}
+        >
+          <View className="flex flex-row items-center">
+            <Icon name="calendar" size={14} color="#666" />
+            <Text
+              className={`text-xs text-gray-600 ${isRTL ? "mr-1.5" : "ml-1.5"}`}
+            >
+              {car.specs.year}
+            </Text>
+          </View>
+
+          <View className="flex flex-row items-center">
+            <Icon name="tachometer" size={14} color="#666" />
+            <Text
+              className={`text-xs text-gray-600 ${isRTL ? "mr-1.5" : "ml-1.5"}`}
+            >
+              {car.specs.mileage || "0 km"}
+            </Text>
+          </View>
+
+          <View className="flex flex-row items-center">
+            <Icon name="gear" size={14} color="#666" />
+            <Text
+              className={`text-xs text-gray-600 ${isRTL ? "mr-1.5" : "ml-1.5"}`}
+            >
+              {getLang(car.specs.transmission) ||
+                (locale === "en" ? "Auto" : "أوتوماتيك")}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 }
