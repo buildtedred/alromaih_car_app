@@ -1,13 +1,10 @@
 import React from 'react';
 import { View, Text, ScrollView, Linking, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useLocale } from '../contexts/LocaleContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function ContactUsScreen() {
   const { t } = useTranslation();
-  const { direction } = useLocale();
-  const isRTL = direction === 'rtl';
 
   const contactDetails = [
     {
@@ -56,13 +53,7 @@ export default function ContactUsScreen() {
 
   return (
     <ScrollView className="flex-1 bg-white px-5 pt-10 pb-16">
-      <Text
-        className="text-2xl font-bold text-primary mb-6"
-        style={{
-          textAlign: isRTL ? 'right' : 'left',
-          writingDirection: isRTL ? 'rtl' : 'ltr',
-        }}
-      >
+      <Text className="text-2xl font-bold text-primary mb-6">
         {t('contact_us.title') || 'Contact Us'}
       </Text>
 
@@ -72,9 +63,6 @@ export default function ContactUsScreen() {
           onPress={item.onPress}
           activeOpacity={item.onPress ? 0.7 : 1}
           className="flex-row items-center bg-gray-100 p-4 rounded-2xl mb-4 shadow-sm"
-          style={{
-            flexDirection: isRTL ? 'row-reverse' : 'row',
-          }}
         >
           <Ionicons
             name={item.icon}
@@ -83,16 +71,10 @@ export default function ContactUsScreen() {
             style={{ marginHorizontal: 12 }}
           />
           <View className="flex-1">
-            <Text
-              className="text-base font-semibold text-gray-800"
-              style={{ textAlign: isRTL ? 'right' : 'left' }}
-            >
+            <Text className="text-base font-semibold text-gray-800">
               {item.label}
             </Text>
-            <Text
-              className="text-sm text-gray-600 mt-1"
-              style={{ textAlign: isRTL ? 'right' : 'left' }}
-            >
+            <Text className="text-sm text-gray-600 mt-1">
               {item.value}
             </Text>
           </View>

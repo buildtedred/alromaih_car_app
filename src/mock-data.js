@@ -1,37 +1,45 @@
-// This file serves as a dummy API for the car listing
-// In a real application, this would be replaced with an actual API call
-
-// Car images - Updated with numbered image names
-import i from "./assets/images/car1.png"
-const carImages = {
-  car1: require("./assets/images/car1.png"),
-  car2: require("./assets/images/car2.png"),
-  car3: require("./assets/images/car3.png"),
-  car4: require("./assets/images/car4.png"),
-  car5: require("./assets/images/car5.png"),
-  car6: require("./assets/images/car6.png"),
-  car7: require("./assets/images/car7.png"),
-  car8: require("./assets/images/car8.png"),
-  car9: require("./assets/images/car9.png"),
-  car10: require("./assets/images/car10.png"),
-}
-
 // Brand logos - Updated with all brand SVGs
 const brandLogos = {
-  jetour: "/brands/jetour.svg",
-  bestune: "/brands/bestune.svg",
-  changan: "/brands/changan.svg",
-  chery: "/brands/chery.svg",
-  chevrolet: "/brands/chevrolet.svg",
-  ford: "/brands/ford.svg",
-  haval: "/brands/haval.svg",
-  honda: "/brands/honda.svg",
-  hongqi: "/brands/hongqi.svg",
-  hyundai: "/brands/hyundai.svg",
-  mg: "/brands/mg.svg",
-  nissan: "/brands/nissan.svg",
-  suzuki: "/brands/suzuki.svg",
-  toyota: "/brands/toyota.svg",
+  jetour: "./assets/brands/jetour.svg",
+  bestune: "./assets/brands/bestune.svg",
+  changan: "./assets/brands/changan.svg",
+  chery: "./assets/brands/chery.svg",
+  chevrolet: "./assets/brands/chevrolet.svg",
+  ford: "./assets/brands/ford.svg",
+  haval: "./assets/brands/haval.svg",
+  honda: "./assets/brands/honda.svg",
+  hongqi: "./assets/brands/hongqi.svg",
+  hyundai: "./assets/brands/hyundai.svg",
+  mg: "./assets/brands/mg.svg",
+  nissan: "./assets/brands/nissan.svg",
+  suzuki: "./assets/brands/suzuki.svg",
+  toyota: "./assets/brands/toyota.svg",
+  kia: "./assets/brands/kia.svg",
+  bmw: "./assets/brands/bmw.svg",
+  mercedes: "./assets/brands/mercedes.svg",
+  audi: "./assets/brands/audi.svg",
+  lexus: "./assets/brands/lexus.svg",
+  mazda: "./assets/brands/mazda.svg",
+}
+
+// Model SVGs - Added SVG icons for car models
+const modelSVGs = {
+  "jetour-t2": "/models/jetour-t2.svg",
+  "jetour-t2-plus": "/models/jetour-t2-plus.svg",
+  "jetour-t2-sport": "/models/jetour-t2-sport.svg",
+  "jetour-x70": "/models/jetour-x70.svg",
+  "jetour-x90": "/models/jetour-x90.svg",
+  "jetour-dashing": "/models/jetour-dashing.svg",
+  "jetour-x95": "/models/jetour-x95.svg",
+  "jetour-t1": "/models/jetour-t1.svg",
+  "toyota-camry": "/models/toyota-camry.svg",
+  "honda-accord": "/models/honda-accord.svg",
+  "toyota-corolla": "/models/toyota-corolla.svg",
+  "honda-civic": "/models/honda-civic.svg",
+  "hyundai-sonata": "/models/hyundai-sonata.svg",
+  "hyundai-tucson": "/models/hyundai-tucson.svg",
+  "kia-sportage": "/models/kia-sportage.svg",
+  "nissan-altima": "/models/nissan-altima.svg",
 }
 
 // Icons - updated with the SVG icons from the image
@@ -43,6 +51,274 @@ const icons = {
   currency: "/icons/Currency.svg", // Changed to use capital "C"
 }
 
+// Body Types with bilingual names and SVG icons
+const bodyTypes = {
+  suv: {
+    en: "SUV",
+    ar: "دفع رباعي",
+    icon: "/body-types/suv.svg",
+  },
+  sedan: {
+    en: "Sedan",
+    ar: "سيدان",
+    icon: "/body-types/sedan.svg",
+  },
+  hatchback: {
+    en: "Hatchback",
+    ar: "هاتشباك",
+    icon: "/body-types/hatchback.svg",
+  },
+  crossover: {
+    en: "Crossover",
+    ar: "كروس أوفر",
+    icon: "/body-types/crossover.svg",
+  },
+  coupe: {
+    en: "Coupe",
+    ar: "كوبيه",
+    icon: "/body-types/coupe.svg",
+  },
+  convertible: {
+    en: "Convertible",
+    ar: "مكشوفة",
+    icon: "/body-types/convertible.svg",
+  },
+  pickup: {
+    en: "Pickup",
+    ar: "بيك أب",
+    icon: "/body-types/pickup.svg",
+  },
+  minivan: {
+    en: "Minivan",
+    ar: "ميني فان",
+    icon: "/body-types/minivan.svg",
+  },
+}
+
+// Categories with bilingual names
+const categories = {
+  economy: {
+    en: "Economy",
+    ar: "اقتصادية",
+  },
+  compact: {
+    en: "Compact",
+    ar: "مدمجة",
+  },
+  midsize: {
+    en: "Mid-size",
+    ar: "متوسطة الحجم",
+  },
+  fullsize: {
+    en: "Full-size",
+    ar: "كاملة الحجم",
+  },
+  luxury: {
+    en: "Luxury",
+    ar: "فاخرة",
+  },
+  sport: {
+    en: "Sport",
+    ar: "رياضية",
+  },
+  family: {
+    en: "Family",
+    ar: "عائلية",
+  },
+  offroad: {
+    en: "Off-road",
+    ar: "طرق وعرة",
+  },
+}
+
+// Brands with bilingual names
+const brands = {
+  jetour: {
+    en: "Jetour",
+    ar: "جيتور",
+    logo: brandLogos.jetour,
+    models: ["t1", "t2", "t2-plus", "t2-sport", "x70", "x90", "x95", "dashing"],
+  },
+  toyota: {
+    en: "Toyota",
+    ar: "تويوتا",
+    logo: brandLogos.toyota,
+    models: ["camry", "corolla", "rav4", "land-cruiser", "highlander"],
+  },
+  honda: {
+    en: "Honda",
+    ar: "هوندا",
+    logo: brandLogos.honda,
+    models: ["accord", "civic", "cr-v", "pilot", "odyssey"],
+  },
+  hyundai: {
+    en: "Hyundai",
+    ar: "هيونداي",
+    logo: brandLogos.hyundai,
+    models: ["sonata", "elantra", "tucson", "santa-fe", "palisade"],
+  },
+  nissan: {
+    en: "Nissan",
+    ar: "نيسان",
+    logo: brandLogos.nissan,
+    models: ["altima", "maxima", "rogue", "pathfinder", "murano"],
+  },
+  kia: {
+    en: "Kia",
+    ar: "كيا",
+    logo: brandLogos.kia,
+    models: ["k5", "forte", "sportage", "sorento", "telluride"],
+  },
+  ford: {
+    en: "Ford",
+    ar: "فورد",
+    logo: brandLogos.ford,
+    models: ["fusion", "mustang", "escape", "explorer", "f-150"],
+  },
+  chevrolet: {
+    en: "Chevrolet",
+    ar: "شيفروليه",
+    logo: brandLogos.chevrolet,
+    models: ["malibu", "camaro", "equinox", "traverse", "tahoe"],
+  },
+  mg: {
+    en: "MG",
+    ar: "إم جي",
+    logo: brandLogos.mg,
+    models: ["5", "6", "zs", "hs", "rx8"],
+  },
+  chery: {
+    en: "Chery",
+    ar: "شيري",
+    logo: brandLogos.chery,
+    models: ["tiggo 2", "tiggo 4", "tiggo 7", "tiggo 8", "arrizo 6"],
+  },
+}
+
+// Specification property names in both languages
+const specNames = {
+  // Engine & Performance Group
+  fuelType: {
+    en: "Fuel Type",
+    ar: "نوع الوقود",
+  },
+  engine: {
+    en: "Engine",
+    ar: "المحرك",
+  },
+  power: {
+    en: "Power",
+    ar: "القوة",
+  },
+  torque: {
+    en: "Torque",
+    ar: "عزم الدوران",
+  },
+  acceleration: {
+    en: "Acceleration",
+    ar: "التسارع",
+  },
+
+  // Dimensions Group
+  length: {
+    en: "Length",
+    ar: "الطول",
+  },
+  width: {
+    en: "Width",
+    ar: "العرض",
+  },
+  height: {
+    en: "Height",
+    ar: "الارتفاع",
+  },
+  wheelbase: {
+    en: "Wheelbase",
+    ar: "قاعدة العجلات",
+  },
+
+  // Interior & Capacity Group
+  seats: {
+    en: "Seats",
+    ar: "المقاعد",
+  },
+  fuelTank: {
+    en: "Fuel Tank",
+    ar: "خزان الوقود",
+  },
+  cargoCapacity: {
+    en: "Cargo Capacity",
+    ar: "سعة الحمولة",
+  },
+
+  // Drivetrain Group
+  transmission: {
+    en: "Transmission",
+    ar: "ناقل الحركة",
+  },
+  driveType: {
+    en: "Drive Type",
+    ar: "نوع الدفع",
+  },
+  drivingMode: {
+    en: "Driving Mode",
+    ar: "وضع القيادة",
+  },
+
+  // Safety Group
+  airbags: {
+    en: "Airbags",
+    ar: "الوسائد الهوائية",
+  },
+  brakes: {
+    en: "Brakes",
+    ar: "الفرامل",
+  },
+  parkingSensors: {
+    en: "Parking Sensors",
+    ar: "حساسات الركن",
+  },
+  camera: {
+    en: "Camera",
+    ar: "الكاميرا",
+  },
+
+  // Other
+  year: {
+    en: "Year",
+    ar: "السنة",
+  },
+}
+
+// Specification groups for better organization
+const specGroups = {
+  engine: {
+    en: "Engine & Performance",
+    ar: "المحرك والأداء",
+    specs: ["fuelType", "engine", "power", "torque", "acceleration"],
+  },
+  dimensions: {
+    en: "Dimensions",
+    ar: "الأبعاد",
+    specs: ["length", "width", "height", "wheelbase"],
+  },
+  interior: {
+    en: "Interior & Capacity",
+    ar: "المقصورة والسعة",
+    specs: ["seats", "fuelTank", "cargoCapacity"],
+  },
+  drivetrain: {
+    en: "Drivetrain",
+    ar: "نظام الدفع",
+    specs: ["transmission", "driveType", "drivingMode"],
+  },
+  safety: {
+    en: "Safety",
+    ar: "السلامة",
+    specs: ["airbags", "brakes", "parkingSensors", "camera"],
+  },
+}
+
 // Mock car data with bilingual content - Updated specifications
 const carsData = [
   {
@@ -51,9 +327,20 @@ const carsData = [
       en: "Jetour T2",
       ar: "جيتور T2",
     },
-    brand: "Jetour",
+    brand: "jetour",
+    model: "t2",
+    modelSVG: modelSVGs["jetour-t2"],
+    bodyType: "suv",
+    category: "midsize",
     brandLogo: brandLogos.jetour,
-    image: carImages.car1,
+    // Main image (thumbnail)
+    image: require("./assets/images/car1.png"),
+    // Additional images using existing car images
+    additionalImages: [
+      require("./assets/images/car2.png"),
+      require("./assets/images/car3.png"),
+      require("./assets/images/car3.png"),
+    ],
     status: "new",
     modelYear: {
       en: "Full Model 2023",
@@ -164,9 +451,14 @@ const carsData = [
       en: "Jetour T2 Plus",
       ar: "جيتور T2 بلس",
     },
-    brand: "Jetour",
+    brand: "jetour",
+    model: "t2-plus",
+    modelSVG: modelSVGs["jetour-t2-plus"],
+    bodyType: "suv",
+    category: "midsize",
     brandLogo: brandLogos.jetour,
-    image: carImages.car2,
+    image: require("./assets/images/car2.png"),
+    additionalImages: [require("./assets/images/car3.png"), require("./assets/images/car1.png")],
     status: "unavailable",
     modelYear: {
       en: "Full Model 2023",
@@ -277,9 +569,14 @@ const carsData = [
       en: "Jetour T2 Sport",
       ar: "جيتور T2 سبورت",
     },
-    brand: "Jetour",
+    brand: "jetour",
+    model: "t2-sport",
+    modelSVG: modelSVGs["jetour-t2-sport"],
+    bodyType: "suv",
+    category: "sport",
     brandLogo: brandLogos.jetour,
-    image: carImages.car3,
+    image: require("./assets/images/car3.png"),
+    additionalImages: [require("./assets/images/car2.png"), require("./assets/images/car6.png")],
     status: "discount",
     modelYear: {
       en: "Full Model 2023",
@@ -384,15 +681,21 @@ const carsData = [
       currency: icons.currency,
     },
   },
+  // Continuing with the rest of the cars...
   {
     id: 4,
     name: {
       en: "Jetour X70",
       ar: "جيتور X70",
     },
-    brand: "Jetour",
+    brand: "jetour",
+    model: "x70",
+    modelSVG: modelSVGs["jetour-x70"],
+    bodyType: "suv",
+    category: "family",
     brandLogo: brandLogos.jetour,
-    image: carImages.car4,
+    image: require("./assets/images/car4.png"),
+    additionalImages: [require("./assets/images/car5.png"), require("./assets/images/car3.png")],
     status: "new",
     modelYear: {
       en: "Full Model 2024",
@@ -503,9 +806,14 @@ const carsData = [
       en: "Jetour X90",
       ar: "جيتور X90",
     },
-    brand: "Jetour",
+    brand: "jetour",
+    model: "x90",
+    modelSVG: modelSVGs["jetour-x90"],
+    bodyType: "suv",
+    category: "fullsize",
     brandLogo: brandLogos.jetour,
-    image: carImages.car5,
+    image: require("./assets/images/car5.png"),
+    additionalImages: [require("./assets/images/car2.png"), require("./assets/images/car3.png")],
     status: "discount",
     modelYear: {
       en: "Full Model 2024",
@@ -616,9 +924,14 @@ const carsData = [
       en: "Jetour Dashing",
       ar: "جيتور داشينج",
     },
-    brand: "Jetour",
+    brand: "jetour",
+    model: "dashing",
+    modelSVG: modelSVGs["jetour-dashing"],
+    bodyType: "crossover",
+    category: "midsize",
     brandLogo: brandLogos.jetour,
-    image: carImages.car6,
+    image: require("./assets/images/car6.png"),
+    additionalImages: [require("./assets/images/car5.png"), require("./assets/images/car4.png")],
     status: "new",
     modelYear: {
       en: "Full Model 2024",
@@ -729,9 +1042,14 @@ const carsData = [
       en: "Jetour X95",
       ar: "جيتور X95",
     },
-    brand: "Jetour",
+    brand: "jetour",
+    model: "x95",
+    modelSVG: modelSVGs["jetour-x95"],
+    bodyType: "suv",
+    category: "luxury",
     brandLogo: brandLogos.jetour,
-    image: carImages.car7,
+    image: require("./assets/images/car7.png"),
+    additionalImages: [require("./assets/images/car6.png"), require("./assets/images/car5.png")],
     status: "unavailable",
     modelYear: {
       en: "Full Model 2023",
@@ -842,9 +1160,14 @@ const carsData = [
       en: "Jetour T1",
       ar: "جيتور T1",
     },
-    brand: "Jetour",
+    brand: "jetour",
+    model: "t1",
+    modelSVG: modelSVGs["jetour-t1"],
+    bodyType: "suv",
+    category: "compact",
     brandLogo: brandLogos.jetour,
-    image: carImages.car8,
+    image: require("./assets/images/car8.png"),
+    additionalImages: [require("./assets/images/car2.png"), require("./assets/images/car3.png")],
     status: "discount",
     modelYear: {
       en: "Full Model 2023",
@@ -949,16 +1272,20 @@ const carsData = [
       currency: icons.currency,
     },
   },
-  // Adding sample cars for other brands
   {
     id: 9,
     name: {
       en: "Toyota Camry",
       ar: "تويوتا كامري",
     },
-    brand: "Toyota",
+    brand: "toyota",
+    model: "camry",
+    modelSVG: modelSVGs["toyota-camry"],
+    bodyType: "sedan",
+    category: "midsize",
     brandLogo: brandLogos.toyota,
-    image: carImages.car9, // You'll need to add this image
+    image: require("./assets/images/car9.png"),
+    additionalImages: [require("./assets/images/car1.png"), require("./assets/images/car8.png")],
     status: "new",
     modelYear: {
       en: "Full Model 2024",
@@ -1065,9 +1392,14 @@ const carsData = [
       en: "Honda Accord",
       ar: "هوندا أكورد",
     },
-    brand: "Honda",
+    brand: "honda",
+    model: "accord",
+    modelSVG: modelSVGs["honda-accord"],
+    bodyType: "sedan",
+    category: "midsize",
     brandLogo: brandLogos.honda,
-    image: carImages.car10, // You'll need to add this image
+    image: require("./assets/images/car10.png"),
+    additionalImages: [require("./assets/images/car7.png"), require("./assets/images/car3.png")],
     status: "new",
     modelYear: {
       en: "Full Model 2024",
@@ -1170,6 +1502,102 @@ const carsData = [
   },
 ]
 
+// Helper function to get specs by group
+export const getSpecsByGroup = (car, groupKey, language = "en") => {
+  const group = specGroups[groupKey]
+  if (!group) return []
+
+  return group.specs
+    .map((specKey) => {
+      if (!car.specs[specKey]) return null
+
+      return {
+        key: specKey,
+        name: specNames[specKey] ? specNames[specKey][language] : specKey,
+        value: typeof car.specs[specKey] === "object" ? car.specs[specKey][language] : car.specs[specKey].toString(),
+      }
+    })
+    .filter(Boolean)
+}
+
+// Function to get all spec groups for a car
+export const getAllSpecGroups = (car, language = "en") => {
+  return Object.keys(specGroups).map((groupKey) => {
+    return {
+      groupKey,
+      groupName: specGroups[groupKey][language],
+      specs: getSpecsByGroup(car, groupKey, language),
+    }
+  })
+}
+
+// Function to get all additional images for a car
+export const getAdditionalImages = (car) => {
+  return car.additionalImages || []
+}
+
+// Function to get all body types
+export const getBodyTypes = (language = "en") => {
+  return Object.keys(bodyTypes).map((key) => ({
+    key,
+    name: bodyTypes[key][language],
+    icon: bodyTypes[key].icon,
+  }))
+}
+
+// Function to get all categories
+export const getCategories = (language = "en") => {
+  return Object.keys(categories).map((key) => ({
+    key,
+    name: categories[key][language],
+  }))
+}
+
+// Function to get all brands
+export const getBrands = (language = "en") => {
+  return Object.keys(brands).map((key) => ({
+    key,
+    name: brands[key][language],
+    logo: brands[key].logo,
+    models: brands[key].models,
+  }))
+}
+
+// Function to get models for a specific brand
+export const getModelsByBrand = (brandKey, language = "en") => {
+  const brand = brands[brandKey]
+  if (!brand) return []
+
+  return brand.models.map((modelKey) => {
+    const fullModelKey = `${brandKey}-${modelKey}`
+    return {
+      key: modelKey,
+      name: modelKey, // You might want to add model names in different languages
+      svg: modelSVGs[fullModelKey] || null,
+    }
+  })
+}
+
+// Function to filter cars by body type
+export const filterCarsByBodyType = (bodyType) => {
+  return carsData.filter((car) => car.bodyType === bodyType)
+}
+
+// Function to filter cars by category
+export const filterCarsByCategory = (category) => {
+  return carsData.filter((car) => car.category === category)
+}
+
+// Function to filter cars by brand
+export const filterCarsByBrand = (brand) => {
+  return carsData.filter((car) => car.brand === brand)
+}
+
+// Function to filter cars by model
+export const filterCarsByModel = (model) => {
+  return carsData.filter((car) => car.model === model)
+}
+
 // Function to simulate API call with a delay
 export const fetchCars = () => {
   return new Promise((resolve) => {
@@ -1179,5 +1607,34 @@ export const fetchCars = () => {
   })
 }
 
-export default carsData
+// Function to get gallery images with labels
+export const getGalleryWithLabels = (car, language = "en") => {
+  const galleryLabels = {
+    front: {
+      en: "Front",
+      ar: "أمامي",
+    },
+    side: {
+      en: "Side",
+      ar: "جانبي",
+    },
+    rear: {
+      en: "Rear",
+      ar: "خلفي",
+    },
+    interior: {
+      en: "Interior",
+      ar: "داخلي",
+    },
+  }
 
+  return Object.keys(car.gallery || {}).map((key) => ({
+    key: key,
+    image: car.gallery[key],
+    label: galleryLabels[key] ? galleryLabels[key][language] : key,
+  }))
+}
+
+export { bodyTypes, categories, brands, modelSVGs, specGroups, specNames }
+
+export default carsData
