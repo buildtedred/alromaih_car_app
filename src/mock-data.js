@@ -353,6 +353,9 @@ const carsData = [
         en: "Gasoline",
         ar: "بنزين",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
+      
       seats: {
         en: "5 Seats",
         ar: "5 مقاعد",
@@ -471,6 +474,8 @@ const carsData = [
         en: "Gasoline",
         ar: "بنزين",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
       seats: {
         en: "5 Seats",
         ar: "5 مقاعد",
@@ -589,6 +594,8 @@ const carsData = [
         en: "Gasoline",
         ar: "بنزين",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
       seats: {
         en: "5 Seats",
         ar: "5 مقاعد",
@@ -708,6 +715,8 @@ const carsData = [
         en: "Gasoline",
         ar: "بنزين",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
       seats: {
         en: "7 Seats",
         ar: "7 مقاعد",
@@ -826,6 +835,8 @@ const carsData = [
         en: "Gasoline",
         ar: "بنزين",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
       seats: {
         en: "7 Seats",
         ar: "7 مقاعد",
@@ -944,6 +955,8 @@ const carsData = [
         en: "Gasoline",
         ar: "بنزين",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
       seats: {
         en: "5 Seats",
         ar: "5 مقاعد",
@@ -1066,6 +1079,8 @@ const carsData = [
         en: "7 Seats",
         ar: "7 مقاعد",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
       transmission: {
         en: "Automatic",
         ar: "أوتوماتيك",
@@ -1180,6 +1195,8 @@ const carsData = [
         en: "Gasoline",
         ar: "بنزين",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
       seats: {
         en: "5 Seats",
         ar: "5 مقاعد",
@@ -1298,6 +1315,8 @@ const carsData = [
         en: "Gasoline",
         ar: "بنزين",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
       seats: {
         en: "5 Seats",
         ar: "5 مقاعد",
@@ -1412,6 +1431,9 @@ const carsData = [
         en: "Gasoline",
         ar: "بنزين",
       },
+      mileage: "43,000 km", // ← Add this field
+      location: "Riyadh",   // ← Add this field
+      
       seats: {
         en: "5 Seats",
         ar: "5 مقاعد",

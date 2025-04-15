@@ -3,17 +3,20 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+// Screens
 import HomeScreen from '../../screens/HomeScreen';
 import MoreScreen from '../../screens/MoreScreen';
 import FindCarScreen from '../../screens/FindCarsScreen';
 import ContactUsScreen from '../../screens/ContectUsScreen';
 import AllCarScreen from '../../screens/AllCarsScreen';
 import Gallery from '../../screens/Gallery';
+import FilteredCarsScreen from '../../screens/FilteredCarsScreen';
+import SearchScreen from '../../screens/SearchScreen';
+import AdvancedSearchScreen from '../../screens/AdvancedSearchScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-// Bottom Tab Navigator
 function BottomTabs() {
   return (
     <Tab.Navigator
@@ -44,27 +47,30 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen
-        name="All Cars"
+        name="AllCars"
         component={AllCarScreen}
         options={{
+          title: 'All Cars',
           tabBarIcon: ({ color }) => (
             <Ionicons name="car-sport" color={color} size={30} />
           ),
         }}
       />
       <Tab.Screen
-        name="Find Car"
+        name="FindCar"
         component={FindCarScreen}
         options={{
+          title: 'Find Car',
           tabBarIcon: ({ color }) => (
             <Ionicons name="search" color={color} size={30} />
           ),
         }}
       />
       <Tab.Screen
-        name="Contact Us"
+        name="ContactUs"
         component={ContactUsScreen}
         options={{
+          title: 'Contact Us',
           tabBarIcon: ({ color }) => (
             <Ionicons name="call" color={color} size={30} />
           ),
@@ -83,12 +89,14 @@ function BottomTabs() {
   );
 }
 
-// Main Stack Navigator
 export default function MainNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Gallery" component={Gallery} options={{ title: 'Gallery' }} />
+      <Stack.Screen name="FilteredCars" component={FilteredCarsScreen} options={{ title: 'Filtered Cars' }} />
+      <Stack.Screen name="Search" component={SearchScreen} options={{ title: 'Search' }} />
+      <Stack.Screen name="AdvancedSearch" component={AdvancedSearchScreen} options={{ title: 'Refine Your Search' }} />
     </Stack.Navigator>
   );
 }
