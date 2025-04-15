@@ -9,11 +9,13 @@ import FindCarScreen from '../../screens/FindCarsScreen';
 import ContactUsScreen from '../../screens/ContectUsScreen';
 import AllCarScreen from '../../screens/AllCarsScreen';
 import Gallery from '../../screens/Gallery';
+import AboutScreen from '../moresection/AboutScreen';
+import TermsScreen from '../moresection/TermsScreen';
+import PrivacyScreen from '../moresection/PrivacyScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-// Bottom Tab Navigator
 function BottomTabs() {
   return (
     <Tab.Navigator
@@ -83,12 +85,14 @@ function BottomTabs() {
   );
 }
 
-// Main Stack Navigator
 export default function MainNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Gallery" component={Gallery} options={{ title: 'Gallery' }} />
+      <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About Us' }} />
+      <Stack.Screen name="Terms" component={TermsScreen} options={{ title: 'Terms and Conditions' }} />
+      <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ title: 'Privacy Policy' }} />
     </Stack.Navigator>
   );
 }

@@ -1,8 +1,16 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Linking, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default function MoreScreen() {
+// Bank logos
+import SNB from '../assets/images/SNB.png';
+import RiyadBank from '../assets/images/RiyadBank.png';
+import BankAlbilad from '../assets/images/Bank_Albilad.png';
+import BanqueSaud from '../assets/images/banque-saud.png';
+import Alrajhi from '../assets/images/alrajhi.png';
+import Alyusr from '../assets/images/alyusr.png';
+
+export default function MoreScreen({ navigation }) {
   const menuItems = [
     { id: 1, icon: 'call-outline', title: 'Call us' },
     { id: 2, icon: 'information-circle-outline', title: 'About Syarah' },
@@ -11,8 +19,22 @@ export default function MoreScreen() {
   ];
 
   const handlePress = (item) => {
-    // Add navigation or actions for each item
-    console.log(`Pressed: ${item.title}`);
+    switch (item.title) {
+      case 'Call us':
+        Linking.openURL('tel:920002470'); // Replace with your actual number
+        break;
+      case 'About Syarah':
+        navigation.navigate('About');
+        break;
+      case 'Terms and Conditions':
+        navigation.navigate('Terms');
+        break;
+      case 'Privacy Policy':
+        navigation.navigate('Privacy');
+        break;
+      default:
+        console.log(`Pressed: ${item.title}`);
+    }
   };
 
   return (
@@ -41,11 +63,21 @@ export default function MoreScreen() {
       </View>
 
       {/* Footer */}
-      <View className="bg-white rounded-lg shadow-sm p-4">
-        <Text className="text-sm text-gray-500 text-center">
+      <View className="bg-white rounded-lg shadow-sm p-4 items-center">
+        <Text className="text-sm text-gray-500 text-center mb-4">
           Syarah is a registered company at the Ministry of Trade and Investment 
           and with the support of Elm Company, with a commercial record No. 1010538980
         </Text>
+
+        {/* Bank Logos */}
+        <View className="flex-row flex-wrap justify-center gap-x-4 gap-y-3 mt-2">
+          <Image source={SNB} style={{ width: 60, height: 30, resizeMode: 'contain' }} />
+          <Image source={RiyadBank} style={{ width: 60, height: 30, resizeMode: 'contain' }} />
+          <Image source={BankAlbilad} style={{ width: 60, height: 30, resizeMode: 'contain' }} />
+          <Image source={BanqueSaud} style={{ width: 60, height: 30, resizeMode: 'contain' }} />
+          <Image source={Alrajhi} style={{ width: 60, height: 30, resizeMode: 'contain' }} />
+          <Image source={Alyusr} style={{ width: 60, height: 30, resizeMode: 'contain' }} />
+        </View>
       </View>
     </ScrollView>
   );
