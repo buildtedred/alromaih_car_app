@@ -1,23 +1,33 @@
 import React from 'react';
-import { View, ScrollView, Text } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import AppHeader from '../components/common/AppHeader';
+import CategoryTabs from '../components/Category/CategoryTabs';
 import FeaturedCars from '../components/cars/FeaturedCars';
-import { useTranslation } from 'react-i18next';
 import carsData from '../mock-data';
 
 export default function HomeScreen() {
-  const { t } = useTranslation();
-
-  const handleSearch = (text) => {
-    // Search functionality can be added here
-  };
-
   return (
-    <ScrollView className="bg-gray-100">
-      <AppHeader onSearchChange={handleSearch} />
-      <View className="">
-        <FeaturedCars cars={carsData} />
+    <View className="flex-1 bg-[#F9F9F9]">
+      {/* App Header */}
+      <View className="z-10 bg-white">
+        <AppHeader />
       </View>
-    </ScrollView>
+
+      {/* Scrollable content */}
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Category Tabs */}
+        <View className="mt-4 mb-2 px-4">
+          <CategoryTabs />
+        </View>
+
+        {/* Featured Cars Section */}
+        <View className="mt-6">
+          <FeaturedCars cars={carsData.slice(0, 6)} />
+        </View>
+      </ScrollView>
+    </View>
   );
 }

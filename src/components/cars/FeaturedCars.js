@@ -2,25 +2,17 @@ import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import CarCard from './CarCard';
 import { useTranslation } from 'react-i18next';
-import { useLocale } from '../../contexts/LocaleContext';
 import { useNavigation } from '@react-navigation/native';
 
 const FeaturedCars = ({ cars }) => {
   const { t } = useTranslation();
-  const { direction } = useLocale();
   const navigation = useNavigation();
 
   return (
     <View>
       {/* Header section with title and "See All" button */}
       <View className="flex-row justify-between items-center mb-4 px-2">
-        <Text
-          className="text-2xl font-bold"
-          style={{
-            textAlign: direction === 'rtl' ? 'right' : 'left',
-            writingDirection: direction === 'rtl' ? 'rtl' : 'ltr',
-          }}
-        >
+        <Text className="text-2xl font-bold">
           {t('screens.home.title')}
         </Text>
 
@@ -42,11 +34,7 @@ const FeaturedCars = ({ cars }) => {
           </View>
         )}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          flexDirection: direction === 'rtl' ? 'row-reverse' : 'row',
-          paddingHorizontal: 8,
-        }}
-        inverted={direction === 'rtl'}
+        contentContainerStyle={{ paddingHorizontal: 8 }}
       />
     </View>
   );

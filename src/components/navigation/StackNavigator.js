@@ -3,15 +3,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+// Screens
 import HomeScreen from '../../screens/HomeScreen';
 import MoreScreen from '../../screens/MoreScreen';
 import FindCarScreen from '../../screens/FindCarsScreen';
 import ContactUsScreen from '../../screens/ContectUsScreen';
 import AllCarScreen from '../../screens/AllCarsScreen';
 import Gallery from '../../screens/Gallery';
-import AboutScreen from '../moresection/AboutScreen';
-import TermsScreen from '../moresection/TermsScreen';
-import PrivacyScreen from '../moresection/PrivacyScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -46,27 +44,30 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen
-        name="All Cars"
+        name="AllCars"
         component={AllCarScreen}
         options={{
+          title: 'All Cars',
           tabBarIcon: ({ color }) => (
             <Ionicons name="car-sport" color={color} size={30} />
           ),
         }}
       />
       <Tab.Screen
-        name="Find Car"
+        name="FindCar"
         component={FindCarScreen}
         options={{
+          title: 'Find Car',
           tabBarIcon: ({ color }) => (
             <Ionicons name="search" color={color} size={30} />
           ),
         }}
       />
       <Tab.Screen
-        name="Contact Us"
+        name="ContactUs"
         component={ContactUsScreen}
         options={{
+          title: 'Contact Us',
           tabBarIcon: ({ color }) => (
             <Ionicons name="call" color={color} size={30} />
           ),
@@ -90,9 +91,6 @@ export default function MainNavigator() {
     <Stack.Navigator>
       <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Gallery" component={Gallery} options={{ title: 'Gallery' }} />
-      <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About Us' }} />
-      <Stack.Screen name="Terms" component={TermsScreen} options={{ title: 'Terms and Conditions' }} />
-      <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ title: 'Privacy Policy' }} />
     </Stack.Navigator>
   );
 }
