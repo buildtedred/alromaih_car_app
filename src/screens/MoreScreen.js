@@ -10,10 +10,7 @@ export default function MoreScreen() {
     { id: 4, icon: 'shield-checkmark-outline', title: 'Privacy Policy' }
   ];
 
-  const handlePress = (item) => {
-    // Add navigation or actions for each item
-    console.log(`Pressed: ${item.title}`);
-  };
+
 
   return (
     <ScrollView className="bg-gray-50 p-4">

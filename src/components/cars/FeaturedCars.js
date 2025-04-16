@@ -10,20 +10,18 @@ const FeaturedCars = ({ cars }) => {
 
   return (
     <View>
-      {/* Header section with title and "See All" button */}
       <View className="flex-row justify-between items-center mb-4 px-2">
         <Text className="text-2xl font-bold">
-          {t('screens.home.title')}
+          {t('screens.home.title', { defaultValue: 'Featured Cars' })}
         </Text>
 
         <TouchableOpacity onPress={() => navigation.navigate('AllCars')}>
           <Text className="text-blue-600 text-base font-medium">
-            {t('common.see_all') || 'See All'}
+            {t('common.see_all', { defaultValue: 'See All' })}
           </Text>
         </TouchableOpacity>
       </View>
 
-      {/* Cars List */}
       <FlatList
         horizontal
         data={cars.slice(0, 6)}

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Text, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useLocale } from '../contexts/LocaleContext';
 
@@ -101,6 +101,24 @@ export default function AdvancedSearchScreen() {
   };
 
   const handleSearch = () => {
+    const noFiltersSelected =
+      selectedModels.length === 0 &&
+      !location &&
+      priceRange[0] === minPriceDefault &&
+      priceRange[1] === maxPriceDefault &&
+      minYear === minYearDefault &&
+      maxYear === maxYearDefault &&
+      !selectedBodyType &&
+      !selectedCategory &&
+      !selectedBrand &&
+      !selectedTransmission &&
+      !selectedEngine;
+  
+    if (noFiltersSelected) {
+      Alert.alert('Please select at least one filter.');
+      return;
+    }
+  
     let filtered = carsData.filter((car) => {
       const matchModel = selectedModels.length === 0 || selectedModels.includes(car.model);
       const matchLocation = !location || car.specs?.location?.toLowerCase() === location.toLowerCase();
@@ -109,7 +127,7 @@ export default function AdvancedSearchScreen() {
       const matchBodyType = !selectedBodyType || car.bodyType === selectedBodyType;
       const matchCategory = !selectedCategory || car.category === selectedCategory;
       const matchBrand = !selectedBrand || car.brand === selectedBrand;
-
+  
       return (
         matchModel &&
         matchLocation &&
@@ -120,7 +138,7 @@ export default function AdvancedSearchScreen() {
         matchBrand
       );
     });
-
+  
     if (selectedTransmission) {
       filtered = filtered.filter(
         (car) =>
@@ -128,7 +146,7 @@ export default function AdvancedSearchScreen() {
           selectedTransmission.toLowerCase()
       );
     }
-
+  
     if (selectedEngine) {
       filtered = filtered.filter(
         (car) =>
@@ -136,12 +154,16 @@ export default function AdvancedSearchScreen() {
           selectedEngine.toLowerCase()
       );
     }
-
+  
+    // ✅ REMOVE NON-SERIALIZABLE VALUES
+    const serializableCars = filtered.map(({ brandLogo, ...rest }) => rest);
+  
     navigation.navigate('FilteredCars', {
-      filteredCars: filtered,
+      filteredCars: serializableCars,
       query: 'Advanced Filter',
     });
   };
+  
 
   return (
     <View className="flex-1 bg-[#F9FAFB]">

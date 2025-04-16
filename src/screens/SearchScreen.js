@@ -118,10 +118,11 @@ export default function SearchScreen() {
         ))}
       </View>
 
-      {/* Advanced Search */}
       <TouchableOpacity onPress={handleAdvancedSearch} className="mb-4">
-        <Text className="text-center text-blue-600 font-semibold">Advanced Search</Text>
-      </TouchableOpacity>
+  <Text className="text-center text-blue-600 font-semibold">Advanced Search</Text>
+</TouchableOpacity>
+
+
 
       {/* Popular Cars */}
       <Text className="text-gray-700 font-semibold text-base mb-2">Popular Used Cars</Text>

@@ -13,9 +13,10 @@ import { useNavigation } from "@react-navigation/native";
 export default function CarCard({ car }) {
   const { locale } = useLocale();
   const navigation = useNavigation();
-
   const [scale] = useState(new Animated.Value(1));
-  const getLang = (field) => (typeof field === "object" ? field?.[locale] : field);
+
+  const getLang = (field) =>
+    typeof field === "object" ? field?.[locale] : field;
 
   const onPressIn = () => {
     Animated.spring(scale, {
@@ -32,7 +33,8 @@ export default function CarCard({ car }) {
   };
 
   const goToGallery = () => {
-    navigation.navigate("Gallery", { car });
+    const { brandLogo, ...serializableCar } = car;
+    navigation.navigate("Gallery", { car: serializableCar });
   };
 
   return (
@@ -44,7 +46,6 @@ export default function CarCard({ car }) {
       style={{ transform: [{ scale }] }}
       className="w-full bg-white rounded-2xl shadow-md mb-5 overflow-hidden"
     >
-      {/* Car Image */}
       <View className="relative w-full h-40 bg-white px-4 py-2">
         <Image
           source={car.image}
@@ -53,7 +54,6 @@ export default function CarCard({ car }) {
         />
       </View>
 
-      {/* Car Info */}
       <View className="p-4">
         <Text className="text-lg font-bold text-gray-800 mb-2">
           {getLang(car.name)}
@@ -61,35 +61,42 @@ export default function CarCard({ car }) {
 
         <View className="flex flex-row items-center justify-between mb-3">
           <Text className="text-lg font-bold text-[#46194F]">
-            {car.cashPrice?.toLocaleString()} {locale === "en" ? "SAR" : "ر.س"}
+            {`${car.cashPrice?.toLocaleString() || ""} ${
+              locale === "en" ? "SAR" : "ر.س"
+            }`}
           </Text>
           <View className="bg-[#f0e6f5] px-2.5 py-1 rounded-md">
             <Text className="text-xs font-semibold text-[#46194F]">
-              {locale === "en" ? "From" : "من"} {car.installmentPrice} {locale === "en" ? "/mo" : "/شهر"}
+              {`${locale === "en" ? "From" : "من"} ${
+                car.installmentPrice || ""
+              } ${locale === "en" ? "/mo" : "/شهر"}`}
             </Text>
           </View>
         </View>
 
-        {/* Specs Row */}
         <View className="flex flex-row items-center justify-between py-3 border-t border-b border-gray-100 mb-3">
           <View className="flex flex-row items-center">
             <Icon name="calendar" size={14} color="#666" />
             <Text className="text-xs text-gray-600 ml-1.5">
-              {car.specs.year}
+              {car.specs?.year?.toString() || "-"}
             </Text>
           </View>
 
           <View className="flex flex-row items-center">
             <Icon name="tachometer" size={14} color="#666" />
             <Text className="text-xs text-gray-600 ml-1.5">
-              {car.specs.mileage || "0 km"}
+              {car.specs?.mileage
+                ? getLang(car.specs?.mileage)
+                : locale === "ar"
+                ? "٠ كم"
+                : "0 km"}
             </Text>
           </View>
 
           <View className="flex flex-row items-center">
             <Icon name="gear" size={14} color="#666" />
             <Text className="text-xs text-gray-600 ml-1.5">
-              {getLang(car.specs.transmission)}
+              {getLang(car.specs?.transmission) || "-"}
             </Text>
           </View>
         </View>

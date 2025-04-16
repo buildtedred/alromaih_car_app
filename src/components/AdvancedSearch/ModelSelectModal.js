@@ -22,14 +22,17 @@ export default function ModelSelectModal({
   return (
     <Modal visible={visible} animationType="slide">
       <View className="flex-1 bg-white px-4 pt-6">
-        {/* Header */}
         <Text className="text-[18px] font-bold text-gray-900 mb-5">
           Search Make or Model
         </Text>
 
-        {/* Search Input */}
         <View className="flex-row items-center bg-gray-100 border border-gray-300 rounded-[10px] px-4 py-2 mb-5">
-          <Ionicons name="search-outline" size={18} color="#888" className="mr-2" />
+          <Ionicons
+            name="search-outline"
+            size={18}
+            color="#888"
+            style={{ marginRight: 8 }}
+          />
           <TextInput
             placeholder="Search makes and models..."
             value={search}
@@ -39,36 +42,32 @@ export default function ModelSelectModal({
           />
         </View>
 
-        {/* Selected Tags */}
-       {/* Selected Tags */}
-{selectedModels.length > 0 && (
-  <View className="mb-4">
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ paddingVertical: 6 }}
-    >
-      {selectedModels.map((modelKey) => {
-        const model = options.find((m) => m.key === modelKey);
-        if (!model) return null;
-        return (
-          <View
-            key={modelKey}
-            className="flex-row items-center bg-brand px-6 py-3 rounded-[10px] mr-2 max-w-[90%]"
-          >
-            <Text className="text-white text-lg mr-2">{model.name}</Text>
-            <TouchableOpacity onPress={() => toggleModel(modelKey)}>
-              <Ionicons name="close" size={16} color="white" />
-            </TouchableOpacity>
+        {selectedModels.length > 0 && (
+          <View className="mb-4">
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingVertical: 6 }}
+            >
+              {selectedModels.map((modelKey) => {
+                const model = options.find((m) => m.key === modelKey);
+                if (!model) return null;
+                return (
+                  <View
+                    key={modelKey}
+                    className="flex-row items-center bg-brand px-6 py-3 rounded-[10px] mr-2 max-w-[90%]"
+                  >
+                    <Text className="text-white text-lg mr-2">{model.name}</Text>
+                    <TouchableOpacity onPress={() => toggleModel(modelKey)}>
+                      <Ionicons name="close" size={16} color="white" />
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </ScrollView>
           </View>
-        );
-      })}
-    </ScrollView>
-  </View>
-)}
+        )}
 
-
-        {/* Option List */}
         <FlatList
           data={options}
           keyExtractor={(item) => item.key}
@@ -87,9 +86,13 @@ export default function ModelSelectModal({
                     name="car-outline"
                     size={30}
                     color={isSelected ? '#46194F' : '#666'}
-                    className="mr-3"
+                    style={{ marginRight: 12 }}
                   />
-                  <Text className={`text-[16px] ${isSelected ? 'text-brand font-semibold' : 'text-gray-800'}`}>
+                  <Text
+                    className={`text-[16px] ${
+                      isSelected ? 'text-brand font-semibold' : 'text-gray-800'
+                    }`}
+                  >
                     {item.name}
                   </Text>
                 </View>
@@ -101,7 +104,6 @@ export default function ModelSelectModal({
           }}
         />
 
-        {/* Apply Button */}
         <TouchableOpacity
           className="bg-brand py-3 rounded-xl items-center mt-6 mb-6"
           onPress={onClose}

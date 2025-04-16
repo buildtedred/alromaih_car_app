@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useLocale } from '../../contexts/LocaleContext';
 import carsData, { getBrands } from '../../mock-data';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { brandLogos } from '../../mock-data'; // Make sure this is imported
 
 export default function BrandSelector({ selected, setSelected }) {
   const { locale } = useLocale();
@@ -13,7 +14,6 @@ export default function BrandSelector({ selected, setSelected }) {
 
   return (
     <View className="mb-6 px-1">
-      {/* Header */}
       <View className="flex-row items-center mb-3">
         <View className="w-9 h-9 bg-gray-100 rounded-full items-center justify-center mr-3">
           <MaterialIcons name="directions-car" size={20} color="#6B7280" />
@@ -23,11 +23,10 @@ export default function BrandSelector({ selected, setSelected }) {
         </Text>
       </View>
 
-      {/* Brands List */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {filteredBrands.map((brand) => {
           const isSelected = selected === brand.key;
-          const LogoComponent = brand.logo; // SVG component
+          const LogoComponent = brandLogos[brand.key]; // ❗ Use brand key to fetch logo safely here
 
           return (
             <TouchableOpacity
@@ -39,7 +38,6 @@ export default function BrandSelector({ selected, setSelected }) {
               style={{ elevation: isSelected ? 3 : 1 }}
               activeOpacity={0.85}
             >
-              {/* Render SVG logo component if available */}
               {LogoComponent && (
                 <LogoComponent width={40} height={30} style={{ marginBottom: 6 }} />
               )}

@@ -29,11 +29,24 @@ export default function GalleryScreen({ route }) {
     source: img,
   }));
 
-  const BrandLogo = brandLogos[car.brand]; // ✅ SVG component (not passed via navigation)
+  const BrandLogo = brandLogos[car.brand];
+
+  const getFeatureLabel = (key, locale) => {
+    const labels = {
+      exterior: { en: 'Exterior', ar: 'الخارجية' },
+      interior: { en: 'Interior', ar: 'الداخلية' },
+      engine: { en: 'Engine', ar: 'المحرك' },
+      safety: { en: 'Safety', ar: 'السلامة' },
+      technology: { en: 'Technology', ar: 'التقنية' },
+      entertainment: { en: 'Entertainment', ar: 'الترفيه' },
+      comfort: { en: 'Comfort', ar: 'الراحة' },
+      exteriorFeatures: { en: 'Exterior Features', ar: 'ميزات خارجية' },
+    };
+    return labels[key]?.[locale] || key;
+  };
 
   return (
     <ScrollView className="flex-1 bg-white">
-      {/* Image Slider */}
       <View className="h-64 relative">
         <FlatList
           data={images}
@@ -62,49 +75,36 @@ export default function GalleryScreen({ route }) {
         </View>
       </View>
 
-      {/* Car Info Card */}
       <View className="bg-white mx-4 mt-10 rounded-2xl px-4 py-4 shadow-md">
-  <View className="flex-row justify-between items-start">
-    {/* Left Side: Name, Year, Price */}
-    <View className="flex-1">
-      <Text className="text-xl font-bold text-[#46194F] mb-1">
-        {getLang(car.name)}
-      </Text>
-      <Text className="text-sm text-gray-500">
-        {getLang(car.modelYear)}
-      </Text>
+        <View className="flex-row justify-between items-start">
+          <View className="flex-1">
+            <Text className="text-xl font-bold text-[#46194F] mb-1">
+              {getLang(car.name)}
+            </Text>
+            <Text className="text-sm text-gray-500">
+              {getLang(car.modelYear)}
+            </Text>
+            <Text className="text-2xl font-extrabold text-[#46194F] mt-3">
+              {car.cashPrice?.toLocaleString()} {locale === 'en' ? 'SAR' : 'ر.س'}
+            </Text>
+          </View>
 
-      {/* ✅ Price stays below name/year */}
-      <Text className="text-2xl font-extrabold text-[#46194F] mt-3">
-        {car.cashPrice?.toLocaleString()} {locale === 'en' ? 'SAR' : 'ر.س'}
-      </Text>
-    </View>
-
-    {/* Right Side: Brand Logo + Installment badge under it */}
-    {BrandLogo && (
-      <View className="items-end ml-2">
-        {/* Brand Logo Card */}
-        <View className="bg-gray-100 px-3 py-2 rounded-xl items-center justify-center mb-2" style={{ elevation: 2 }}>
-          <BrandLogo width={75} height={40} />
-        </View>
-
-        {/* ✅ Installment badge under brand logo */}
-        <View className="bg-[#46194F] px-3 py-1 mt-1 rounded-full">
-          <Text className="text-white text-xs font-semibold">
-            {locale === 'en' ? 'From' : 'من'} {car.installmentPrice}{' '}
-            {locale === 'en' ? '/mo' : '/شهر'}
-          </Text>
+          {BrandLogo && (
+            <View className="items-end ml-2">
+              <View className="bg-gray-100 px-3 py-2 rounded-xl items-center justify-center mb-2" style={{ elevation: 2 }}>
+                <BrandLogo width={75} height={40} />
+              </View>
+              <View className="bg-[#46194F] px-3 py-1 mt-1 rounded-full">
+                <Text className="text-white text-xs font-semibold">
+                  {locale === 'en' ? 'From' : 'من'} {car.installmentPrice}{' '}
+                  {locale === 'en' ? '/mo' : '/شهر'}
+                </Text>
+              </View>
+            </View>
+          )}
         </View>
       </View>
-    )}
-  </View>
-</View>
 
-
-
-
-
-      {/* Quick Specs */}
       <View className="bg-white mx-4 mt-4 rounded-2xl px-4 py-4 shadow-md">
         <View className="flex-row justify-between">
           {[
@@ -134,7 +134,6 @@ export default function GalleryScreen({ route }) {
         </View>
       </View>
 
-      {/* Tabs */}
       <View className="flex-row border-b border-gray-200 mx-4 mt-6">
         {['specs', 'features'].map((tab) => (
           <TouchableOpacity
@@ -155,7 +154,6 @@ export default function GalleryScreen({ route }) {
         ))}
       </View>
 
-      {/* Tab Content */}
       <View className="p-4">
         {activeTab === 'specs' ? (
           specGroups.map((group) => (
@@ -185,7 +183,7 @@ export default function GalleryScreen({ route }) {
                   <View className="flex-row items-center">
                     <Icon name="check-circle" size={16} color="#46194F" />
                     <Text className="text-gray-800 text-sm ml-2">
-                      {locale === 'en' ? key : `ميزة: ${key}`}
+                      {getFeatureLabel(key, locale)}
                     </Text>
                   </View>
                 </View>
@@ -194,7 +192,6 @@ export default function GalleryScreen({ route }) {
         )}
       </View>
 
-      {/* CTA */}
       <View className="p-4 bg-gray-50">
         <TouchableOpacity className="bg-[#46194F] p-4 rounded-lg flex-row justify-center items-center">
           <MaterialIcons name="phone" size={20} color="white" />

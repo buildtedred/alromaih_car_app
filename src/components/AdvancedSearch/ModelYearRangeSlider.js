@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import { Slider } from '@miblanchard/react-native-slider';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useLocale } from '../../contexts/LocaleContext';
 
 export default function ModelYearRangeSlider({
   min = 1970,
@@ -10,39 +11,86 @@ export default function ModelYearRangeSlider({
   onValueChange,
 }) {
   const [localValue, setLocalValue] = useState(value);
+  const { locale } = useLocale();
 
   useEffect(() => {
-    setLocalValue(value); // sync with parent if reset
+    setLocalValue(value);
   }, [value]);
 
   const handleChange = (val) => {
-    setLocalValue(val); // update for real-time UI feedback
-    if (onValueChange) onValueChange(val); // notify parent
+    setLocalValue(val);
+    if (onValueChange) onValueChange(val);
   };
 
   return (
-    <View className="mb-6 px-1 mt-6 p-6 bg-white border rounded-xl border-gray-300 ">
-      {/* Header */}
-      <View className="flex-row items-center mb-3">
-        <View className="w-9 h-9 bg-gray-100 rounded-full items-center justify-center mr-3">
+    <View
+      style={{
+        marginBottom: 24,
+        marginTop: 24,
+        padding: 24,
+        paddingHorizontal: 8,
+        backgroundColor: 'white',
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#D1D5DB',
+      }}
+    >
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            backgroundColor: '#F3F4F6',
+            borderRadius: 18,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: 12,
+          }}
+        >
           <Ionicons name="calendar-outline" size={22} color="#6B7280" />
         </View>
-        <Text className="text-lg font-semibold text-brand">Model Year Range</Text>
+        <Text style={{ fontSize: 18, fontWeight: '600', color: '#46194F' }}>
+          {locale === 'ar' ? 'نطاق سنة الموديل' : 'Model Year Range'}
+        </Text>
       </View>
 
-      {/* Year Display */}
-      <View className="flex-row justify-between items-center px-1 mb-2">
-        <View className="flex-1 bg-white px-4 py-2 rounded-md border border-gray-200 items-center mr-1">
-          <Text className="text-base text-gray-600">{localValue[0]}</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'white',
+            paddingVertical: 8,
+            paddingHorizontal: 16,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: '#D1D5DB',
+            alignItems: 'center',
+            marginRight: 4,
+          }}
+        >
+          <Text style={{ fontSize: 16, color: '#4B5563' }}>{localValue[0]}</Text>
         </View>
-        <Text className="text-sm text-gray-500 mx-2">to</Text>
-        <View className="flex-1 bg-white px-4 py-2 rounded-md border border-gray-200 items-center ml-1">
-          <Text className="text-base text-gray-600">{localValue[1]}</Text>
+        <Text style={{ marginHorizontal: 8, fontSize: 14, color: '#6B7280' }}>
+          {locale === 'ar' ? 'إلى' : 'to'}
+        </Text>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'white',
+            paddingVertical: 8,
+            paddingHorizontal: 16,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: '#D1D5DB',
+            alignItems: 'center',
+            marginLeft: 4,
+          }}
+        >
+          <Text style={{ fontSize: 16, color: '#4B5563' }}>{localValue[1]}</Text>
         </View>
       </View>
 
-      {/* Slider */}
-      <View className="px-2 mt-3">
+      <View style={{ marginTop: 12, paddingHorizontal: 8 }}>
         <Slider
           value={localValue}
           minimumValue={min}

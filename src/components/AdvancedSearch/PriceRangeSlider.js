@@ -33,7 +33,6 @@ export default function PriceRangeSlider({
         {locale === 'ar' ? 'نطاق السعر' : 'Price Range'}
       </Text>
 
-      {/* Graph Bars */}
       <View className="flex-row items-end justify-between h-20 mb-4 overflow-hidden">
         {lines.map((height, idx) => {
           const percent = (idx / (lines.length - 1)) * (max - min) + min;
@@ -41,16 +40,13 @@ export default function PriceRangeSlider({
           return (
             <View
               key={idx}
+              className={`flex-1 mx-[1px] rounded ${inRange ? 'bg-brand-primary' : 'bg-gray-200'}`}
               style={{ height: `${height}%` }}
-              className={`flex-1 mx-[1px] rounded ${
-                inRange ? 'bg-brand-primary' : 'bg-gray-200'
-              }`}
             />
           );
         })}
       </View>
 
-      {/* Slider */}
       <Slider
         value={sliderValue}
         minimumValue={min}
@@ -74,7 +70,6 @@ export default function PriceRangeSlider({
         }}
       />
 
-      {/* Selected Values */}
       <View className="flex-row justify-between mt-3">
         <Text className="text-sm text-gray-600">
           {locale === 'ar' ? 'ر.س' : 'SAR'} {Math.round(sliderValue[0]).toLocaleString()}
