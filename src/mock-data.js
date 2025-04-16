@@ -1,26 +1,37 @@
 // Brand logos - Updated with all brand SVGs
-const brandLogos = {
-  jetour: "./assets/brands/jetour.svg",
-  bestune: "./assets/brands/bestune.svg",
-  changan: "./assets/brands/changan.svg",
-  chery: "./assets/brands/chery.svg",
-  chevrolet: "./assets/brands/chevrolet.svg",
-  ford: "./assets/brands/ford.svg",
-  haval: "./assets/brands/haval.svg",
-  honda: "./assets/brands/honda.svg",
-  hongqi: "./assets/brands/hongqi.svg",
-  hyundai: "./assets/brands/hyundai.svg",
-  mg: "./assets/brands/mg.svg",
-  nissan: "./assets/brands/nissan.svg",
-  suzuki: "./assets/brands/suzuki.svg",
-  toyota: "./assets/brands/toyota.svg",
-  kia: "./assets/brands/kia.svg",
-  bmw: "./assets/brands/bmw.svg",
-  mercedes: "./assets/brands/mercedes.svg",
-  audi: "./assets/brands/audi.svg",
-  lexus: "./assets/brands/lexus.svg",
-  mazda: "./assets/brands/mazda.svg",
-}
+import JetourLogo from './assets/brands/jetour.svg';
+import BestuneLogo from './assets/brands/bestune.svg';
+import ChanganLogo from './assets/brands/changan.svg';
+import CheryLogo from './assets/brands/chery.svg';
+import ChevroletLogo from './assets/brands/chevrolet.svg';
+import FordLogo from './assets/brands/ford.svg';
+import HavalLogo from './assets/brands/haval.svg';
+import HondaLogo from './assets/brands/honda.svg';
+import HongqiLogo from './assets/brands/hongqi.svg';
+import HyundaiLogo from './assets/brands/hyundai.svg';
+import MgLogo from './assets/brands/mg.svg';
+import NissanLogo from './assets/brands/nissan.svg';
+import SuzukiLogo from './assets/brands/suzuki.svg';
+import ToyotaLogo from './assets/brands/toyota.svg';
+
+export const brandLogos = {
+  jetour: JetourLogo,
+  bestune: BestuneLogo,
+  changan: ChanganLogo,
+  chery: CheryLogo,
+  chevrolet: ChevroletLogo,
+  ford: FordLogo,
+  haval: HavalLogo,
+  honda: HondaLogo,
+  hongqi: HongqiLogo,
+  hyundai: HyundaiLogo,
+  mg: MgLogo,
+  nissan: NissanLogo,
+  suzuki: SuzukiLogo,
+  toyota: ToyotaLogo,
+};
+
+
 
 // Model SVGs - Added SVG icons for car models
 const modelSVGs = {

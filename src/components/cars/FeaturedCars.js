@@ -16,7 +16,7 @@ const FeaturedCars = ({ cars }) => {
           {t('screens.home.title')}
         </Text>
 
-        <TouchableOpacity onPress={() => navigation.navigate('All Cars')}>
+        <TouchableOpacity onPress={() => navigation.navigate('AllCars')}>
           <Text className="text-blue-600 text-base font-medium">
             {t('common.see_all') || 'See All'}
           </Text>

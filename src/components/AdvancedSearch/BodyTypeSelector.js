@@ -20,7 +20,7 @@ export default function BodyTypeSelector({ selected, setSelected }) {
             <TouchableOpacity
               key={item.key}
               onPress={() => setSelected(isSelected ? null : item.key)}
-              className={`mr-3 px-4 py-2 rounded-full border ${
+              className={`mr-3 w-[85] py-2 items-center font-semibold rounded-[10px] border ${
                 isSelected ? 'bg-brand border-brand' : 'bg-white border-gray-300'
               }`}
             >

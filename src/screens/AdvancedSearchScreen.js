@@ -3,7 +3,7 @@ import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useLocale } from '../contexts/LocaleContext';
 
-import carsData, { brands, getModelsByBrand } from '../mock-data';
+import carsData from '../mock-data';
 
 import ModelSelectModal from '../components/AdvancedSearch/ModelSelectModal';
 import ModelSelector from '../components/AdvancedSearch/ModelSelector';
@@ -47,16 +47,6 @@ export default function AdvancedSearchScreen() {
   const [selectedTransmission, setSelectedTransmission] = useState(null);
   const [selectedEngine, setSelectedEngine] = useState(null);
 
-  const modelOptions = useMemo(() => {
-    const models = selectedBrand
-      ? getModelsByBrand(selectedBrand, locale)
-      : Object.keys(brands).flatMap((brandKey) => getModelsByBrand(brandKey, locale));
-
-    return models.filter((m) =>
-      m.name.toLowerCase().includes(modelSearch.toLowerCase())
-    );
-  }, [selectedBrand, modelSearch, locale]);
-
   const engineOptions = useMemo(() => {
     const engines = new Set();
     carsData.forEach((car) => {
@@ -69,6 +59,24 @@ export default function AdvancedSearchScreen() {
     });
     return Array.from(engines);
   }, [locale]);
+
+  const modelOptions = useMemo(() => {
+    const allModels = carsData.map((car) => ({
+      key: car.model,
+      name: typeof car.model === 'object' ? car.model[locale] : car.model,
+    }));
+
+    const unique = [];
+    const seen = new Set();
+    for (const m of allModels) {
+      if (!seen.has(m.key)) {
+        seen.add(m.key);
+        unique.push(m);
+      }
+    }
+
+    return unique.filter((m) => m.name.toLowerCase().includes(modelSearch.toLowerCase()));
+  }, [modelSearch, locale]);
 
   const toggleModel = (modelKey) => {
     setSelectedModels((prev) =>
