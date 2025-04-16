@@ -10,6 +10,12 @@ import FindCarScreen from '../../screens/FindCarsScreen';
 import ContactUsScreen from '../../screens/ContectUsScreen';
 import AllCarScreen from '../../screens/AllCarsScreen';
 import Gallery from '../../screens/Gallery';
+import FilteredCarsScreen from '../../screens/FilteredCarsScreen';
+import SearchScreen from '../../screens/SearchScreen';
+import AdvancedSearchScreen from '../../screens/AdvancedSearchScreen';
+import AboutScreen from '../moresection/AboutScreen';
+import TermsScreen from '../moresection/TermsScreen';
+import PrivacyScreen from '../moresection/PrivacyScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -91,6 +97,13 @@ export default function MainNavigator() {
     <Stack.Navigator>
       <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Gallery" component={Gallery} options={{ title: 'Gallery' }} />
+      <Stack.Screen name="FilteredCars" component={FilteredCarsScreen} options={{ title: 'Filtered Cars' }} />
+      <Stack.Screen name="Search" component={SearchScreen} options={{ title: 'Search' }} />
+      <Stack.Screen name="AdvancedSearch" component={AdvancedSearchScreen} options={{ title: 'Refine Your Search' }} />
+      {/* Add these new screens */}
+      <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About Syarah' }} />
+      <Stack.Screen name="Terms" component={TermsScreen} options={{ title: 'Terms and Conditions' }} />
+      <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ title: 'Privacy Policy' }} />
     </Stack.Navigator>
   );
 }
