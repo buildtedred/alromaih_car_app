@@ -6,22 +6,21 @@ import { useLocale } from '../../contexts/LocaleContext';
 export default function PriceRangeSlider({
   min = 0,
   max = 310000,
-  value = [0, 310000],
+  value = [min, max],
   onValueChange,
 }) {
   const { locale } = useLocale();
   const [sliderValue, setSliderValue] = useState(value);
   const [lines, setLines] = useState([]);
 
-  // Generate graph lines initially and whenever value resets
   useEffect(() => {
     setLines(generateLines());
     setSliderValue(value);
   }, [value]);
 
-  function generateLines() {
+  const generateLines = () => {
     return Array.from({ length: 50 }, () => Math.random() * 70 + 30);
-  }
+  };
 
   const handleValueChange = (val) => {
     setSliderValue(val);
@@ -30,7 +29,7 @@ export default function PriceRangeSlider({
 
   return (
     <View className="px-4 py-5 bg-white rounded-xl border border-gray-300 shadow-sm">
-      <Text className="text-lg font-semibold text-gray-800 mb-3">
+      <Text className="text-lg font-semibold text-brand mb-3">
         {locale === 'ar' ? 'نطاق السعر' : 'Price Range'}
       </Text>
 
@@ -39,7 +38,6 @@ export default function PriceRangeSlider({
         {lines.map((height, idx) => {
           const percent = (idx / (lines.length - 1)) * (max - min) + min;
           const inRange = percent >= sliderValue[0] && percent <= sliderValue[1];
-
           return (
             <View
               key={idx}
@@ -58,11 +56,22 @@ export default function PriceRangeSlider({
         minimumValue={min}
         maximumValue={max}
         step={1000}
+        animateTransitions
+        onValueChange={handleValueChange}
         thumbTintColor="#46194F"
         minimumTrackTintColor="#46194F"
         maximumTrackTintColor="#E5E7EB"
-        animateTransitions
-        onValueChange={handleValueChange}
+        containerStyle={{ height: 50 }}
+        trackStyle={{ height: 4 }}
+        thumbStyle={{
+          width: 24,
+          height: 24,
+          borderRadius: 12,
+          backgroundColor: '#fff',
+          borderWidth: 2,
+          borderColor: '#46194F',
+          elevation: 2,
+        }}
       />
 
       {/* Selected Values */}

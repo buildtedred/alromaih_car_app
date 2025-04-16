@@ -4,26 +4,48 @@ import { useNavigation } from '@react-navigation/native';
 import { useLocale } from '../contexts/LocaleContext';
 
 import carsData, { brands, getModelsByBrand } from '../mock-data';
+
 import ModelSelectModal from '../components/AdvancedSearch/ModelSelectModal';
 import ModelSelector from '../components/AdvancedSearch/ModelSelector';
 import LocationInput from '../components/AdvancedSearch/LocationInput';
 import PriceRangeSlider from '../components/AdvancedSearch/PriceRangeSlider';
 import ModelYearRangeSlider from '../components/AdvancedSearch/ModelYearRangeSlider';
 import TransmissionSelector from '../components/AdvancedSearch/TransmissionSelector';
+import EngineSelector from '../components/AdvancedSearch/EngineSelector';
+import BrandSelector from '../components/AdvancedSearch/BrandSelector';
+import BodyTypeSelector from '../components/AdvancedSearch/BodyTypeSelector';
+import CategorySelector from '../components/AdvancedSearch/CategorySelector';
+
+const getDynamicYearRange = () => {
+  const years = carsData.map((car) => car.specs?.year).filter(Boolean);
+  return [Math.min(...years), Math.max(...years)];
+};
+
+const getDynamicPriceRange = () => {
+  const prices = carsData.map((car) => car.cashPrice).filter(Boolean);
+  return [Math.min(...prices), Math.max(...prices)];
+};
 
 export default function AdvancedSearchScreen() {
   const { locale } = useLocale();
   const navigation = useNavigation();
 
-  const [minYear, setMinYear] = useState(2018);
-  const [maxYear, setMaxYear] = useState(2024);
+  const [minYearDefault, maxYearDefault] = getDynamicYearRange();
+  const [minYear, setMinYear] = useState(minYearDefault);
+  const [maxYear, setMaxYear] = useState(maxYearDefault);
+
+  const [minPriceDefault, maxPriceDefault] = getDynamicPriceRange();
+  const [priceRange, setPriceRange] = useState([minPriceDefault, maxPriceDefault]);
+
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedModels, setSelectedModels] = useState([]);
+  const [selectedBodyType, setSelectedBodyType] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [location, setLocation] = useState('');
   const [modelModalVisible, setModelModalVisible] = useState(false);
   const [modelSearch, setModelSearch] = useState('');
-  const [priceRange, setPriceRange] = useState([50000, 250000]);
   const [selectedTransmission, setSelectedTransmission] = useState(null);
+  const [selectedEngine, setSelectedEngine] = useState(null);
 
   const modelOptions = useMemo(() => {
     const models = selectedBrand
@@ -34,6 +56,19 @@ export default function AdvancedSearchScreen() {
       m.name.toLowerCase().includes(modelSearch.toLowerCase())
     );
   }, [selectedBrand, modelSearch, locale]);
+
+  const engineOptions = useMemo(() => {
+    const engines = new Set();
+    carsData.forEach((car) => {
+      const engine = car?.specs?.fuelType;
+      if (engine && typeof engine === 'object') {
+        engines.add(engine[locale]);
+      } else if (engine) {
+        engines.add(engine.toString());
+      }
+    });
+    return Array.from(engines);
+  }, [locale]);
 
   const toggleModel = (modelKey) => {
     setSelectedModels((prev) =>
@@ -47,20 +82,35 @@ export default function AdvancedSearchScreen() {
     setSelectedModels([]);
     setModelSearch('');
     setLocation('');
-    setPriceRange([50000, 250000]);
-    setMinYear(2018);
-    setMaxYear(2024);
+    setPriceRange([minPriceDefault, maxPriceDefault]);
+    setMinYear(minYearDefault);
+    setMaxYear(maxYearDefault);
     setSelectedTransmission(null);
+    setSelectedEngine(null);
+    setSelectedBrand(null);
+    setSelectedBodyType(null);
+    setSelectedCategory(null);
   };
 
   const handleSearch = () => {
     let filtered = carsData.filter((car) => {
       const matchModel = selectedModels.length === 0 || selectedModels.includes(car.model);
-      const matchLocation =
-        !location || car.specs?.location?.toLowerCase() === location.toLowerCase();
+      const matchLocation = !location || car.specs?.location?.toLowerCase() === location.toLowerCase();
       const matchPrice = car.cashPrice >= priceRange[0] && car.cashPrice <= priceRange[1];
       const matchYear = car.specs?.year >= minYear && car.specs?.year <= maxYear;
-      return matchModel && matchLocation && matchPrice && matchYear;
+      const matchBodyType = !selectedBodyType || car.bodyType === selectedBodyType;
+      const matchCategory = !selectedCategory || car.category === selectedCategory;
+      const matchBrand = !selectedBrand || car.brand === selectedBrand;
+
+      return (
+        matchModel &&
+        matchLocation &&
+        matchPrice &&
+        matchYear &&
+        matchBodyType &&
+        matchCategory &&
+        matchBrand
+      );
     });
 
     if (selectedTransmission) {
@@ -68,6 +118,14 @@ export default function AdvancedSearchScreen() {
         (car) =>
           car.specs?.transmission?.[locale]?.toLowerCase() ===
           selectedTransmission.toLowerCase()
+      );
+    }
+
+    if (selectedEngine) {
+      filtered = filtered.filter(
+        (car) =>
+          car.specs?.fuelType?.[locale]?.toLowerCase() ===
+          selectedEngine.toLowerCase()
       );
     }
 
@@ -80,10 +138,12 @@ export default function AdvancedSearchScreen() {
   return (
     <View className="flex-1 bg-[#F9FAFB]">
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 100 }}>
-        {/* Location Input */}
         <LocationInput location={location} setLocation={setLocation} />
 
-        {/* Model Selector */}
+        <BrandSelector selected={selectedBrand} setSelected={setSelectedBrand} />
+        <BodyTypeSelector selected={selectedBodyType} setSelected={setSelectedBodyType} />
+        <CategorySelector selected={selectedCategory} setSelected={setSelectedCategory} />
+
         <ModelSelector
           selectedModels={selectedModels}
           modelOptions={modelOptions}
@@ -91,31 +151,38 @@ export default function AdvancedSearchScreen() {
           setModelModalVisible={setModelModalVisible}
         />
 
-        {/* Price Range Slider */}
         <PriceRangeSlider
-          min={50000}
-          max={250000}
+          min={minPriceDefault}
+          max={maxPriceDefault}
           value={priceRange}
           onValueChange={setPriceRange}
         />
 
-        {/* Model Year Range Slider */}
         <ModelYearRangeSlider
-          initialValue={[minYear, maxYear]}
+          min={minYearDefault}
+          max={maxYearDefault}
+          value={[minYear, maxYear]}
           onValueChange={(val) => {
-            setMinYear(val[0]);
-            setMaxYear(val[1]);
+            if (Array.isArray(val)) {
+              setMinYear(val[0]);
+              setMaxYear(val[1]);
+            }
           }}
         />
 
-        {/* Transmission Selector */}
         <TransmissionSelector
           selected={selectedTransmission}
           setSelected={setSelectedTransmission}
         />
+
+        <EngineSelector
+          selected={selectedEngine}
+          setSelected={setSelectedEngine}
+          engineOptions={engineOptions}
+          locale={locale}
+        />
       </ScrollView>
 
-      {/* Action Buttons - Fixed to bottom */}
       <View className="absolute bottom-0 left-0 right-0 bg-white px-4 py-4 flex-row border-t border-gray-200">
         <TouchableOpacity
           onPress={clearModels}
@@ -132,7 +199,6 @@ export default function AdvancedSearchScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Model Modal */}
       <ModelSelectModal
         visible={modelModalVisible}
         onClose={() => setModelModalVisible(false)}

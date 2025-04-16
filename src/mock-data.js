@@ -343,7 +343,7 @@ const carsData = [
     ],
     status: "new",
     modelYear: {
-      en: "Full Model 2023",
+      en: "Full Model 2020",
       ar: "الطراز الكامل 2023",
     },
     cashPrice: 146000,
@@ -372,7 +372,7 @@ const carsData = [
         en: "Normal, Sport, Sand, Mud",
         ar: "عادي رياضي الرمال الطين",
       },
-      year: 2023,
+      year: 2020,
       engine: {
         en: "1.6L Turbo",
         ar: "1.6 لتر توربو",
