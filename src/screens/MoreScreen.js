@@ -13,15 +13,19 @@ import Alyusr from '../assets/images/alyusr.png';
 export default function MoreScreen({ navigation }) {
   const menuItems = [
     { id: 1, icon: 'call-outline', title: 'Call us' },
-    { id: 2, icon: 'information-circle-outline', title: 'About Syarah' },
-    { id: 3, icon: 'document-text-outline', title: 'Terms and Conditions' },
-    { id: 4, icon: 'shield-checkmark-outline', title: 'Privacy Policy' }
+    { id: 2, icon: 'mail-outline', title: 'Contact Us' }, // Added Contact Us option
+    { id: 3, icon: 'information-circle-outline', title: 'About Syarah' },
+    { id: 4, icon: 'document-text-outline', title: 'Terms and Conditions' },
+    { id: 5, icon: 'shield-checkmark-outline', title: 'Privacy Policy' }
   ];
 
   const handlePress = (item) => {
     switch (item.title) {
       case 'Call us':
-        Linking.openURL('tel:920002470'); // Replace with your actual number
+        Linking.openURL('tel:920002470');
+        break;
+      case 'Contact Us':
+        navigation.navigate('ContactUs'); // Navigate to ContactUs screen
         break;
       case 'About Syarah':
         navigation.navigate('About');
