@@ -27,6 +27,35 @@
       "price_low": "Price (Low to High)",
       "price_high": "Price (High to Low)"
     },
+    "gallery": {
+      "title": "Gallery"
+    },
+    "filtered_cars": {
+      "title": "Filtered Cars"
+    },
+    "refine_search": {
+      "title": "Refine Search"
+    },
+    "compare": {
+      "builder_title": "Car Comparison",
+      "result_title": "Comparison Results",
+      "select_brand": "Select Brand",
+      "select_model": "Select Model",
+      "select_year": "Select Year",
+      "compare_now": "Compare Now"
+    },
+    "financial": {
+      "cash_brand": "Select Brand (Cash)",
+      "cash_model": "Select Model (Cash)",
+      "cash_category": "Select Category (Cash)",
+      "cash_year": "Select Year (Cash)",
+      "cash_bank": "Select Bank (Cash)",
+      "finance_brand": "Select Brand (Finance)",
+      "finance_model": "Select Model (Finance)",
+      "finance_category": "Select Category (Finance)",
+      "finance_year": "Select Year (Finance)",
+      "finance_bank": "Select Bank (Finance)"
+    },
     "more": {
       "company_name": "Alromaih Motors",
       "tagline": "Premium Car Dealership",
@@ -52,7 +81,7 @@
       "section6_title": "6. Changes to This Privacy Policy",
       "section6_content": "Al Rumaih Cars reserves the right to update or change this Privacy Policy at any time. Any changes will be posted on this page. By using our application or services, you consent to the collection and use of your information as described in this Privacy Policy. If you have any questions about our Terms of Service or Privacy Policy, please contact us through our 'Contact Us' page."
     },
-   "about": {
+    "about": {
       "heading": "About Al Rumaih Cars",
       "description": "Since 1996, we've embarked on a journey full of passion and innovation toward a bright future in the automotive world. With confidence and a clear vision, we have built bridges of trust with our clients and achieved continuous success we are proud of.",
       "vision_title": "Creating a Massive Entity",

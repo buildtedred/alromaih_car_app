@@ -18,6 +18,35 @@
       "title": "جميع السيارات",
       "no_cars": "لا توجد سيارات متاحة"
     },
+    "gallery": {
+      "title": "معرض الصور"
+    },
+    "filtered_cars": {
+      "title": "السيارات المصفاة"
+    },
+    "refine_search": {
+      "title": "تصفية البحث"
+    },
+    "compare": {
+      "builder_title": "مقارنة السيارات",
+      "result_title": "نتائج المقارنة",
+      "select_brand": "اختر الماركة",
+      "select_model": "اختر الطراز",
+      "select_year": "اختر السنة",
+      "compare_now": "ابدأ المقارنة"
+    },
+    "financial": {
+      "cash_brand": "اختر ماركة السيارة (نقدًا)",
+      "cash_model": "اختر طراز السيارة (نقدًا)",
+      "cash_category": "اختر الفئة (نقدًا)",
+      "cash_year": "اختر سنة الصنع (نقدًا)",
+      "cash_bank": "اختر البنك (نقدًا)",
+      "finance_brand": "اختر ماركة السيارة (تمويل)",
+      "finance_model": "اختر الطراز (تمويل)",
+      "finance_category": "اختر الفئة (تمويل)",
+      "finance_year": "اختر السنة (تمويل)",
+      "finance_bank": "اختر البنك (تمويل)"
+    },
     "more": {
       "company_name": "الروميح",
       "tagline": "شراء سيارة جديدة",
