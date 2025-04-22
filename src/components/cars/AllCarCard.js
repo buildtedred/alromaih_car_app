@@ -14,13 +14,18 @@ export default function AllCarCard({ car, onPress }) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="bg-white rounded-2xl shadow px-4 py-3 mb-4 mx-1"
+      className="bg-white rounded-2xl shadow px-5 py-4 mb-4 mx-1"
     >
       <View className="flex-row items-center">
         <Image
           source={car.image}
           resizeMode="contain"
-          style={{ width: 120, height: 100, marginRight: 12 }}
+          style={{
+            width: '38%',
+            height: undefined,
+            aspectRatio: 1.35,
+            marginRight: '4%',
+          }}
         />
 
         <View className="flex-1">

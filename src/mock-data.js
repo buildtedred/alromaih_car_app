@@ -31,6 +31,131 @@ export const brandLogos = {
   toyota: ToyotaLogo,
 };
 
+export const videosData = [
+  {
+    id: 1,
+    title: { en: 'Car Video 1', ar: 'فيديو السيارة 1' },
+    description: {
+      en: 'Let’s unbox the Dongfeng Box! First look review.',
+      ar: 'دعونا نفتح صندوق دونغفانغ! مراجعة النظرة الأولى.',
+    },
+    videoId: 'PUkAIAIzA0I', // from https://youtu.be/PUkAIAIzA0I
+  },
+  {
+    id: 2,
+    title: { en: 'Car Video 2', ar: 'فيديو السيارة 2' },
+    description: {
+      en: 'Owning a Corvette C8 in Pakistan!',
+      ar: 'امتلاك كورفيت C8 في باكستان!',
+    },
+    videoId: 'FbatfY_3Ymw', // from https://youtube.com/shorts/FbatfY_3Ymw
+  },
+  {
+    id: 3,
+    title: { en: 'Car Video 3', ar: 'فيديو السيارة 3' },
+    description: {
+      en: 'Experience the First Night Car Mela in Lahore.',
+      ar: 'عش تجربة أول معرض سيارات ليلي في لاهور.',
+    },
+    videoId: 'ck7RGv4sJZM', // from https://youtube.com/shorts/ck7RGv4sJZM
+  },
+  {
+    id: 4,
+    title: { en: 'Car Video 4', ar: 'فيديو السيارة 4' },
+    description: {
+      en: 'The maintenance cost 10 lakhs!',
+      ar: 'تكلفة الصيانة 10 لاك!',
+    },
+    videoId: 'VATHDIChgwI', // from https://youtube.com/shorts/VATHDIChgwI
+  },
+  {
+    id: 5,
+    title: { en: 'Car Video 5', ar: 'فيديو السيارة 5' },
+    description: {
+      en: 'Driving experience of the most powerful SUV.',
+      ar: 'تجربة قيادة لأقوى سيارة SUV.',
+    },
+    videoId: '-2oIyITP4Pc', // from https://youtube.com/shorts/-2oIyITP4Pc
+  },
+  {
+    id: 7,
+    title: { en: 'Car Video 6', ar: 'فيديو السيارة 6' },
+    description: {
+      en: 'Most insane car wrap ever seen!',
+      ar: 'أغرب تغليف سيارة على الإطلاق!',
+    },
+    videoId: 'RRtXx74rWoA', // from https://youtube.com/shorts/RRtXx74rWoA
+  },
+  
+  {
+    id: 6,
+    title: { en: 'Car Video 6', ar: 'فيديو السيارة 6' },
+    description: {
+      en: 'Most insane car wrap ever seen!',
+      ar: 'أغرب تغليف سيارة على الإطلاق!',
+    },
+    videoId: 'RRtXx74rWoA', // from https://youtube.com/shorts/RRtXx74rWoA
+  },
+];
+
+
+export const newsData = [
+  {
+    id: 1,
+    title: {
+      en: 'Dongfeng Box Launched in Riyadh',
+      ar: 'إطلاق دونغفنغ بوكس في الرياض',
+    },
+    description: {
+      en: 'An exciting electric SUV joins the Saudi market with top features.',
+      ar: 'سيارة SUV كهربائية تنضم للسوق السعودي بمواصفات رائعة.',
+    },
+    image: require('./assets/images/car11.jpg'),
+    date: 'April 20, 2025',
+  },
+  {
+    id: 2,
+    title: {
+      en: 'Corvette C8: The Beast Arrives',
+      ar: 'كورفيت C8: الوحش يصل',
+    },
+    description: {
+      en: 'Pakistan welcomes the powerful sports car — a game changer.',
+      ar: 'باكستان ترحب بسيارة السباق القوية — تغيير قواعد اللعبة.',
+    },
+    image: require('./assets/images/car12.jpg'),
+    date: 'April 18, 2025',
+  },
+  {
+    id: 3,
+    title: {
+      en: 'Top 5 Cars of 2025 (So Far)',
+      ar: 'أفضل 5 سيارات لعام 2025 (حتى الآن)',
+    },
+    description: {
+      en: 'A detailed list of the most impressive releases this year.',
+      ar: 'قائمة تفصيلية لأبرز الإصدارات هذا العام.',
+    },
+    image: require('./assets/images/car13.jpg'),
+    date: 'April 16, 2025',
+  },
+  {
+    id: 4,
+    title: {
+      en: 'Maintenance Tips for Summer Driving',
+      ar: 'نصائح صيانة لقيادة آمنة في الصيف',
+    },
+    description: {
+      en: 'Ensure your car stays cool and efficient this season.',
+      ar: 'حافظ على برودة وكفاءة سيارتك هذا الموسم.',
+    },
+    image: require('./assets/images/car14.jpg'),
+    date: 'April 15, 2025',
+  },
+];
+
+
+
 
 
 // Model SVGs - Added SVG icons for car models
@@ -174,12 +299,7 @@ const brands = {
     logo: brandLogos.nissan,
     models: ["altima", "maxima", "rogue", "pathfinder", "murano"],
   },
-  kia: {
-    en: "Kia",
-    ar: "كيا",
-    logo: brandLogos.kia,
-    models: ["k5", "forte", "sportage", "sorento", "telluride"],
-  },
+  
   ford: {
     en: "Ford",
     ar: "فورد",
@@ -465,7 +585,7 @@ const carsData = [
       en: "Jetour T2 Plus",
       ar: "جيتور T2 بلس",
     },
-    brand: "jetour",
+    brand: "honda",
     model: "t2-plus",
     modelSVG: modelSVGs["jetour-t2-plus"],
     bodyType: "suv",
@@ -585,7 +705,7 @@ const carsData = [
       en: "Jetour T2 Sport",
       ar: "جيتور T2 سبورت",
     },
-    brand: "jetour",
+    brand: "hyundai",
     model: "t2-sport",
     modelSVG: modelSVGs["jetour-t2-sport"],
     bodyType: "suv",
@@ -706,7 +826,7 @@ const carsData = [
       en: "Jetour X70",
       ar: "جيتور X70",
     },
-    brand: "jetour",
+    brand: "nissan",
     model: "x70",
     modelSVG: modelSVGs["jetour-x70"],
     bodyType: "suv",
@@ -946,7 +1066,7 @@ const carsData = [
       en: "Jetour Dashing",
       ar: "جيتور داشينج",
     },
-    brand: "jetour",
+    brand: "ford",
     model: "dashing",
     modelSVG: modelSVGs["jetour-dashing"],
     bodyType: "crossover",
@@ -1066,7 +1186,7 @@ const carsData = [
       en: "Jetour X95",
       ar: "جيتور X95",
     },
-    brand: "jetour",
+    brand: "chevrolet",
     model: "x95",
     modelSVG: modelSVGs["jetour-x95"],
     bodyType: "suv",
@@ -1186,7 +1306,7 @@ const carsData = [
       en: "Jetour T1",
       ar: "جيتور T1",
     },
-    brand: "jetour",
+    brand: "mg",
     model: "t1",
     modelSVG: modelSVGs["jetour-t1"],
     bodyType: "suv",

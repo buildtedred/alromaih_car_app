@@ -1,8 +1,9 @@
+// ✅ FeaturedCars.js
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import CarCard from './CarCard';
-import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import CarCard from './CarCard';
 
 const FeaturedCars = ({ cars }) => {
   const { t } = useTranslation();
@@ -10,14 +11,13 @@ const FeaturedCars = ({ cars }) => {
 
   return (
     <View>
-      <View className="flex-row justify-between items-center mb-4 px-2">
-        <Text className="text-2xl font-bold">
+      <View className="flex-row justify-between items-center px-4 mb-3">
+        <Text className="text-xl font-bold text-gray-900">
           {t('screens.home.title', { defaultValue: 'Featured Cars' })}
         </Text>
-
         <TouchableOpacity onPress={() => navigation.navigate('AllCars')}>
-          <Text className="text-blue-600 text-base font-medium">
-            {t('common.see_all', { defaultValue: 'See All' })}
+          <Text className="text-sm font-medium" style={{ color: '#46194F' }}>
+            {t('common.view_all', { defaultValue: 'View All' })}
           </Text>
         </TouchableOpacity>
       </View>

@@ -8,6 +8,13 @@ export default function LocationInput({ location, setLocation }) {
     { key: 'arar', label: 'Ar Ar' },
   ];
 
+  const handleSelect = (key) => {
+    if (typeof setLocation === 'function') {
+      // Toggle: if already selected, deselect
+      setLocation(location === key ? null : key);
+    }
+  };
+
   return (
     <View className="mb-6">
       <Text className="text-[16px] font-semibold text-gray-800 mb-3">Select Location</Text>
@@ -18,7 +25,7 @@ export default function LocationInput({ location, setLocation }) {
           return (
             <React.Fragment key={city.key}>
               <TouchableOpacity
-                onPress={() => setLocation(city.key)}
+                onPress={() => handleSelect(city.key)}
                 className={`flex-1 py-3 flex-row items-center justify-center ${
                   isSelected ? 'bg-brand' : 'bg-white'
                 }`}

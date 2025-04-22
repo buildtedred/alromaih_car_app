@@ -18,6 +18,9 @@ import { useLocale } from '../../contexts/LocaleContext';
 
 const { width } = Dimensions.get('window');
 
+// Calculate card-width-based tab width
+const tabWidth = (width - (width * 0.02 * 2 * 3) - 32) / 3; // same logic as 31.3% with 1% margin each side
+
 const getModels = (locale) => {
   const seen = new Set();
   return carsData.reduce((acc, car) => {
@@ -82,7 +85,7 @@ const CategoryTabs = ({ onSelectCategory }) => {
     <TouchableOpacity
       key={index}
       onPress={() => handlePress(item.key)}
-      className="w-[30%] mx-[1.5%] mb-3 p-4 bg-white rounded-xl shadow items-center"
+      className="w-[31.3%] mx-[1%] mb-3 p-4 bg-white rounded-[5px] shadow-2xl items-center"
     >
       <Icon name={getIconForItem(item.key) || 'car-sports'} size={26} color="#46194F" />
       <Text className="mt-2 text-xs font-semibold text-gray-800 text-center">
@@ -92,8 +95,8 @@ const CategoryTabs = ({ onSelectCategory }) => {
   );
 
   return (
-    <View className="mt-4">
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-4 mb-2">
+    <View className="pt-6 ml-2 mr-2 rounded-[5px] bg-white shadow-2xl">
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-4 mb-4">
         {TABS.map(({ key }) => (
           <TouchableOpacity
             key={key}
@@ -101,7 +104,8 @@ const CategoryTabs = ({ onSelectCategory }) => {
               setActiveTab(key);
               setPageIndex(0);
             }}
-            className={`w-[110] items-center py-3 mb-4 font-semibold rounded-[5px] mx-1 ${
+            style={{ width: tabWidth }}
+            className={`items-center py-3 mb-4 font-semibold rounded-[2px] mx-[1%] ${
               activeTab === key ? 'bg-[#46194F]' : 'bg-gray-200'
             }`}
           >
@@ -136,7 +140,7 @@ const CategoryTabs = ({ onSelectCategory }) => {
         })}
       </PagerView>
 
-      <View className="flex-row justify-center mt-2">
+      <View className="flex-row justify-center mb-6">
         {pagedData.map((_, i) => (
           <View
             key={i}

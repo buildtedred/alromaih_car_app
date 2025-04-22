@@ -7,12 +7,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from '../../screens/HomeScreen';
 import MoreScreen from '../../screens/MoreScreen';
 import FindCarScreen from '../../screens/FindCarsScreen';
-import ContactUsScreen from '../../screens/ContectUsScreen';
 import AllCarScreen from '../../screens/AllCarsScreen';
 import Gallery from '../../screens/Gallery';
 import FilteredCarsScreen from '../../screens/FilteredCarsScreen';
 import SearchScreen from '../../screens/SearchScreen';
 import AdvancedSearchScreen from '../../screens/AdvancedSearchScreen';
+import CompareBuilderScreen from '../../screens/CompareBuilderScreen';
+import CompareScreen from '../../screens/CompareScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -67,12 +68,12 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen
-        name="ContactUs"
-        component={ContactUsScreen}
+        name="Compare"
+        component={CompareBuilderScreen}
         options={{
-          title: 'Contact Us',
+          title: 'Compare',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="call" color={color} size={30} />
+            <Ionicons name="git-compare" color={color} size={30} />
           ),
         }}
       />
@@ -92,11 +93,36 @@ function BottomTabs() {
 export default function MainNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }} />
-      <Stack.Screen name="Gallery" component={Gallery} options={{ title: 'Gallery' }} />
-      <Stack.Screen name="FilteredCars" component={FilteredCarsScreen} options={{ title: 'Filtered Cars' }} />
-      <Stack.Screen name="Search" component={SearchScreen} options={{ title: 'Search' }} />
-      <Stack.Screen name="AdvancedSearch" component={AdvancedSearchScreen} options={{ title: 'Refine Your Search' }} />
+      <Stack.Screen
+        name="Main"
+        component={BottomTabs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Gallery"
+        component={Gallery}
+        options={{ title: 'Gallery' }}
+      />
+      <Stack.Screen
+        name="FilteredCars"
+        component={FilteredCarsScreen}
+        options={{ title: 'Filtered Cars' }}
+      />
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{ title: 'Search' }}
+      />
+      <Stack.Screen
+        name="AdvancedSearch"
+        component={AdvancedSearchScreen}
+        options={{ title: 'Refine Your Search' }}
+      />
+      <Stack.Screen
+        name="CompareScreen"
+        component={CompareScreen}
+        options={{ title: 'Comparison' }}
+      />
     </Stack.Navigator>
   );
 }

@@ -1,0 +1,45 @@
+// ✅ PopularCars.js
+import React from 'react';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
+import { useRecentlyViewed } from '../../contexts/RecentlyViewedContext';
+import PopularCarCard from './PopularCarCard';
+
+export default function PopularCars({ cars }) {
+  const { t } = useTranslation();
+  const navigation = useNavigation();
+  const { addToRecentlyViewed } = useRecentlyViewed();
+
+  const handleCarPress = (car) => {
+    addToRecentlyViewed(car);
+    const { brandLogo, image, ...safeCar } = car;
+    navigation.navigate('Gallery', { car: safeCar });
+  };
+
+  return (
+    <View>
+      <View className="flex-row justify-between items-center px-4 mb-3">
+        <Text className="text-xl font-bold text-gray-900">
+          {t('home.popularCars', { defaultValue: 'Popular Cars' })}
+        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('AllCars')}>
+          <Text className="text-sm font-medium" style={{ color: '#46194F' }}>
+            {t('common.view_all', { defaultValue: 'View All' })}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <FlatList
+        horizontal
+        data={cars.slice(0, 6)}
+        keyExtractor={(item) => item.id?.toString()}
+        renderItem={({ item }) => (
+          <PopularCarCard car={item} onPress={() => handleCarPress(item)} />
+        )}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 8 }}
+      />
+    </View>
+  );
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, FlatList, ActivityIndicator, SafeAreaView
+  View, Text, FlatList, ActivityIndicator, SafeAreaView, Image
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { fetchCars } from '../mock-data';
@@ -31,6 +31,16 @@ export default function AllCarsScreen() {
     loadCars();
   }, [route.params]);
 
+  const handlePress = (car) => {
+    const imageUri = Image.resolveAssetSource(car.image).uri;
+    navigation.navigate('Gallery', {
+      car: {
+        ...car,
+        imageUri,
+      }
+    });
+  };
+
   if (loading) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center bg-white">
@@ -58,13 +68,10 @@ export default function AllCarsScreen() {
       <FlatList
         data={cars}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
+        contentContainerStyle={{ paddingHorizontal: '4%', paddingBottom: 24 }}
         renderItem={({ item }) => (
-          <View style={{ width: '100%', maxWidth: 400, paddingHorizontal: 13 }}>
-            <AllCarCard
-              car={item}
-              onPress={() => navigation.navigate('Gallery', { car: item })}
-            />
+          <View style={{ width: '100%' }}>
+            <AllCarCard car={item} onPress={() => handlePress(item)} />
           </View>
         )}
         showsVerticalScrollIndicator={false}

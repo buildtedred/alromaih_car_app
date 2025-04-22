@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useLocale } from '../contexts/LocaleContext';
-import { getAllSpecGroups, brandLogos } from '../mock-data';
+import carsData, { getAllSpecGroups, brandLogos } from '../mock-data';
 
 const { width } = Dimensions.get('window');
 
@@ -20,16 +20,26 @@ export default function GalleryScreen({ route }) {
   const [activeTab, setActiveTab] = useState('specs');
   const { locale } = useLocale();
 
+  const fullCar = useMemo(() => {
+    const fromData = carsData.find((c) => c.id === car.id);
+    return {
+      ...car,
+      image: fromData?.image,
+      brandLogo: fromData?.brandLogo,
+      additionalImages: fromData?.additionalImages,
+    };
+  }, [car.id]);
+
   const getLang = (field) =>
     typeof field === 'object' ? field?.[locale] : field;
 
-  const specGroups = getAllSpecGroups(car, locale);
-  const images = [car.image, ...(car.additionalImages || [])].map((img, index) => ({
+  const specGroups = getAllSpecGroups(fullCar, locale);
+  const images = [fullCar.image, ...(fullCar.additionalImages || [])].map((img, index) => ({
     id: index + 1,
     source: img,
   }));
 
-  const BrandLogo = brandLogos[car.brand];
+  const BrandLogo = brandLogos[fullCar.brand];
 
   const getFeatureLabel = (key, locale) => {
     const labels = {
@@ -79,13 +89,13 @@ export default function GalleryScreen({ route }) {
         <View className="flex-row justify-between items-start">
           <View className="flex-1">
             <Text className="text-xl font-bold text-[#46194F] mb-1">
-              {getLang(car.name)}
+              {getLang(fullCar.name)}
             </Text>
             <Text className="text-sm text-gray-500">
-              {getLang(car.modelYear)}
+              {getLang(fullCar.modelYear)}
             </Text>
             <Text className="text-2xl font-extrabold text-[#46194F] mt-3">
-              {car.cashPrice?.toLocaleString()} {locale === 'en' ? 'SAR' : 'ر.س'}
+              {fullCar.cashPrice?.toLocaleString()} {locale === 'en' ? 'SAR' : 'ر.س'}
             </Text>
           </View>
 
@@ -96,8 +106,7 @@ export default function GalleryScreen({ route }) {
               </View>
               <View className="bg-[#46194F] px-3 py-1 mt-1 rounded-full">
                 <Text className="text-white text-xs font-semibold">
-                  {locale === 'en' ? 'From' : 'من'} {car.installmentPrice}{' '}
-                  {locale === 'en' ? '/mo' : '/شهر'}
+                  {locale === 'en' ? 'From' : 'من'} {fullCar.installmentPrice} {locale === 'en' ? '/mo' : '/شهر'}
                 </Text>
               </View>
             </View>
@@ -108,10 +117,10 @@ export default function GalleryScreen({ route }) {
       <View className="bg-white mx-4 mt-4 rounded-2xl px-4 py-4 shadow-md">
         <View className="flex-row justify-between">
           {[
-            { icon: 'calendar', label: 'year', value: car.specs.year },
-            { icon: 'tachometer', label: 'mileage', value: car.specs?.mileage || '0 km' },
-            { icon: 'gear', label: 'transmission', value: getLang(car.specs.transmission) },
-            { icon: 'users', label: 'seats', value: getLang(car.specs.seats) },
+            { icon: 'calendar', label: 'year', value: fullCar.specs.year },
+            { icon: 'tachometer', label: 'mileage', value: fullCar.specs?.mileage || '0 km' },
+            { icon: 'gear', label: 'transmission', value: getLang(fullCar.specs.transmission) },
+            { icon: 'users', label: 'seats', value: getLang(fullCar.specs.seats) },
           ].map((item) => (
             <View key={item.label} className="items-center flex-1">
               <View className="bg-gray-100 p-2.5 rounded-full mb-2">
@@ -176,7 +185,7 @@ export default function GalleryScreen({ route }) {
           ))
         ) : (
           <View>
-            {Object.entries(car.features)
+            {Object.entries(fullCar.features)
               .filter(([_, enabled]) => enabled)
               .map(([key], idx) => (
                 <View key={idx} className="mb-2">

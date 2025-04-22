@@ -29,15 +29,23 @@ export default function AppHeader() {
 
       {/* Tappable search bar (navigates to Search screen) */}
       <TouchableOpacity
-        onPress={() => navigation.navigate('Search')}
-        className="flex-row items-center bg-gray-100 rounded-xl px-3 py-2"
-        activeOpacity={0.7}
-      >
-        <Feather name="search" size={20} color="#999" />
-        <Text className="ml-2 text-sm text-gray-600">
-          {locale === 'en' ? 'Search used cars' : 'ابحث عن السيارات'}
-        </Text>
-      </TouchableOpacity>
+  onPress={() => navigation.navigate('Search')}
+  className="flex-row items-center bg-[#F1F3F5] rounded-[10px] px-4 py-3 mt-2"
+  activeOpacity={0.8}
+  style={{
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.07,
+    shadowRadius: 3,
+    elevation: 2,
+  }}
+>
+  <Feather name="search" size={18} color="#777" />
+  <Text className="ml-3 text-sm text-gray-700 font-medium">
+    {locale === 'en' ? 'Search used cars' : 'ابحث عن السيارات'}
+  </Text>
+</TouchableOpacity>
+
     </View>
   );
 }
