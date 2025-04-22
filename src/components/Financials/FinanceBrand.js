@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, SafeAreaView, ScrollView } fro
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const CashBrand = () => {
+const FinanceBrand = () => {
   const [searchBrand, setSearchBrand] = useState("");
   const navigation = useNavigation();
 
@@ -19,14 +19,12 @@ const CashBrand = () => {
     { name: "Ford", display: "F", icon: null, color: "#46194F" }
   ];
 
-  const filteredBrands = brands.filter(brand => 
+  const filteredBrands = brands.filter(brand =>
     brand.name.toLowerCase().includes(searchBrand.toLowerCase())
   );
 
   const handleBrandSelection = (brandName) => {
-    navigation.navigate('CashModel', { 
-      brand: brandName,
-    });
+    navigation.navigate('FinanceModel', { brand: brandName });
   };
 
   return (
@@ -56,7 +54,7 @@ const CashBrand = () => {
         </View>
 
         {/* Content Section */}
-        <ScrollView className="p-4" showsVerticalScrollIndicator={false}>
+        <ScrollView className="p-4 pt-2" showsVerticalScrollIndicator={false}>
           {/* Back Button */}
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -80,35 +78,32 @@ const CashBrand = () => {
             />
           </View>
 
-          {/* Brand Grid */}
+          {/* Brand Grid (Compact Style) */}
           <View className="flex-row flex-wrap justify-between">
             {filteredBrands.map((brand) => (
               <TouchableOpacity
                 key={brand.name}
                 onPress={() => handleBrandSelection(brand.name)}
-                className="w-[31%] bg-white border border-brand-light rounded-lg p-3 mb-3 items-center justify-center shadow-sm h-[34px]"
+                className="w-[31%] border border-brand-dark rounded-md px-2 py-1 mb-2 bg-white shadow-sm items-center justify-center h-[34px]"
                 activeOpacity={0.7}
               >
                 {brand.icon ? (
-                  <View className="w-5 h-5 items-center justify-center ">
-                    <Ionicons 
-                      name={brand.icon} 
-                      size={24} 
-                      color={brand.color || "#46194F"} 
-                    />
-                  </View>
+                  <Ionicons 
+                    name={brand.icon}
+                    size={20}
+                    color={brand.color || "#46194F"}
+                    className="mb-1"
+                  />
                 ) : (
-                  <View className="w-3 h-3 items-center justify-center   rounded-full bg-brand-light">
-                    <Text 
-                      className="text-xl font-bold"
-                      style={{ color: brand.color || "#46194F" }}
-                    >
-                      {brand.display || brand.name.charAt(0)}
-                    </Text>
-                  </View>
+                  <Text
+                    className="text-base font-bold mb-1"
+                    style={{ color: brand.color || "#46194F" }}
+                  >
+                    {brand.display || brand.name.charAt(0)}
+                  </Text>
                 )}
-                <Text 
-                  className="text-brand-primary text-sm font-medium"
+                <Text
+                  className="text-[10px] text-brand-primary text-center"
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
@@ -123,4 +118,4 @@ const CashBrand = () => {
   );
 };
 
-export default CashBrand;
+export default FinanceBrand;

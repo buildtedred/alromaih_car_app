@@ -25,7 +25,7 @@ const Financials = () => {
           </View>
 
           <View className="items-center mt-6">
-            <FinanceImage width={310} height={310} />
+            <FinanceImage width={100} height={100} />
           </View>
         </View>
       </ScrollView>

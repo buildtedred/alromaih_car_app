@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, SafeAreaView, ScrollView } fro
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const CashModel = () => {
+const FinanceModel = () => {
   const [searchModel, setSearchModel] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
@@ -84,7 +84,7 @@ const CashModel = () => {
               <TouchableOpacity
                 key={model}
                 onPress={() =>
-                  navigation.navigate('CashCategory', {
+                  navigation.navigate('FinanceCategory', {
                     brand,
                     model,
                   })
@@ -104,4 +104,4 @@ const CashModel = () => {
   );
 };
 
-export default CashModel;
+export default FinanceModel;

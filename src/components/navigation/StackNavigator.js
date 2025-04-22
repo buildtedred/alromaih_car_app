@@ -22,7 +22,15 @@ import ContactUsScreen from '../moresection/ContactUsScreen';
 // Financial Flow Components
 import CashBrand from '../../components/Financials/CashBrand';
 import CashModel from '../../components/Financials/CashModel';
-import CashCatagory from '../../components/Financials/CashCatagory';
+import CashCategory from '../Financials/CashCategory';
+import CashYear from '../../components/Financials/CashYear';
+import CashBank from'../../components/Financials/CashBank';
+import FinanceBrand from '../../components/Financials/FinanceBrand';
+import FinanceModel from '../../components/Financials/FinanceModel';
+import FinanceCategory from '../../components/Financials/FinanceCategory';
+import FinanceYear from '../../components/Financials/FinanceYear';
+import FinanceBank from '../../components/Financials/FinanceBank';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -30,11 +38,13 @@ const Stack = createNativeStackNavigator();
 // Custom Center Tab Icon
 const CenterTabIcon = ({ color }) => (
   <View style={{
+    width:50,
+    height:50,
     position: 'absolute',
-    top: -20,
-    backgroundColor: '#f8f8f8',
+    top: -25,
+    backgroundColor: 'white',
     borderRadius: 50,
-    padding: 8,
+    padding: 5,
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -49,7 +59,7 @@ function BottomTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#003366',
+        tabBarActiveTintColor: '#46194F',
         tabBarInactiveTintColor: '#9CA3AF',
         tabBarStyle: {
           height: 80,
@@ -91,8 +101,8 @@ function BottomTabs() {
         component={Financials}
         options={{
           title: 'Finance',
-          tabBarIcon: ({ color }) => <CenterTabIcon color={color} />,
-          tabBarLabel: () => null,
+          tabBarIcon: ({ color }) => <CenterTabIcon color={color} size={30} />,
+          // tabBarLabel: () => null,
         }}
       />
       <Tab.Screen
@@ -167,12 +177,66 @@ export default function MainNavigator() {
         })} 
       />
       <Stack.Screen 
-        name="CashCatagory" 
-        component={CashCatagory} 
+        name="CashCategory" 
+        component={CashCategory} 
         options={({ route }) => ({ 
           title: `${route.params?.brand || ''} ${route.params?.model || 'Model'}`,
           headerBackTitle: 'Back',
         })}
+      />
+      <Stack.Screen 
+  name="CashYear" 
+  component={CashYear} 
+  options={({ route }) => ({ 
+    title: `${route.params?.model || ''} - Year`,
+    headerBackTitle: 'Back',
+  })}
+/>
+<Stack.Screen 
+  name="CashBank" 
+  component={CashBank} 
+  options={{ title: 'Select Bank' }} 
+/>
+
+<Stack.Screen 
+        name="FinanceBrand" 
+        component={FinanceBrand} 
+        options={{ 
+          title: 'Select Brand',
+          headerBackTitle: 'Back',
+        }} 
+      />
+      <Stack.Screen 
+        name="FinanceModel" 
+        component={FinanceModel} 
+        options={{ 
+          title: 'Select Model',
+          headerBackTitle: 'Back',
+        }} 
+      />
+      <Stack.Screen 
+        name="FinanceCategory" 
+        component={FinanceCategory} 
+        options={{ 
+          title: 'Select Category',
+          headerBackTitle: 'Back',
+        }} 
+      />
+       <Stack.Screen 
+        name="FinanceYear" 
+        component={FinanceYear} 
+        options={{ 
+          title: 'Select Year',
+          headerBackTitle: 'Back',
+        }} 
+      />
+       <Stack.Screen 
+        name="FinanceBank" 
+        component={FinanceBank} 
+        options={{ 
+          title: 'Select bank',
+          headerBackTitle: 'Back',
+        }} 
       />
     </Stack.Navigator>
   );
