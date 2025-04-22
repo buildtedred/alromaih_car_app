@@ -1,9 +1,10 @@
 import React from 'react';
+import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-// Screens
+// Screen Imports
 import HomeScreen from '../../screens/HomeScreen';
 import MoreScreen from '../../screens/MoreScreen';
 import FindCarScreen from '../../screens/FindCarsScreen';
@@ -18,11 +19,31 @@ import CompareScreen from '../../screens/CompareScreen';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+// Custom Center Tab Icon
+const CenterTabIcon = ({ color }) => (
+  <View style={{
+    width:50,
+    height:50,
+    position: 'absolute',
+    top: -25,
+    backgroundColor: 'white',
+    borderRadius: 50,
+    padding: 5,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  }}>
+    <Ionicons name="add-circle" color={color} size={40} />
+  </View>
+);
+
 function BottomTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#003366',
+        tabBarActiveTintColor: '#46194F',
         tabBarInactiveTintColor: '#9CA3AF',
         tabBarStyle: {
           height: 80,
@@ -30,6 +51,8 @@ function BottomTabs() {
           paddingTop: 8,
           backgroundColor: '#f8f8f8',
           borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
         },
         headerShown: false,
         tabBarLabelStyle: {
@@ -43,7 +66,7 @@ function BottomTabs() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <Ionicons name="home" color={color} size={30} />
+            <Ionicons name="home" color={color} size={26} />
           ),
         }}
       />
@@ -53,18 +76,17 @@ function BottomTabs() {
         options={{
           title: 'All Cars',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="car-sport" color={color} size={30} />
+            <Ionicons name="car-sport" color={color} size={26} />
           ),
         }}
       />
       <Tab.Screen
-        name="FindCar"
-        component={FindCarScreen}
+        name="Financials"
+        component={Financials}
         options={{
-          title: 'Find Car',
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="search" color={color} size={30} />
-          ),
+          title: 'Finance',
+          tabBarIcon: ({ color }) => <CenterTabIcon color={color} size={30} />,
+          // tabBarLabel: () => null,
         }}
       />
       <Tab.Screen
@@ -82,7 +104,7 @@ function BottomTabs() {
         component={MoreScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <Ionicons name="menu" color={color} size={30} />
+            <Ionicons name="menu" color={color} size={26} />
           ),
         }}
       />
