@@ -47,7 +47,7 @@ export default function CarCard({ car }) {
   };
 
   return (
-    <View className="w-full h-80 mr-2 mb-5 bg-white rounded-[10px] shadow-md">
+    <View className="w-full h-70 mr-2 mb-5 bg-white rounded-[10px] shadow-md">
       <TouchableOpacity
         activeOpacity={0.97}
         onPressIn={onPressIn}
@@ -57,7 +57,7 @@ export default function CarCard({ car }) {
         className="overflow-hidden rounded-[10px]"
       >
         {/* 🔸 Car Image */}
-        <View className="relative w-full h-40 bg-white px-4 py-2">
+        <View className="relative w-full h-32 mt-3 px-4 py-2">
           <Image
             source={car.image}
             className="w-full h-full"
@@ -98,7 +98,7 @@ export default function CarCard({ car }) {
           </View>
 
           {/* 🔹 Specs */}
-          <View className="flex flex-row items-center justify-between py-3 border-t border-b border-gray-100 mt-2">
+          <View className="flex flex-row items-center justify-between py-3 border-t border-gray-100 mt-2">
             <View className="flex flex-row items-center">
               <Icon name="calendar" size={14} color="#666" />
               <Text className="text-xs text-gray-600 ml-1.5">

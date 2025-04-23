@@ -1,17 +1,20 @@
-
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 
 export default function EngineSelector({ selected, setSelected, engineOptions }) {
+  const { t } = useTranslation();
+
   return (
     <View className="mb-6 px-1 p-6 bg-white border rounded-xl border-gray-300 gap-2">
-
       <View className="flex-row items-center mb-3">
         <View className="w-9 h-9 bg-gray-100 rounded-full items-center justify-center mr-3">
           <Ionicons name="car-outline" size={22} color="#6B7280" />
         </View>
-        <Text className="text-lg font-semibold text-brand">Engine</Text>
+        <Text className="text-lg font-semibold text-brand">
+          {t('car_specs.engine', { defaultValue: 'Engine' })}
+        </Text>
       </View>
 
       <View className="flex-row flex-wrap gap-2">
@@ -30,7 +33,7 @@ export default function EngineSelector({ selected, setSelected, engineOptions })
                   isSelected ? 'text-white font-semibold' : 'text-gray-800'
                 }`}
               >
-                {type}
+                {t(`car_specs.${type}`, { defaultValue: type })}
               </Text>
             </TouchableOpacity>
           );

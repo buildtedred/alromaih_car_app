@@ -11,12 +11,14 @@ import { useNavigation } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import carsData from '../mock-data';
 import { useLocale } from '../contexts/LocaleContext';
+import { useTranslation } from 'react-i18next';
 
 const popularCars = ['Daihatsu Mira', 'Honda City', 'Honda Civic', 'Suzuki Alto'];
 
 export default function SearchScreen() {
   const navigation = useNavigation();
   const { locale } = useLocale();
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState(['All Cars']);
   const [suggestions, setSuggestions] = useState([]);
@@ -75,7 +77,7 @@ export default function SearchScreen() {
         </TouchableOpacity>
         <TextInput
           className="ml-3 flex-1 text-sm text-gray-800"
-          placeholder="Search used cars"
+          placeholder={t('common.search_placeholder')}
           autoFocus
           value={query}
           onChangeText={setQuery}
@@ -101,9 +103,13 @@ export default function SearchScreen() {
       {/* Recent Searches */}
       <View className="mb-6">
         <View className="flex-row justify-between items-center mb-2">
-          <Text className="text-gray-700 font-semibold text-base">Recent searches</Text>
+          <Text className="text-gray-700 font-semibold text-base">
+            {t('screens.search.recent_searches', { defaultValue: 'Recent searches' })}
+          </Text>
           <TouchableOpacity>
-            <Text className="text-blue-500 text-sm">View All</Text>
+            <Text className="text-blue-500 text-sm">
+              {t('common.view_all', { defaultValue: 'View All' })}
+            </Text>
           </TouchableOpacity>
         </View>
         {recentSearches.map((item, idx) => (
@@ -113,19 +119,25 @@ export default function SearchScreen() {
             className="bg-gray-100 rounded-xl px-4 py-3 mb-2"
           >
             <Text className="text-gray-800">{item}</Text>
-            <Text className="text-gray-500 text-xs">All Cities, Any Price, Any Year</Text>
+            <Text className="text-gray-500 text-xs">
+              {t('screens.search.recent_filter_note', {
+                defaultValue: 'All Cities, Any Price, Any Year',
+              })}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
 
       <TouchableOpacity onPress={handleAdvancedSearch} className="mb-4">
-  <Text className="text-center text-blue-600 font-semibold">Advanced Search</Text>
-</TouchableOpacity>
-
-
+        <Text className="text-center text-blue-600 font-semibold">
+          {t('screens.search.advanced_search', { defaultValue: 'Advanced Search' })}
+        </Text>
+      </TouchableOpacity>
 
       {/* Popular Cars */}
-      <Text className="text-gray-700 font-semibold text-base mb-2">Popular Used Cars</Text>
+      <Text className="text-gray-700 font-semibold text-base mb-2">
+        {t('screens.search.popular', { defaultValue: 'Popular Used Cars' })}
+      </Text>
       <FlatList
         data={popularCars}
         keyExtractor={(item) => item}

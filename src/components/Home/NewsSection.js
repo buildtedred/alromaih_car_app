@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { newsData } from '../../mock-data';
-import { useLocale } from '../../contexts/LocaleContext';
+import { useNavigation } from '@react-navigation/native';
+import { useLocale } from '../../contexts/LocaleContext'; // ✅ FIXED: Import useLocale
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { newsData } from '../../mock-data';
 
 export default function NewsSection() {
+  const navigation = useNavigation();
   const { locale } = useLocale();
   const primaryColor = '#1C74D9';
   const { width } = Dimensions.get('window');
@@ -23,6 +25,7 @@ export default function NewsSection() {
     <View className="px-4 mb-4">
       <TouchableOpacity
         activeOpacity={0.9}
+        onPress={() => navigation.navigate('NewsDetail', { news: item })}
         className="bg-white rounded-2xl border border-gray-100 flex-row overflow-hidden"
         style={{
           shadowColor: '#000',
@@ -75,12 +78,16 @@ export default function NewsSection() {
 
   return (
     <View className="mb-8">
-      <Text
-        className="text-xl font-bold px-4 mb-4"
-        style={{ color: primaryColor }}
-      >
-        {locale === 'ar' ? 'آخر الأخبار' : 'Latest News'}
-      </Text>
+      <View className="px-4 mb-3 flex-row justify-between items-center">
+        <Text className="text-xl font-bold" style={{ color: primaryColor }}>
+          {locale === 'ar' ? 'آخر الأخبار' : 'Latest News'}
+        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Blog')}>
+          <Text className="text-sm font-semibold" style={{ color: primaryColor }}>
+            {locale === 'ar' ? 'عرض الكل' : 'View All'}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       <FlatList
         data={newsData.slice(0, 3)}

@@ -9,6 +9,8 @@ import {
   ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
+import { useLocale } from '../../contexts/LocaleContext';
 
 export default function ModelSelectModal({
   visible,
@@ -19,11 +21,17 @@ export default function ModelSelectModal({
   search,
   setSearch,
 }) {
+  const { t } = useTranslation();
+  const { locale } = useLocale();
+
+  const getLocalizedName = (name) =>
+    typeof name === 'object' ? name[locale] : name;
+
   return (
     <Modal visible={visible} animationType="slide">
       <View className="flex-1 bg-white px-4 pt-6">
         <Text className="text-[18px] font-bold text-gray-900 mb-5">
-          Search Make or Model
+          {t('advanced.search_make_model', { defaultValue: 'Search Make or Model' })}
         </Text>
 
         <View className="flex-row items-center bg-gray-100 border border-gray-300 rounded-[10px] px-4 py-2 mb-5">
@@ -34,7 +42,9 @@ export default function ModelSelectModal({
             style={{ marginRight: 8 }}
           />
           <TextInput
-            placeholder="Search makes and models..."
+            placeholder={t('advanced.search_placeholder', {
+              defaultValue: 'Search makes and models...',
+            })}
             value={search}
             onChangeText={setSearch}
             placeholderTextColor="#999"
@@ -57,7 +67,9 @@ export default function ModelSelectModal({
                     key={modelKey}
                     className="flex-row items-center bg-brand px-6 py-3 rounded-[10px] mr-2 max-w-[90%]"
                   >
-                    <Text className="text-white text-lg mr-2">{model.name}</Text>
+                    <Text className="text-white text-lg mr-2">
+                      {getLocalizedName(model.name)}
+                    </Text>
                     <TouchableOpacity onPress={() => toggleModel(modelKey)}>
                       <Ionicons name="close" size={16} color="white" />
                     </TouchableOpacity>
@@ -93,7 +105,7 @@ export default function ModelSelectModal({
                       isSelected ? 'text-brand font-semibold' : 'text-gray-800'
                     }`}
                   >
-                    {item.name}
+                    {getLocalizedName(item.name)}
                   </Text>
                 </View>
                 {isSelected && (
@@ -108,7 +120,9 @@ export default function ModelSelectModal({
           className="bg-brand py-3 rounded-xl items-center mt-6 mb-6"
           onPress={onClose}
         >
-          <Text className="text-white font-semibold m-1 text-xl">Apply</Text>
+          <Text className="text-white font-semibold m-1 text-xl">
+            {t('advanced.apply', { defaultValue: 'Apply' })}
+          </Text>
         </TouchableOpacity>
       </View>
     </Modal>

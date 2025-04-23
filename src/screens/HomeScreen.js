@@ -7,12 +7,16 @@ import PopularCars from '../components/cars/PopularCars';
 import FeaturedCars from '../components/cars/FeaturedCars';
 import RecentlyViewedCars from '../components/cars/RecentlyViewedCars';
 import RecommendedCars from '../components/cars/RecommendedCars';
-import NewsSection from '../components/Home/news'; // ✅ Import new news section
+import NewsSection from '../components/Home/NewsSection'; // ✅ Imported Latest News section
 import carsData from '../mock-data';
 import { useNavigation } from '@react-navigation/native';
+import { useLocale } from '../contexts/LocaleContext';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const { direction } = useLocale();
+  const isRTL = direction === 'rtl';
+
   const [selectedBrand, setSelectedBrand] = useState(null);
 
   const featuredCars = useMemo(() => {
@@ -48,11 +52,16 @@ export default function HomeScreen() {
         <AppHeader />
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 40 }}
+        style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+        showsVerticalScrollIndicator={false}
+      >
         <View className="mt-6 mb-4 bg-white rounded-2xl px-2">
-          <CategoryTabs 
+          <CategoryTabs
             onSelectCategory={handleCategorySelect}
             navigation={navigation}
+            isRTL={isRTL}
           />
         </View>
 
@@ -67,25 +76,24 @@ export default function HomeScreen() {
           />
         </View>
 
-        <View className="mt-6">
-          <PopularCars cars={popularCars} />
+        <View className="mt-4">
+          <PopularCars cars={popularCars} isRTL={isRTL} />
         </View>
 
-        <View className="mt-6">
-          <FeaturedCars cars={featuredCars} />
+        <View className="mt-4">
+          <FeaturedCars cars={featuredCars} isRTL={isRTL} />
         </View>
 
-        <View className="mt-6">
-          <RecommendedCars />
+        <View className="mt-4">
+          <RecommendedCars isRTL={isRTL} />
         </View>
 
-        <View className="mt-6">
-          <RecentlyViewedCars navigation={navigation} />
+        <View className="mt-4">
+          <RecentlyViewedCars navigation={navigation} isRTL={isRTL} />
         </View>
 
-        <View className="mt-6">
-          <NewsSection /> 
-        </View>
+        
+        <NewsSection />
       </ScrollView>
     </View>
   );

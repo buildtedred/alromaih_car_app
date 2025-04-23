@@ -1,23 +1,27 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 
 export default function LocationInput({ location, setLocation }) {
+  const { t } = useTranslation();
+
   const cities = [
-    { key: 'riyadh', label: 'Riyadh' },
-    { key: 'arar', label: 'Ar Ar' },
+    { key: 'riyadh', label: t('location.riyadh', { defaultValue: 'Riyadh' }) },
+    { key: 'arar', label: t('location.arar', { defaultValue: 'Ar Ar' }) },
   ];
 
   const handleSelect = (key) => {
     if (typeof setLocation === 'function') {
-      // Toggle: if already selected, deselect
       setLocation(location === key ? null : key);
     }
   };
 
   return (
     <View className="mb-6">
-      <Text className="text-[16px] font-semibold text-gray-800 mb-3">Select Location</Text>
+      <Text className="text-[16px] font-semibold text-gray-800 mb-3">
+        {t('location.select_location', { defaultValue: 'Select Location' })}
+      </Text>
 
       <View className="flex-row bg-white border border-brand rounded-xl overflow-hidden">
         {cities.map((city, index) => {

@@ -32,10 +32,10 @@ const AppDesign = () => {
         {/* Intro Section */}
         <View className="bg-brand-primary mx-4 my-4 p-6 rounded-xl">
           <Text className="text-3xl font-bold mb-4 text-white">
-            {t('screens.appDesign.welcomeTitle')}
+            {t('appDesign.welcomeTitle')}
           </Text>
           <Text className="text-brand-light text-lg leading-6">
-            {t('screens.appDesign.welcomeMessage')}
+            {t('appDesign.welcomeMessage')}
           </Text>
         </View>
 
@@ -49,7 +49,7 @@ const AppDesign = () => {
                 </View>
                 <View>
                   <Text className="text-gray-500 text-xs">
-                    {t('screens.appDesign.phoneLabel')}
+                    {t('appDesign.phoneLabel')}
                   </Text>
                   <Text className="text-black text-lg font-semibold">9200 31 202</Text>
                 </View>
@@ -69,7 +69,7 @@ const AppDesign = () => {
                 </View>
                 <View>
                   <Text className="text-gray-500 text-xs">
-                    {t('screens.appDesign.emailLabel')}
+                    {t('appDesign.emailLabel')}
                   </Text>
                   <Text className="text-black text-lg font-semibold">info@alomalhcars.com</Text>
                 </View>
@@ -84,10 +84,10 @@ const AppDesign = () => {
           </View>
         </View>
 
-        {/* Payment Methods Section */}
+        {/* Payment Methods */}
         <View className="bg-white mx-6 p-6 rounded-xl shadow-lg mb-8">
           <Text className="text-gray-700 text-center text-lg font-medium mb-4">
-            {t('screens.appDesign.paymentTitle')}
+            {t('appDesign.paymentTitle')}
           </Text>
 
           <View className="flex-row justify-around items-center mb-6">
@@ -98,24 +98,24 @@ const AppDesign = () => {
             <Image source={Vat} className="w-8 h-6 object-contain" />
           </View>
 
-          {/* Links Section */}
+          {/* Links */}
           <View className="flex-col items-center space-y-1.5">
             <View className="flex-row items-center px-2 flex-wrap justify-center gap-2">
               <TouchableOpacity onPress={() => navigation.navigate('About')}>
-                <Text className="text-brand-primary text-xs">{t('screens.appDesign.about')}</Text>
+                <Text className="text-brand-primary text-xs">{t('appDesign.about')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => navigation.navigate('Privacy')}>
-                <Text className="text-brand-primary text-xs">| {t('screens.appDesign.privacy')}</Text>
+                <Text className="text-brand-primary text-xs">| {t('appDesign.privacy')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity onPress={() => navigation.navigate('Terms')}>
-                <Text className="text-brand-primary text-xs">| {t('screens.appDesign.terms')}</Text>
+                <Text className="text-brand-primary text-xs">| {t('appDesign.terms')}</Text>
               </TouchableOpacity>
             </View>
 
             <Text className="text-gray-400 text-xs text-center px-2 pt-2">
-              © 2025 Alromaih. {t('screens.appDesign.rights')}
+              © 2025 Alromaih. {t('appDesign.rights')}
             </Text>
           </View>
         </View>

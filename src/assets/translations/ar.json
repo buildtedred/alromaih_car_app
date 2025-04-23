@@ -5,14 +5,22 @@
     "year": "سنة",
     "seats": "مقاعد",
     "fuel": "وقود",
-    "price": "السعر: {{price}} ر.س"
+    "price": "السعر: {{price}} ر.س",
+    "view_all": "عرض الكل"
+  },
+  "home": {
+    "title": "سيارات مميزة",
+    "popularCars": "السيارات الشائعة",
+    "recommended": "موصى بها لك",
+    "recentlyViewed": "تمت مشاهدتها مؤخرًا"
   },
   "screens": {
-    "home": {
-      "title": "سيارات مميزة"
-    },
     "search": {
-      "title": "بحث"
+      "title": "بحث",
+      "recent_searches": "عمليات البحث الأخيرة",
+      "advanced_search": "بحث متقدم",
+      "popular": "السيارات المستعملة الشائعة",
+      "recent_filter_note": "جميع المدن، أي سعر، أي سنة"
     },
     "all_cars": {
       "title": "جميع السيارات",
@@ -51,6 +59,7 @@
       "company_name": "الروميح",
       "tagline": "شراء سيارة جديدة",
       "call_us": "اتصل بنا",
+      "contact_us": "تواصل معنا",
       "about": "عن الروميح",
       "terms": "الشروط والأحكام",
       "privacy": "سياسة الخصوصية",
@@ -124,11 +133,13 @@
     }
   },
   "car_specs": {
+    "engine": "المحرك",
     "gasoline": "بنزين",
     "automatic": "أوتوماتيك",
     "manual": "يدوي",
     "hybrid": "هايبرد",
-    "electric": "كهربائي"
+    "electric": "كهربائي",
+    "transmission": "ناقل الحركة"
   },
   "contact_us": {
     "title": "اتصل بنا",
@@ -154,5 +165,27 @@
     "confirm": "تأكيد",
     "select": "اختيار",
     "all": "الكل"
-  }
+  },
+  "location": {
+  "select_location": "اختر الموقع",
+  "riyadh": "الرياض",
+  "arar": "عرعر"
+},
+"advanced": {
+  "car_make_model": "الماركة والطراز",
+    "search_placeholder": "ابحث عن الماركات والطرازات...",
+  "apply": "تطبيق"
+},
+"appDesign": {
+  "welcomeTitle": "مرحباً",
+  "welcomeMessage": "اكتشف خدماتنا المتميزة وعروضنا الحصرية المصممة خصيصًا لك.",
+  "phoneLabel": "رقم الهاتف",
+  "emailLabel": "البريد الإلكتروني",
+  "paymentTitle": "طرق الدفع المقبولة",
+  "about": "من نحن",
+  "privacy": "سياسة الخصوصية",
+  "terms": "الشروط والأحكام",
+  "rights": "جميع الحقوق محفوظة"
+}
+
 }

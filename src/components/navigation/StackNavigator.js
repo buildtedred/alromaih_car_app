@@ -19,6 +19,8 @@ import AboutScreen from '../moresection/AboutScreen';
 import TermsScreen from '../moresection/TermsScreen';
 import PrivacyScreen from '../moresection/PrivacyScreen';
 import ContactUsScreen from '../moresection/ContactUsScreen';
+import BlogScreen from '../../screens/BlogScreen';
+import NewsDetailScreen from '../../screens/NewsDetailScreen';
 
 // Financial Flow Components
 import CashBrand from '../../components/Financials/CashBrand';
@@ -31,6 +33,7 @@ import FinanceModel from '../../components/Financials/FinanceModel';
 import FinanceCategory from '../../components/Financials/FinanceCategory';
 import FinanceYear from '../../components/Financials/FinanceYear';
 import FinanceBank from '../../components/Financials/FinanceBank';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -151,6 +154,8 @@ export default function MainNavigator() {
       <Stack.Screen name="Terms" component={TermsScreen} options={{ title: 'Terms & Conditions' }} />
       <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ title: 'Privacy Policy' }} />
       <Stack.Screen name="ContactUs" component={ContactUsScreen} options={{ title: 'Contact Us' }} />
+      <Stack.Screen name="Blog" component={BlogScreen} />
+      <Stack.Screen name="NewsDetail" component={NewsDetailScreen} />
 
       {/* Financial (Cash) Flow */}
       <Stack.Screen name="CashBrand" component={CashBrand} options={{ title: 'Select Brand' }} />

@@ -110,8 +110,43 @@ export const newsData = [
       en: 'An exciting electric SUV joins the Saudi market with top features.',
       ar: 'سيارة SUV كهربائية تنضم للسوق السعودي بمواصفات رائعة.',
     },
-    image: require('./assets/images/car11.jpg'),
+    fullText: {
+      en: `Dongfeng has officially launched its all-new electric SUV, the Box, in Riyadh. With an impressive range of 500 km and advanced features like Level 2 autonomous driving, the Dongfeng Box is expected to disrupt the mid-size SUV segment in Saudi Arabia. The vehicle offers a spacious interior, dual screens, and a bold exterior design, making it ideal for tech-savvy consumers.`,
+      ar: `أطلقت شركة دونغفنغ رسميًا سيارة SUV الكهربائية الجديدة "بوكس" في الرياض. وتتمتع السيارة بمدى يصل إلى 500 كيلومتر وميزات متقدمة مثل القيادة الذاتية من المستوى الثاني، مما يجعلها مرشحًا قويًا في سوق سيارات SUV متوسطة الحجم في المملكة. وتوفر "بوكس" مقصورة داخلية فسيحة، وشاشتين مزدوجتين، وتصميم خارجي جريء يلائم المستهلكين المهتمين بالتقنية.`,
+    },
+    image: require('./assets/newsimages/news1.jpg'),
     date: 'April 20, 2025',
+    additionalImages: [
+      require('./assets/newsimages/news2.jpg'),
+      require('./assets/newsimages/news3.jpg'),
+      require('./assets/newsimages/news4.jpg'),
+    ],
+    author: 'Omar Faruq',
+    tags: ['News', 'EV Launch', 'Saudi Arabia'],
+    views: 21051,
+    comments: 0,
+    specs: {
+      'Performance': [
+        '160kW Motor (214 HP)',
+        '80kWh Battery, 500km Range',
+        'Level 2 Autonomy',
+      ],
+      'Interior': [
+        'Dual 12.3" Displays',
+        'Wireless Charging',
+        'Panoramic Sunroof',
+      ],
+      'Safety': [
+        'Autonomous Emergency Braking',
+        'Lane Keep Assist',
+        'Blind Spot Monitoring',
+      ],
+      'greate': [
+        'Autonomous Emergency Braking',
+        'Lane Keep Assist',
+        'Blind Spot Monitoring',
+      ]
+    },
   },
   {
     id: 2,
@@ -123,7 +158,11 @@ export const newsData = [
       en: 'Pakistan welcomes the powerful sports car — a game changer.',
       ar: 'باكستان ترحب بسيارة السباق القوية — تغيير قواعد اللعبة.',
     },
-    image: require('./assets/images/car12.jpg'),
+    fullText: {
+      en: `The iconic Chevrolet Corvette C8 has officially landed in Pakistan, featuring a mid-engine design for the first time in Corvette history. With 495 horsepower and 637 Nm of torque, the C8 offers exhilarating performance and razor-sharp handling. The launch has generated buzz among sports car enthusiasts across the region.`,
+      ar: `وصلت أخيرًا سيارة شيفروليه كورفيت C8 إلى باكستان، وهي أول كورفيت بمحرك وسطي في تاريخ السلسلة. وتوفر 495 حصانًا و637 نيوتن متر من العزم، مما يمنحها أداءً مذهلاً وتحكمًا فائقًا. وقد أثار الإطلاق اهتمامًا كبيرًا بين عشاق السيارات الرياضية في المنطقة.`,
+    },
+    image: require('./assets/newsimages/news2.jpg'),
     date: 'April 18, 2025',
   },
   {
@@ -136,7 +175,11 @@ export const newsData = [
       en: 'A detailed list of the most impressive releases this year.',
       ar: 'قائمة تفصيلية لأبرز الإصدارات هذا العام.',
     },
-    image: require('./assets/images/car13.jpg'),
+    fullText: {
+      en: `From sleek electric vehicles to powerful performance machines, 2025 has already brought some standout automotive innovations. Among the top contenders are the Hyundai Ioniq 7, BMW i5, Mercedes EQE SUV, Toyota Century SUV, and the Ferrari Roma Spider. Each model brings something unique, from futuristic design to record-breaking speed.`,
+      ar: `شهد عام 2025 حتى الآن العديد من الابتكارات البارزة في عالم السيارات، من المركبات الكهربائية الحديثة إلى السيارات الرياضية القوية. ومن بين أبرز السيارات: هيونداي أيونيك 7، وBMW i5، ومرسيدس EQE SUV، وتويوتا سينتشري SUV، وفيراري روما سبايدر. كل طراز يتميز بتقنيات فريدة وتصميمات مستقبلية.`,
+    },
+    image: require('./assets/newsimages/news3.jpg'),
     date: 'April 16, 2025',
   },
   {
@@ -149,14 +192,48 @@ export const newsData = [
       en: 'Ensure your car stays cool and efficient this season.',
       ar: 'حافظ على برودة وكفاءة سيارتك هذا الموسم.',
     },
-    image: require('./assets/images/car14.jpg'),
+    fullText: {
+      en: `As temperatures rise, it's crucial to prepare your car for summer conditions. Check your coolant levels, ensure tire pressure is optimal, and inspect your air conditioning system. Also, clean the battery terminals and replace worn-out wipers. Preventative maintenance can save you from unexpected breakdowns.`,
+      ar: `مع ارتفاع درجات الحرارة، من المهم تجهيز سيارتك لفصل الصيف. افحص مستوى سائل التبريد، وتأكد من ضغط الإطارات، وتحقق من نظام التكييف. كما يُنصح بتنظيف أقطاب البطارية واستبدال المساحات التالفة. الصيانة الوقائية تحميك من الأعطال المفاجئة.`,
+    },
+    image: require('./assets/newsimages/news4.jpg'),
     date: 'April 15, 2025',
   },
+  {
+    id: 5,
+    title: {
+      en: 'BYD Enters Saudi Arabia with EV Lineup',
+      ar: 'BYD تدخل السوق السعودي بأسطول كهربائي',
+    },
+    description: {
+      en: 'Chinese EV giant BYD enters KSA with its full range of electric vehicles.',
+      ar: 'شركة BYD الصينية تطلق مجموعة سيارات كهربائية كاملة في المملكة.',
+    },
+    fullText: {
+      en: `BYD has made its debut in Saudi Arabia with models like the Han EV, Tang SUV, and Dolphin hatchback. This move marks a major step toward EV adoption in the Gulf. BYD also plans to open multiple service centers and fast-charging stations across the country.`,
+      ar: `دخلت شركة BYD السوق السعودي بإطلاق طرازات مثل هان EV، وتانغ SUV، ودولفين. ويمثل هذا الدخول خطوة كبيرة نحو تعزيز الاعتماد على السيارات الكهربائية في الخليج. وتخطط الشركة لافتتاح مراكز صيانة ومحطات شحن سريع في مختلف أنحاء المملكة.`,
+    },
+    image: require('./assets/newsimages/news5.jpg'),
+    date: 'April 12, 2025',
+  },
+  {
+    id: 6,
+    title: {
+      en: 'Tesla to Launch Robotaxi in 2025',
+      ar: 'تسلا تطلق روبوتاكسي في عام 2025',
+    },
+    description: {
+      en: 'Tesla is preparing to unveil its autonomous taxi service.',
+      ar: 'تستعد تسلا للكشف عن خدمة التاكسي ذاتي القيادة.',
+    },
+    fullText: {
+      en: `Tesla has announced that it will launch its highly anticipated Robotaxi service in 2025. The autonomous ride-hailing system will debut in select markets before rolling out globally. Powered by Tesla’s FSD software, Robotaxi aims to revolutionize urban transportation.`,
+      ar: `أعلنت تسلا عن خططها لإطلاق خدمة روبوتاكسي المنتظرة في عام 2025. وستبدأ الخدمة في أسواق محددة قبل أن تنتشر عالميًا، وتعتمد على نظام القيادة الذاتية الكامل FSD الخاص بتسلا، بهدف إحداث ثورة في وسائل النقل الحضري.`,
+    },
+    image: require('./assets/newsimages/news6.jpg'),
+    date: 'April 10, 2025',
+  },
 ];
-
-
-
-
 
 // Model SVGs - Added SVG icons for car models
 const modelSVGs = {

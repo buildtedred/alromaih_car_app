@@ -7,17 +7,24 @@
     "fuel": "Fuel",
     "price": "Price: SAR {{price}}",
     "engine": "Engine",
-    "transmission": "Transmission"
+    "transmission": "Transmission",
+    "view_all": "View All"
+  },
+  "home": {
+    "title": "Featured Cars",
+    "popularCars": "Popular Cars",
+    "recommended": "Recommended for You",
+    "recentlyViewed": "Recently Viewed"
   },
   "screens": {
-    "home": {
-      "title": "Featured Cars",
-      "view_details": "View Details"
-    },
     "search": {
       "title": "Search",
       "filters": "Filters",
-      "reset": "Reset"
+      "reset": "Reset",
+      "recent_searches": "Recent searches",
+      "advanced_search": "Advanced Search",
+      "popular": "Popular Used Cars",
+      "recent_filter_note": "All Cities, Any Price, Any Year"
     },
     "all_cars": {
       "title": "All Cars",
@@ -60,6 +67,7 @@
       "company_name": "Alromaih Motors",
       "tagline": "Premium Car Dealership",
       "call_us": "Call Us",
+      "contact_us": "Contact Us",
       "about": "About Us",
       "terms": "Terms and Conditions",
       "privacy": "Privacy Policy",
@@ -133,6 +141,7 @@
     }
   },
   "car_specs": {
+    "engine": "Engine",
     "gasoline": "Gasoline",
     "diesel": "Diesel",
     "hybrid": "Hybrid",
@@ -142,7 +151,8 @@
     "semi_auto": "Semi-Automatic",
     "horsepower": "HP",
     "mileage": "Mileage",
-    "color": "Color"
+    "color": "Color",
+    "transmission": "Transmission"
   },
   "contact_us": {
     "title": "Contact Us",
@@ -171,5 +181,28 @@
     "confirm": "Confirm",
     "select": "Select",
     "all": "All"
-  }
+  },
+  "location": {
+  "select_location": "Select Location",
+  "riyadh": "Riyadh",
+  "arar": "Ar Ar"
+},
+"advanced": {
+  "car_make_model": "Car Make & Model",
+    "search_placeholder": "Search makes and models...",
+  "apply": "Apply"
+},
+"appDesign": {
+  "welcomeTitle": "Welcome",
+  "welcomeMessage": "Discover our premium services and exclusive offers tailored just for you.",
+  "phoneLabel": "Phone Number",
+  "emailLabel": "Email Address",
+  "paymentTitle": "We Accept",
+  "about": "About Us",
+  "privacy": "Privacy Policy",
+  "terms": "Terms & Condition",
+  "rights": "All rights reserved"
+}
+
+
 }
