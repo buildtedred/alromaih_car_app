@@ -1,11 +1,16 @@
 import './src/services/localization';
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { LocaleProvider, useLocale } from './src/contexts/LocaleContext';
-import { RecentlyViewedProvider } from './src/contexts/RecentlyViewedContext'; // ✅ NEW
-import StackNavigator from './src/components/navigation/StackNavigator';
 import { SafeAreaView, I18nManager } from 'react-native';
+
 import './global.css';
+
+import { LocaleProvider, useLocale } from './src/contexts/LocaleContext';
+import { RecentlyViewedProvider } from './src/contexts/RecentlyViewedContext';
+import { FinanceFlowProvider } from './src/contexts/FinanceFlowContext';
+
+import StackNavigator from './src/components/navigation/StackNavigator';
+import FinanceFlowNavigator from './src/components/Financials/FinanceFlowNavigator'; // ✅ Added here
 
 function AppWithLocale() {
   const { direction } = useLocale();
@@ -15,7 +20,6 @@ function AppWithLocale() {
     if (I18nManager.isRTL !== isRTL) {
       I18nManager.forceRTL(isRTL);
       I18nManager.allowRTL(isRTL);
-      // Note: Full RTL switch may require app reload depending on the platform.
     }
   }, [isRTL]);
 
@@ -28,6 +32,7 @@ function AppWithLocale() {
     >
       <NavigationContainer>
         <StackNavigator />
+        <FinanceFlowNavigator />
       </NavigationContainer>
     </SafeAreaView>
   );
@@ -37,7 +42,9 @@ export default function App() {
   return (
     <LocaleProvider>
       <RecentlyViewedProvider>
-        <AppWithLocale />
+        <FinanceFlowProvider>
+          <AppWithLocale />
+        </FinanceFlowProvider>
       </RecentlyViewedProvider>
     </LocaleProvider>
   );

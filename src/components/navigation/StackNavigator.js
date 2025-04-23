@@ -23,18 +23,6 @@ import ContactUsScreen from '../moresection/ContactUsScreen';
 import BlogScreen from '../../screens/BlogScreen';
 import NewsDetailScreen from '../../screens/NewsDetailScreen';
 
-// Financial Flow Components
-import CashBrand from '../../components/Financials/CashBrand';
-import CashModel from '../../components/Financials/CashModel';
-import CashCategory from '../../components/Financials/CashCategory';
-import CashYear from '../../components/Financials/CashYear';
-import CashBank from '../../components/Financials/CashBank';
-import FinanceBrand from '../../components/Financials/FinanceBrand';
-import FinanceModel from '../../components/Financials/FinanceModel';
-import FinanceCategory from '../../components/Financials/FinanceCategory';
-import FinanceYear from '../../components/Financials/FinanceYear';
-import FinanceBank from '../../components/Financials/FinanceBank';
-
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -51,7 +39,7 @@ function BottomTabs() {
           paddingBottom: 8,
           borderTopWidth: 0,
           elevation: 0,
-          position: 'absolute', // ✅ important to let Finance button float
+          position: 'absolute',
         },
         headerShown: false,
         tabBarLabelStyle: {
@@ -79,21 +67,19 @@ function BottomTabs() {
           ),
         }}
       />
-  <Tab.Screen
-  name="Financials"
-  component={Financials}
-  options={{
-    title: 'Finance',
-    tabBarButton: (props) => (
-      <CenterTabIcon
-        focused={props.accessibilityState.selected}
-        onPress={props.onPress} // 👈 Only icon is clickable now
+      <Tab.Screen
+        name="Financials"
+        component={Financials}
+        options={{
+          title: 'Finance',
+          tabBarButton: (props) => (
+            <CenterTabIcon
+              focused={props.accessibilityState.selected}
+              onPress={props.onPress}
+            />
+          ),
+        }}
       />
-    ),
-  }}
-/>
-
-
       <Tab.Screen
         name="Compare"
         component={CompareBuilderScreen}
@@ -116,7 +102,6 @@ function BottomTabs() {
     </Tab.Navigator>
   );
 }
-
 
 // Main Stack Navigation
 export default function MainNavigator() {
@@ -143,36 +128,6 @@ export default function MainNavigator() {
       <Stack.Screen name="ContactUs" component={ContactUsScreen} options={{ title: 'Contact Us' }} />
       <Stack.Screen name="Blog" component={BlogScreen} />
       <Stack.Screen name="NewsDetail" component={NewsDetailScreen} />
-
-      {/* Financial (Cash) Flow */}
-      <Stack.Screen name="CashBrand" component={CashBrand} options={{ title: 'Select Brand' }} />
-      <Stack.Screen
-        name="CashModel"
-        component={CashModel}
-        options={({ route }) => ({ title: `${route.params?.brand || 'Select'} Models` })}
-      />
-      <Stack.Screen
-        name="CashCategory"
-        component={CashCategory}
-        options={({ route }) => ({
-          title: `${route.params?.brand || ''} ${route.params?.model || 'Model'}`,
-        })}
-      />
-      <Stack.Screen
-        name="CashYear"
-        component={CashYear}
-        options={({ route }) => ({
-          title: `${route.params?.model || ''} - Year`,
-        })}
-      />
-      <Stack.Screen name="CashBank" component={CashBank} options={{ title: 'Select Bank' }} />
-
-      {/* Financial (Installment) Flow */}
-      <Stack.Screen name="FinanceBrand" component={FinanceBrand} options={{ title: 'Select Brand' }} />
-      <Stack.Screen name="FinanceModel" component={FinanceModel} options={{ title: 'Select Model' }} />
-      <Stack.Screen name="FinanceCategory" component={FinanceCategory} options={{ title: 'Select Category' }} />
-      <Stack.Screen name="FinanceYear" component={FinanceYear} options={{ title: 'Select Year' }} />
-      <Stack.Screen name="FinanceBank" component={FinanceBank} options={{ title: 'Select Bank' }} />
     </Stack.Navigator>
   );
 }
