@@ -85,7 +85,7 @@ const CategoryTabs = ({ onSelectCategory }) => {
     <TouchableOpacity
       key={index}
       onPress={() => handlePress(item.key)}
-      className="w-[31.3%] mx-[1%] mb-3 p-4 bg-white rounded-[5px] shadow-2xl items-center"
+      className="w-[31.3%] mx-[1%] mb-3 p-3 bg-white rounded-[5px] border-[0.3px] items-center"
     >
       <Icon name={getIconForItem(item.key) || 'car-sports'} size={26} color="#46194F" />
       <Text className="mt-2 text-xs font-semibold text-gray-800 text-center">
@@ -105,7 +105,7 @@ const CategoryTabs = ({ onSelectCategory }) => {
               setPageIndex(0);
             }}
             style={{ width: tabWidth }}
-            className={`items-center py-3 mb-4 font-semibold rounded-[2px] mx-[1%] ${
+            className={`items-center py-3 mb-4 font-semibold rounded-[5px] mx-[1%] ${
               activeTab === key ? 'bg-[#46194F]' : 'bg-gray-200'
             }`}
           >
@@ -121,7 +121,7 @@ const CategoryTabs = ({ onSelectCategory }) => {
       </ScrollView>
 
       <PagerView
-        style={{ height: 200 }}
+        style={{ height: 180 }}
         initialPage={0}
         onPageSelected={(e) => setPageIndex(e.nativeEvent.position)}
       >
@@ -132,7 +132,7 @@ const CategoryTabs = ({ onSelectCategory }) => {
             <View
               key={i}
               style={{ height }}
-              className="flex-row flex-wrap justify-center px-4"
+              className="flex-row flex-wrap justify-start px-4"
             >
               {page.map(renderCard)}
             </View>

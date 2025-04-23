@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CenterTabIcon from '../../components/common/CenterTabIcon';
 
 // Screens
 import HomeScreen from '../../screens/HomeScreen';
@@ -34,29 +35,8 @@ import FinanceCategory from '../../components/Financials/FinanceCategory';
 import FinanceYear from '../../components/Financials/FinanceYear';
 import FinanceBank from '../../components/Financials/FinanceBank';
 
-
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
-// Center Tab Icon
-const CenterTabIcon = ({ color }) => (
-  <View style={{
-    width: 50,
-    height: 50,
-    position: 'absolute',
-    top: -25,
-    backgroundColor: 'white',
-    borderRadius: 50,
-    padding: 5,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  }}>
-    <Ionicons name="add-circle" color={color} size={40} />
-  </View>
-);
 
 // Bottom Tab Navigation
 function BottomTabs() {
@@ -66,13 +46,12 @@ function BottomTabs() {
         tabBarActiveTintColor: '#46194F',
         tabBarInactiveTintColor: '#9CA3AF',
         tabBarStyle: {
-          height: 80,
-          paddingBottom: 12,
-          paddingTop: 8,
-          backgroundColor: '#f8f8f8',
+          height: 60,
+          backgroundColor: '#fff',
+          paddingBottom: 8,
           borderTopWidth: 0,
           elevation: 0,
-          shadowOpacity: 0,
+          position: 'absolute', // ✅ important to let Finance button float
         },
         headerShown: false,
         tabBarLabelStyle: {
@@ -86,7 +65,7 @@ function BottomTabs() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <Ionicons name="home" color={color} size={26} />
+            <Ionicons name="home" color={color} size={22} />
           ),
         }}
       />
@@ -96,25 +75,32 @@ function BottomTabs() {
         options={{
           title: 'All Cars',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="car-sport" color={color} size={26} />
+            <Ionicons name="car-sport" color={color} size={22} />
           ),
         }}
       />
-      <Tab.Screen
-        name="Financials"
-        component={Financials}
-        options={{
-          title: 'Finance',
-          tabBarIcon: ({ color }) => <CenterTabIcon color={color} />,
-        }}
+  <Tab.Screen
+  name="Financials"
+  component={Financials}
+  options={{
+    title: 'Finance',
+    tabBarButton: (props) => (
+      <CenterTabIcon
+        focused={props.accessibilityState.selected}
+        onPress={props.onPress} // 👈 Only icon is clickable now
       />
+    ),
+  }}
+/>
+
+
       <Tab.Screen
         name="Compare"
         component={CompareBuilderScreen}
         options={{
           title: 'Compare',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="git-compare" color={color} size={30} />
+            <Ionicons name="git-compare" color={color} size={22} />
           ),
         }}
       />
@@ -123,13 +109,14 @@ function BottomTabs() {
         component={MoreScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <Ionicons name="menu" color={color} size={26} />
+            <Ionicons name="menu" color={color} size={22} />
           ),
         }}
       />
     </Tab.Navigator>
   );
 }
+
 
 // Main Stack Navigation
 export default function MainNavigator() {

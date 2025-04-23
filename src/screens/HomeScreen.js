@@ -7,7 +7,7 @@ import PopularCars from '../components/cars/PopularCars';
 import FeaturedCars from '../components/cars/FeaturedCars';
 import RecentlyViewedCars from '../components/cars/RecentlyViewedCars';
 import RecommendedCars from '../components/cars/RecommendedCars';
-import NewsSection from '../components/Home/NewsSection'; // ✅ Imported Latest News section
+import NewsSection from '../components/Home/NewsSection';
 import carsData from '../mock-data';
 import { useNavigation } from '@react-navigation/native';
 import { useLocale } from '../contexts/LocaleContext';
@@ -57,7 +57,7 @@ export default function HomeScreen() {
         style={{ direction: isRTL ? 'rtl' : 'ltr' }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="mt-6 mb-4 bg-white rounded-2xl px-2">
+        <View className="mt-6 mb-4 rounded-2xl px-2">
           <CategoryTabs
             onSelectCategory={handleCategorySelect}
             navigation={navigation}
@@ -92,7 +92,6 @@ export default function HomeScreen() {
           <RecentlyViewedCars navigation={navigation} isRTL={isRTL} />
         </View>
 
-        
         <NewsSection />
       </ScrollView>
     </View>
