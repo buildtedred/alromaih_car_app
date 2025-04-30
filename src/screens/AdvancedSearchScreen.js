@@ -80,9 +80,7 @@ export default function AdvancedSearchScreen() {
 
   const toggleModel = (modelKey) => {
     setSelectedModels((prev) =>
-      prev.includes(modelKey)
-        ? prev.filter((m) => m !== modelKey)
-        : [...prev, modelKey]
+      prev.includes(modelKey) ? prev.filter((m) => m !== modelKey) : [...prev, modelKey]
     );
   };
 
@@ -127,7 +125,6 @@ export default function AdvancedSearchScreen() {
       const matchBodyType = !selectedBodyType || car.bodyType === selectedBodyType;
       const matchCategory = !selectedCategory || car.category === selectedCategory;
       const matchBrand = !selectedBrand || car.brand === selectedBrand;
-  
       return (
         matchModel &&
         matchLocation &&
@@ -140,27 +137,36 @@ export default function AdvancedSearchScreen() {
     });
   
     if (selectedTransmission) {
-      filtered = filtered.filter(
-        (car) =>
-          car.specs?.transmission?.[locale]?.toLowerCase() ===
-          selectedTransmission.toLowerCase()
+      filtered = filtered.filter((car) =>
+        car.specs?.transmission?.[locale]?.toLowerCase() === selectedTransmission.toLowerCase()
       );
     }
   
     if (selectedEngine) {
-      filtered = filtered.filter(
-        (car) =>
-          car.specs?.fuelType?.[locale]?.toLowerCase() ===
-          selectedEngine.toLowerCase()
+      filtered = filtered.filter((car) =>
+        car.specs?.fuelType?.[locale]?.toLowerCase() === selectedEngine.toLowerCase()
       );
     }
   
-    // ✅ REMOVE NON-SERIALIZABLE VALUES
-    const serializableCars = filtered.map(({ brandLogo, ...rest }) => rest);
+    const selectedFilters = {
+      ...(selectedBrand ? { brand: selectedBrand } : {}),
+      ...(selectedModels.length > 0 ? { models: selectedModels.join(', ') } : {}),
+      ...(selectedCategory ? { category: selectedCategory } : {}),
+      ...(selectedBodyType ? { bodyType: selectedBodyType } : {}),
+      ...(location ? { location } : {}),
+      ...(selectedTransmission ? { transmission: selectedTransmission } : {}),
+      ...(selectedEngine ? { fuel: selectedEngine } : {}),
+      ...(priceRange[0] !== minPriceDefault || priceRange[1] !== maxPriceDefault
+        ? { price: `${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}` }
+        : {}),
+      ...(minYear !== minYearDefault || maxYear !== maxYearDefault
+        ? { year: `${minYear} - ${maxYear}` }
+        : {}),
+    };
   
-    navigation.navigate('FilteredCars', {
-      filteredCars: serializableCars,
-      query: 'Advanced Filter',
+    navigation.navigate('AllCars', {
+      filteredCars: filtered,
+      selectedFilters
     });
   };
   
@@ -169,25 +175,21 @@ export default function AdvancedSearchScreen() {
     <View className="flex-1 bg-[#F9FAFB]">
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 100 }}>
         <LocationInput location={location} setLocation={setLocation} />
-
         <BrandSelector selected={selectedBrand} setSelected={setSelectedBrand} />
         <BodyTypeSelector selected={selectedBodyType} setSelected={setSelectedBodyType} />
         <CategorySelector selected={selectedCategory} setSelected={setSelectedCategory} />
-
         <ModelSelector
           selectedModels={selectedModels}
           modelOptions={modelOptions}
           toggleModel={toggleModel}
           setModelModalVisible={setModelModalVisible}
         />
-
         <PriceRangeSlider
           min={minPriceDefault}
           max={maxPriceDefault}
           value={priceRange}
           onValueChange={setPriceRange}
         />
-
         <ModelYearRangeSlider
           min={minYearDefault}
           max={maxYearDefault}
@@ -199,12 +201,10 @@ export default function AdvancedSearchScreen() {
             }
           }}
         />
-
         <TransmissionSelector
           selected={selectedTransmission}
           setSelected={setSelectedTransmission}
         />
-
         <EngineSelector
           selected={selectedEngine}
           setSelected={setSelectedEngine}

@@ -81,18 +81,22 @@ export default function HomeScreen() {
         </View>
 
         <View className="mt-4">
-          <FeaturedCars cars={featuredCars} isRTL={isRTL} />
-        </View>
-
-        <View className="mt-4">
           <RecommendedCars isRTL={isRTL} />
         </View>
 
-        <View className="mt-4">
+        <View className="mt-4 mb-4">
           <RecentlyViewedCars navigation={navigation} isRTL={isRTL} />
         </View>
 
+        <View className="mt-4">
+          <FeaturedCars cars={featuredCars} isRTL={isRTL} />
+        </View>
+
+        <View className="mt-16 mb-8">
         <NewsSection />
+        </View>
+
+
       </ScrollView>
     </View>
   );

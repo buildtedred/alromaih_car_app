@@ -8,7 +8,14 @@
     "price": "Price: SAR {{price}}",
     "engine": "Engine",
     "transmission": "Transmission",
-    "view_all": "View All"
+    "view_all": "View All",
+    "sort": "Sort",
+    "sorted": "Sorted",
+    "filter": "Filter",
+    "result": "result",
+    "results": "results",
+    "no_results": "No cars match your search.",
+    "loading_error": "An error occurred while loading."
   },
   "home": {
     "title": "Featured Cars",
@@ -202,6 +209,29 @@
   "privacy": "Privacy Policy",
   "terms": "Terms & Condition",
   "rights": "All rights reserved"
+},
+"compare": {
+  "title": "Compare Cars",
+  "car": "Car",
+  "brand": "Brand",
+  "model": "Model",
+  "year": "Year",
+  "select_brand": "Select Brand",
+  "select_model": "Select Model",
+  "select_year": "Select Year",
+  "add_car": "Add Another Car",
+  "remove": "Remove",
+  "select_more": "Select 2 or more cars to compare",
+  "compare_now": "Compare {{count}} Cars",
+  "select_two_cars": "Select at least 2 cars to compare.",
+  "vs": "VS",
+  "download_pdf": "Download Comparison PDF",
+  "pdf_title": "Car Comparison Report",
+  "specification": "Specification",
+  "success": "Success",
+  "error": "Error",
+  "pdf_saved": "Comparison PDF saved to your Downloads folder!",
+  "pdf_failed": "Failed to generate or save the PDF."
 }
 
 

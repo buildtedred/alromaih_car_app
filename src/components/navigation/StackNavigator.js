@@ -11,7 +11,6 @@ import MoreScreen from '../../screens/MoreScreen';
 import Financials from '../../screens/Financials';
 import AllCarScreen from '../../screens/AllCarsScreen';
 import Gallery from '../../screens/Gallery';
-import FilteredCarsScreen from '../../screens/FilteredCarsScreen';
 import SearchScreen from '../../screens/SearchScreen';
 import AdvancedSearchScreen from '../../screens/AdvancedSearchScreen';
 import CompareBuilderScreen from '../../screens/CompareBuilderScreen';
@@ -58,7 +57,7 @@ function BottomTabs() {
         }}
       />
       <Tab.Screen
-        name="AllCars"
+        name="AllCarsTab"
         component={AllCarScreen}
         options={{
           title: 'All Cars',
@@ -118,7 +117,7 @@ export default function MainNavigator() {
 
       {/* General Screens */}
       <Stack.Screen name="Gallery" component={Gallery} options={{ title: 'Gallery' }} />
-      <Stack.Screen name="FilteredCars" component={FilteredCarsScreen} options={{ title: 'Filtered Cars' }} />
+      <Stack.Screen name="AllCars" component={AllCarScreen} options={{ title: 'All Cars' }} />
       <Stack.Screen name="Search" component={SearchScreen} options={{ title: 'Search' }} />
       <Stack.Screen name="AdvancedSearch" component={AdvancedSearchScreen} options={{ title: 'Refine Your Search' }} />
       <Stack.Screen name="CompareScreen" component={CompareScreen} options={{ title: 'Comparison' }} />
