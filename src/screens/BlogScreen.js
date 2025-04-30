@@ -1,4 +1,3 @@
-// src/screens/BlogScreen.js
 import React from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { useLocale } from '../contexts/LocaleContext';
@@ -9,31 +8,70 @@ export default function BlogScreen() {
   const { locale } = useLocale();
   const navigation = useNavigation();
   const { width } = Dimensions.get('window');
-  const getLocalized = (value) => (typeof value === 'object' ? value?.[locale] : value);
+
+  const getLocalized = (value) => {
+    if (typeof value === 'object' && value !== null) {
+      return value[locale] || value['en'] || '';
+    }
+    return value || '';
+  };
+
+  const handlePress = (item) => {
+    navigation.navigate('NewsDetail', { news: item });
+  };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate('NewsDetail', { news: item })}
-      className="flex-row bg-white border border-gray-100 rounded-xl mb-3 mx-4 overflow-hidden"
+      onPress={() => handlePress(item)}
+      activeOpacity={0.85}
+      className="flex-row bg-white rounded-2xl mx-4 mb-5 border border-gray-200"
+      style={{
+        height: 110, // ✅ Increased height
+        alignItems: 'center',
+        overflow: 'hidden',
+      }}
     >
-      <Image
-        source={item.image}
-        style={{ width: width * 0.3, height: width * 0.2 }}
-        resizeMode="cover"
-      />
-      <View className="flex-1 px-4 py-3 justify-center">
-        <Text className="text-sm font-bold mb-1" numberOfLines={2}>{getLocalized(item.title)}</Text>
+      <View
+        style={{
+          width: width * 0.3,
+          height: 100,
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          paddingLeft: 10, // ✅ Added left padding to car
+          backgroundColor: '#fff', // ✅ No dark background/shadow
+        }}
+      >
+        <Image
+          source={item.image}
+          style={{
+            width: '100%',
+            height: '100%',
+            resizeMode: 'contain', // ✅ Full car visible, no cut
+          }}
+        />
+      </View>
+
+      <View className="flex-1 px-4 justify-center">
+        <Text className="text-base font-bold text-gray-900 mb-2" numberOfLines={2}>
+          {getLocalized(item.title)}
+        </Text>
         <Text className="text-xs text-gray-500">{item.date}</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <View className="flex-1 bg-white pt-3">
+    <View className="flex-1 bg-gray-50 pt-4">
       <FlatList
         data={newsData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={() => (
+          <View className="flex-1 items-center justify-center py-10">
+            <Text className="text-gray-500 text-sm">No news available</Text>
+          </View>
+        )}
       />
     </View>
   );

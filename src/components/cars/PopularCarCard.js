@@ -1,4 +1,3 @@
-
 import { View, Text, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useLocale } from '../../contexts/LocaleContext';
@@ -13,33 +12,35 @@ export default function PopularCarCard({ car, onPress }) {
   };
 
   // Responsive values
+  const cardWidth = width * 0.8; // Match recommended card width (80% of screen)
   const imageSize = width < 400 ? 100 : 120;
-  const cardMargin = width < 400 ? 1 : 2;
   const textBaseSize = width < 400 ? 'sm' : 'base';
 
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.9}
-      className={`
-        bg-white rounded-2xl shadow-md flex-row py-3 mb-5 
-        mx-${cardMargin} items-center
-        ${width < 350 ? 'w-[95%] self-center' : ''}
-      `}
+      style={{
+        width: cardWidth,
+        marginRight: 16, // Consistent spacing between cards
+      }}
+      className="bg-white rounded-2xl shadow-md flex-row py-3 mb-4 items-center"
     >
       {/* Car Image */}
       <Image
         source={car.image}
         resizeMode="contain"
-        className="rounded-lg mr-4"
+        className="rounded-lg"
         style={{ 
           width: imageSize, 
           height: imageSize * 0.875, // Maintain aspect ratio
+          marginLeft: 12,
+          marginRight: 12,
         }}
       />
 
       {/* Car Info */}
-      <View className="flex-1">
+      <View className="flex-1 pr-2">
         <Text
           className={`text-${textBaseSize} font-bold text-gray-900 mb-1`}
           numberOfLines={1}

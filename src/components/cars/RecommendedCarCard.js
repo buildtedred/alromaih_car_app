@@ -12,7 +12,7 @@ export default function RecommendedCarCard({ car, onPress }) {
 
   // Responsive values
   const isSmallScreen = width < 400;
-  const cardWidth = isSmallScreen ? 'w-full' : 'w-[300px]';
+  const cardWidth = width * 0.8; // Take 80% of screen width
   const imageSize = isSmallScreen ? 100 : 120;
   const textSize = isSmallScreen ? 'sm' : 'base';
   const priceTextSize = isSmallScreen ? 'sm' : 'base';
@@ -22,19 +22,21 @@ export default function RecommendedCarCard({ car, onPress }) {
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.9}
-      className={`
-        flex-row bg-white rounded-2xl shadow-md p-3 items-center 
-        ${cardWidth} mb-4 mx-2
-      `}
+      style={{
+        width: cardWidth, // Use fixed width for consistent sizing
+        marginRight: 16, // Add spacing between cards
+      }}
+      className="flex-row bg-white rounded-2xl shadow-md p-3 items-center mb-4"
     >
       {/* Car Image */}
       <Image
         source={car.image}
         resizeMode="contain"
-        className="rounded-lg mr-8"
+        className="rounded-lg"
         style={{
           width: imageSize,
           height: imageSize * 0.75, // Maintain 4:3 aspect ratio
+          marginRight: 12,
         }}
       />
 
@@ -49,7 +51,6 @@ export default function RecommendedCarCard({ car, onPress }) {
           >
             {getLocalized(car.name)}
           </Text>
-        
         </View>
 
         {/* Year + Brand */}

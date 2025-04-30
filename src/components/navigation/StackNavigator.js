@@ -21,6 +21,8 @@ import PrivacyScreen from '../moresection/PrivacyScreen';
 import ContactUsScreen from '../moresection/ContactUsScreen';
 import BlogScreen from '../../screens/BlogScreen';
 import NewsDetailScreen from '../../screens/NewsDetailScreen';
+import BrowseScreen from '../../screens/BrowseScreen';
+import ReviewScreen from '../../screens/ReviewScreen';
 
 // Financial Flow Components
 import CashBrand from '../../components/Financials/CashBrand';
@@ -34,31 +36,21 @@ import FinanceCategory from '../../components/Financials/FinanceCategory';
 import FinanceYear from '../../components/Financials/FinanceYear';
 import FinanceBank from '../../components/Financials/FinanceBank';
 
-
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-// Center Tab Icon
 const CenterTabIcon = ({ color }) => (
   <View style={{
-    width: 50,
-    height: 50,
-    position: 'absolute',
-    top: -25,
-    backgroundColor: 'white',
-    borderRadius: 50,
-    padding: 5,
-    elevation: 5,
-    shadowColor: '#000',
+    width: 50, height: 50, position: 'absolute', top: -25,
+    backgroundColor: 'white', borderRadius: 50, padding: 5,
+    elevation: 5, shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 0.25, shadowRadius: 3.84
   }}>
     <Ionicons name="add-circle" color={color} size={40} />
   </View>
 );
 
-// Bottom Tab Navigation
 function BottomTabs() {
   return (
     <Tab.Navigator
@@ -81,57 +73,25 @@ function BottomTabs() {
         },
       }}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="home" color={color} size={26} />
-          ),
-        }}
+      <Tab.Screen name="Home" component={HomeScreen}
+        options={{ tabBarIcon: ({ color }) => (<Ionicons name="home" color={color} size={26} />) }}
       />
-      <Tab.Screen
-        name="AllCars"
-        component={AllCarScreen}
-        options={{
-          title: 'All Cars',
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="car-sport" color={color} size={26} />
-          ),
-        }}
+      <Tab.Screen name="AllCars" component={AllCarScreen}
+        options={{ title: 'All Cars', tabBarIcon: ({ color }) => (<Ionicons name="car-sport" color={color} size={26} />) }}
       />
-      <Tab.Screen
-        name="Financials"
-        component={Financials}
-        options={{
-          title: 'Finance',
-          tabBarIcon: ({ color }) => <CenterTabIcon color={color} />,
-        }}
+      <Tab.Screen name="Financials" component={Financials}
+        options={{ title: 'Finance', tabBarIcon: ({ color }) => <CenterTabIcon color={color} /> }}
       />
-      <Tab.Screen
-        name="Compare"
-        component={CompareBuilderScreen}
-        options={{
-          title: 'Compare',
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="git-compare" color={color} size={30} />
-          ),
-        }}
+      <Tab.Screen name="Compare" component={CompareBuilderScreen}
+        options={{ title: 'Compare', tabBarIcon: ({ color }) => (<Ionicons name="git-compare" color={color} size={30} />) }}
       />
-      <Tab.Screen
-        name="More"
-        component={MoreScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="menu" color={color} size={26} />
-          ),
-        }}
+      <Tab.Screen name="More" component={MoreScreen}
+        options={{ tabBarIcon: ({ color }) => (<Ionicons name="menu" color={color} size={26} />) }}
       />
     </Tab.Navigator>
   );
 }
 
-// Main Stack Navigation
 export default function MainNavigator() {
   return (
     <Stack.Navigator
@@ -143,8 +103,6 @@ export default function MainNavigator() {
       }}
     >
       <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }} />
-
-      {/* General Screens */}
       <Stack.Screen name="Gallery" component={Gallery} options={{ title: 'Gallery' }} />
       <Stack.Screen name="FilteredCars" component={FilteredCarsScreen} options={{ title: 'Filtered Cars' }} />
       <Stack.Screen name="Search" component={SearchScreen} options={{ title: 'Search' }} />
@@ -156,31 +114,15 @@ export default function MainNavigator() {
       <Stack.Screen name="ContactUs" component={ContactUsScreen} options={{ title: 'Contact Us' }} />
       <Stack.Screen name="Blog" component={BlogScreen} />
       <Stack.Screen name="NewsDetail" component={NewsDetailScreen} />
+      <Stack.Screen name="ReviewScreen" component={ReviewScreen} options={{ title: 'Car Reviews' }} />
+      <Stack.Screen name="BrowseScreen" component={BrowseScreen} />
 
-      {/* Financial (Cash) Flow */}
+      {/* Financial Screens */}
       <Stack.Screen name="CashBrand" component={CashBrand} options={{ title: 'Select Brand' }} />
-      <Stack.Screen
-        name="CashModel"
-        component={CashModel}
-        options={({ route }) => ({ title: `${route.params?.brand || 'Select'} Models` })}
-      />
-      <Stack.Screen
-        name="CashCategory"
-        component={CashCategory}
-        options={({ route }) => ({
-          title: `${route.params?.brand || ''} ${route.params?.model || 'Model'}`,
-        })}
-      />
-      <Stack.Screen
-        name="CashYear"
-        component={CashYear}
-        options={({ route }) => ({
-          title: `${route.params?.model || ''} - Year`,
-        })}
-      />
+      <Stack.Screen name="CashModel" component={CashModel} options={({ route }) => ({ title: `${route.params?.brand || 'Select'} Models` })} />
+      <Stack.Screen name="CashCategory" component={CashCategory} options={({ route }) => ({ title: `${route.params?.brand || ''} ${route.params?.model || 'Model'}` })} />
+      <Stack.Screen name="CashYear" component={CashYear} options={({ route }) => ({ title: `${route.params?.model || ''} - Year` })} />
       <Stack.Screen name="CashBank" component={CashBank} options={{ title: 'Select Bank' }} />
-
-      {/* Financial (Installment) Flow */}
       <Stack.Screen name="FinanceBrand" component={FinanceBrand} options={{ title: 'Select Brand' }} />
       <Stack.Screen name="FinanceModel" component={FinanceModel} options={{ title: 'Select Model' }} />
       <Stack.Screen name="FinanceCategory" component={FinanceCategory} options={{ title: 'Select Category' }} />

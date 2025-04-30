@@ -11,7 +11,7 @@ import NewsSection from '../components/Home/NewsSection'; // ✅ Imported Latest
 import carsData from '../mock-data';
 import { useNavigation } from '@react-navigation/native';
 import { useLocale } from '../contexts/LocaleContext';
-
+import BrowserScreen from './BrowseScreen';
 export default function HomeScreen() {
   const navigation = useNavigation();
   const { direction } = useLocale();
@@ -94,7 +94,12 @@ export default function HomeScreen() {
 
         
         <NewsSection />
+        <View className="mt-4">
+        
+        </View>
+        <BrowserScreen />
       </ScrollView>
+      
     </View>
   );
 }

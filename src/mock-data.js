@@ -114,37 +114,35 @@ export const newsData = [
       en: `Dongfeng has officially launched its all-new electric SUV, the Box, in Riyadh. With an impressive range of 500 km and advanced features like Level 2 autonomous driving, the Dongfeng Box is expected to disrupt the mid-size SUV segment in Saudi Arabia. The vehicle offers a spacious interior, dual screens, and a bold exterior design, making it ideal for tech-savvy consumers.`,
       ar: `أطلقت شركة دونغفنغ رسميًا سيارة SUV الكهربائية الجديدة "بوكس" في الرياض. وتتمتع السيارة بمدى يصل إلى 500 كيلومتر وميزات متقدمة مثل القيادة الذاتية من المستوى الثاني، مما يجعلها مرشحًا قويًا في سوق سيارات SUV متوسطة الحجم في المملكة. وتوفر "بوكس" مقصورة داخلية فسيحة، وشاشتين مزدوجتين، وتصميم خارجي جريء يلائم المستهلكين المهتمين بالتقنية.`,
     },
-    image: require('./assets/newsimages/news1.jpg'),
+    image: require('./assets/newsimages/news8.png'),
     date: 'April 20, 2025',
     additionalImages: [
       require('./assets/newsimages/news2.jpg'),
       require('./assets/newsimages/news3.jpg'),
       require('./assets/newsimages/news4.jpg'),
     ],
-    author: 'Omar Faruq',
+    interiorImages:[
+      require('./assets/newsimages/news3.jpg'),
+      require('./assets/newsimages/news3.jpg'),
+      require('./assets/newsimages/news2.jpg'),
+    ],
+    author: 'Zeeshan Ahmad',
     tags: ['News', 'EV Launch', 'Saudi Arabia'],
     views: 21051,
-    comments: 0,
+    comments: 15,
     specs: {
       'Performance': [
-        '160kW Motor (214 HP)',
-        '80kWh Battery, 500km Range',
-        'Level 2 Autonomy',
+       ' The vehicle boasts impressive performance with its powerful 160kW electric motor, delivering 214 horsepower for a smooth and responsive driving experience. Equipped with an 80kWh battery, it offers an exceptional range of up to 500 kilometers on a single charge, making it perfect for both city commutes and long drives. Additionally, Level 2 autonomy enhances driving convenience by offering advanced driver-assist features, ensuring a safer and more relaxed journey.'
       ],
       'Interior': [
-        'Dual 12.3" Displays',
-        'Wireless Charging',
-        'Panoramic Sunroof',
+       ' The interior of the vehicle combines advanced technology with modern comfort. It features dual 12.3-inch displays that provide a sleek and intuitive interface for navigation, media, and vehicle settings. Wireless charging ensures your devices stay powered without clutter, adding convenience to every drive. Enhancing the sense of space and luxury, the panoramic sunroof floods the cabin with natural light, creating a bright and open atmosphere for an elevated driving experience.'
+       
       ],
       'Safety': [
-        'Autonomous Emergency Braking',
-        'Lane Keep Assist',
-        'Blind Spot Monitoring',
+       ' The vehicle prioritizes your safety with a suite of advanced driver-assistance technologies. Autonomous Emergency Braking helps prevent potential collisions by automatically applying the brakes in critical situations. Lane Keep Assist ensures you stay safely centered in your lane, reducing the risk of unintentional drifting. Blind Spot Monitoring adds an extra layer of awareness by alerting you to vehicles that may be hidden from view, making every journey safer and more secure.'
       ],
       'greate': [
-        'Autonomous Emergency Braking',
-        'Lane Keep Assist',
-        'Blind Spot Monitoring',
+        'This vehicle comes equipped with great safety-focused features that enhance both confidence and control on the road. With Autonomous Emergency Braking, the car can detect potential collisions and automatically apply the brakes to prevent or reduce impact. Lane Keep Assist helps you stay safely within your lane by gently steering when unintended drifting is detected. Meanwhile, Blind Spot Monitoring keeps an eye on areas you can’t see, alerting you to nearby vehicles and ensuring safer lane changes.'
       ]
     },
   },
@@ -179,7 +177,7 @@ export const newsData = [
       en: `From sleek electric vehicles to powerful performance machines, 2025 has already brought some standout automotive innovations. Among the top contenders are the Hyundai Ioniq 7, BMW i5, Mercedes EQE SUV, Toyota Century SUV, and the Ferrari Roma Spider. Each model brings something unique, from futuristic design to record-breaking speed.`,
       ar: `شهد عام 2025 حتى الآن العديد من الابتكارات البارزة في عالم السيارات، من المركبات الكهربائية الحديثة إلى السيارات الرياضية القوية. ومن بين أبرز السيارات: هيونداي أيونيك 7، وBMW i5، ومرسيدس EQE SUV، وتويوتا سينتشري SUV، وفيراري روما سبايدر. كل طراز يتميز بتقنيات فريدة وتصميمات مستقبلية.`,
     },
-    image: require('./assets/newsimages/news3.jpg'),
+    image: require('./assets/newsimages/news9.png'),
     date: 'April 16, 2025',
   },
   {
