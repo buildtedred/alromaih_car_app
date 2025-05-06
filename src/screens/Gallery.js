@@ -2,16 +2,16 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   Image,
+  ScrollView,
+  TouchableOpacity,
   FlatList,
   Dimensions,
+  Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useLocale } from '../contexts/LocaleContext';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import RNFS from 'react-native-fs';
 import carsData, { getAllSpecGroups, brandLogos } from '../mock-data';
 import Horsepower from '../assets/icons/Horsepower.svg';
 import Torque from '../assets/icons/Torque.svg';
@@ -31,18 +31,39 @@ import RiyalIcon from '../assets/icons/RiyalIcon.svg'; // Add this at top
 
 const { width } = Dimensions.get('window');
 
+const SECTIONS = [
+  {
+    key: 'transmission',
+    title: 'ناقل الحركة',
+    icon: 'car-shift-pattern',
+    data: [
+      { label: 'ناقل الحركة', value: 'اوتوماتيك' },
+      { label: 'نوع الجر', value: 'دفع رباعي' },
+      { label: 'وضع القيادة', value: 'عادي رياضي الرمال الطين' },
+    ],
+  },
+];
+
 export default function GalleryScreen({ route }) {
   const { car } = route.params;
-  const [activeTab, setActiveTab] = useState('specs');
+  const [activeTab, setActiveTab] = useState('exterior');
   const { locale } = useLocale();
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const [currentImages, setCurrentImages] = useState([]);
+  const [expanded, setExpanded] = useState('transmission');
+  const [selectedColor, setSelectedColor] = useState(null); // ✅ Declare selectedColor here
+  const [selectedMethod, setSelectedMethod] = useState('cash');
+
 
   const fullCar = useMemo(() => {
-    const carData = carsData.find((c) => c.id === car.id);
+    const fromData = carsData.find((c) => c.id === car.id);
     return {
       ...car,
       image: fromData?.image,
       brandLogo: fromData?.brandLogo,
       additionalImages: fromData?.additionalImages,
+      interiorImages: fromData?.interiorImages || [],
+      exteriorImages: [fromData?.image, ...(fromData?.additionalImages || [])],
     };
   }, [car.id]);
 
@@ -54,28 +75,6 @@ export default function GalleryScreen({ route }) {
 
   const getLang = (field) =>
     typeof field === 'object' ? field?.[locale] : field;
-
-  const specGroups = getAllSpecGroups(fullCar, locale);
-  const images = [fullCar.image, ...(fullCar.additionalImages || [])].map((img, index) => ({
-    id: index + 1,
-    source: img,
-  }));
-
-  const BrandLogo = brandLogos[fullCar.brand];
-
-  const getFeatureLabel = (key, locale) => {
-    const labels = {
-      exterior: { en: 'Exterior', ar: 'الخارجية' },
-      interior: { en: 'Interior', ar: 'الداخلية' },
-      engine: { en: 'Engine', ar: 'المحرك' },
-      safety: { en: 'Safety', ar: 'السلامة' },
-      technology: { en: 'Technology', ar: 'التقنية' },
-      entertainment: { en: 'Entertainment', ar: 'الترفيه' },
-      comfort: { en: 'Comfort', ar: 'الراحة' },
-      exteriorFeatures: { en: 'Exterior Features', ar: 'ميزات خارجية' },
-    };
-    return labels[key]?.[locale] || key;
-  };
 
   return (
     <ScrollView className="flex-1 bg-white">
@@ -130,137 +129,263 @@ export default function GalleryScreen({ route }) {
         </View>
       </View>
 
-      <View className="bg-white mx-4 mt-10 rounded-2xl px-4 py-4 shadow-md">
-        <View className="flex-row justify-between items-start">
-          <View className="flex-1">
-            <Text className="text-xl font-bold text-[#46194F] mb-1">
-              {getLang(fullCar.name)}
-            </Text>
-            <Text className="text-sm text-gray-500">
-              {getLang(fullCar.modelYear)}
-            </Text>
-            <Text className="text-2xl font-extrabold text-[#46194F] mt-3">
-              {fullCar.cashPrice?.toLocaleString()} {locale === 'en' ? 'SAR' : 'ر.س'}
-            </Text>
-          </View>
+      <View className="border-2 border-[#46194F] mx-8 mt-6 rounded-2xl px-4 pt-6 pb-4 bg-white relative">
 
-          {BrandLogo && (
-            <View className="items-end ml-2">
-              <View className="bg-gray-100 px-3 py-2 rounded-xl items-center justify-center mb-2" style={{ elevation: 2 }}>
-                <BrandLogo width={75} height={40} />
-              </View>
-              <View className="bg-[#46194F] px-3 py-1 mt-1 rounded-full">
-                <Text className="text-white text-xs font-semibold">
-                  {locale === 'en' ? 'From' : 'من'} {fullCar.installmentPrice} {locale === 'en' ? '/mo' : '/شهر'}
-                </Text>
-              </View>
+{/* Brand Box */}
+<View className="absolute -top-6 left-1/4 right-1/4 z-10">
+  <View className="border-2 border-[#46194F] rounded-xl px-6 py-3 bg-white mx-auto items-center">
+    <Text className="text-[#000] font-extrabold text-xs text-center">JETOUR</Text>
+    <Text className="text-[10px] text-center text-gray-700 -mt-1">Drive Your Future</Text>
+  </View>
+</View>
+
+
+{/* Top Icons + Info */}
+<View className="flex-row justify-between mt-2 mb-2 items-center">
+  <View className="flex-row gap-4">
+    <Icon name="heart" size={20} color="#46194F" />
+    <ShareIcon width={20} height={20} />
+    <PdfIcon width={20} height={20} />
+  </View>
+
+  <View className="items-end">
+    <Text className="text-xl font-bold text-[#46194F]">جيتور T2</Text>
+    <Text className="text-sm text-gray-500">لدكري فل كامل 2025</Text>
+  </View>
+</View>
+
+{/* Divider */}
+<View className="h-[1px] bg-[#46194F] mb-2" />
+
+{/* Price Section */}
+<View className="flex-row justify-between items-center">
+  {/* Cash Price */}
+  <View className="items-center flex-1">
+    <Text className="text-sm text-gray-500 mb-1">سعر الكاش</Text>
+    <View className="flex-row items-center justify-center gap-1">
+      <RiyalIcon width={20} height={20} />
+      <Text className="text-xl font-extrabold text-[#46194F]">200000</Text>
+    </View>
+  </View>
+
+  {/* Divider */}
+  <View className="w-[1px] h-12 bg-[#46194F] mx-2" />
+
+  {/* Installment Price */}
+  <View className="items-center flex-1">
+    <Text className="text-sm text-gray-500 mb-1">بدأ القسط من</Text>
+    <View className="flex-row items-center justify-center gap-1">
+      <RiyalIcon width={20} height={20} />
+      <Text className="text-xl font-extrabold text-[#46194F]">1940</Text>
+    </View>
+  </View>
+</View>
+
+
+
+{/* Divider */}
+<View className="h-[1px] bg-[#46194F] my-4" />
+
+{/* Colors */}
+<View className="items-end">
+  <Text className="text-semibold text-gray-500 mb-2 text-end">لون السيارة</Text>
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    className="flex-row px"
+    contentContainerStyle={{ gap: 14 }}
+  >
+    {[
+      { color: '#b42f0f', label: 'أحمر' },
+      { color: '#d2dce7', label: 'رمادي هاواي' },
+      { color: '#8f8f8f', label: 'رمادي' },
+      { color: '#4b3b2c', label: 'بني' },
+      { color: '#000000', label: 'أسود' },
+      { color: '#e7e51b', label: 'أصفر' },
+      { color: '#6fa0d9', label: 'أزرق فاتح' },
+      { color: '#374259', label: 'أزرق غامق' },
+    ].map((item, idx) => {
+      const isSelected = selectedColor === item.color;
+
+      return (
+        <TouchableOpacity
+          key={idx}
+          onPress={() => setSelectedColor(item.color)}
+          className="items-center justify-center"
+        >
+          {isSelected ? (
+            <View className="flex-row items-center gap-2 px-2 py-1 rounded-lg border border-[#94a3b8] bg-white">
+              <Text className="text-xs text-[#374151]">{item.label || 'اللون المحدد'}</Text>
+              <View
+                className="w-10 h-10 rounded-full"
+                style={{ backgroundColor: item.color }}
+              />
             </View>
+          ) : (
+            <View
+              className="w-10 h-10 rounded-full border-2 border-white"
+              style={{ backgroundColor: item.color }}
+            />
           )}
-        </View>
-      </View>
+        </TouchableOpacity>
+      );
+    })}
+  </ScrollView>
+</View>
 
-      <View className="bg-white mx-4 mt-4 rounded-2xl px-4 py-4 shadow-md">
+</View>
+
+
+
+
+
+
+
+
+
+<View className="border-2 border-[#46194F] mx-8 rounded-xl p-4 mt-6">
+  <Text className="text-sm text-[#46194F] text-center mb-3">
+    اختر الطريقة المناسبة لشراء هذه السيارة؟
+  </Text>
+
+  {/* Tabs */}
+  <View className="flex-row bg-white rounded-xl overflow-hidden border border-[#46194F] mx-4">
+    <TouchableOpacity
+      onPress={() => setSelectedMethod('finance')}
+      className={`flex-1 py-2 rounded-l-xl ${
+        selectedMethod === 'finance' ? 'bg-[#46194F]' : ''
+      }`}
+    >
+      <Text
+        className={`text-center font-bold ${
+          selectedMethod === 'finance' ? 'text-white' : 'text-[#46194F]'
+        }`}
+      >
+        التمويل
+      </Text>
+    </TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => setSelectedMethod('cash')}
+      className={`flex-1 py-2 rounded-r-xl ${
+        selectedMethod === 'cash' ? 'bg-[#46194F]' : ''
+      }`}
+    >
+      <Text
+        className={`text-center font-bold ${
+          selectedMethod === 'cash' ? 'text-white' : 'text-[#46194F]'
+        }`}
+      >
+        كاش
+      </Text>
+    </TouchableOpacity>
+  </View>
+
+  {/* Price Info */}
+  <View className="items-center mt-3">
+    <Text className="text-sm text-[#46194F]">سعر الكاش</Text>
+    <View className="flex-row items-center justify-center my-0.5 space-x-1 rtl:space-x-reverse">
+      <RiyalIcon width={22} height={22} />
+      <Text className="text-2xl font-extrabold text-[#46194F]">
+        {fullCar.cashPrice?.toLocaleString()}
+      </Text>
+    </View>
+    <Text className="text-sm text-[#46194F]">شامل الضريبه و اللوحات</Text>
+  </View>
+
+ {/* Buy Button */}
+<TouchableOpacity className="w-11/12 bg-[#46194F] py-3 px-6 mt-3 rounded-xl self-center">
+
+  <Text className="text-white text-center font-bold">طلب شراء</Text>
+</TouchableOpacity>
+
+</View>
+
+
+      {/* Car Quick Info Section */}
+      <View className="px-4 mt-6 mb-4">
+        <Text className="text-[#46194F] text-sm font-bold mb-3 text-right">معلومات السيارة</Text>
         <View className="flex-row justify-between">
-          {[
-            { icon: 'calendar', label: 'year', value: fullCar.specs.year },
-            { icon: 'tachometer', label: 'mileage', value: fullCar.specs?.mileage || '0 km' },
-            { icon: 'gear', label: 'transmission', value: getLang(fullCar.specs.transmission) },
-            { icon: 'users', label: 'seats', value: getLang(fullCar.specs.seats) },
-          ].map((item) => (
-            <View key={item.label} className="items-center flex-1">
-              <View className="bg-gray-100 p-2.5 rounded-full mb-2">
-                <Icon name={item.icon} size={20} color="#46194F" />
-              </View>
-              <Text className="text-gray-500 text-xs mb-1">
-                {locale === 'en'
-                  ? item.label.charAt(0).toUpperCase() + item.label.slice(1)
-                  : item.label === 'year'
-                  ? 'السنة'
-                  : item.label === 'mileage'
-                  ? 'عدد الكيلومترات'
-                  : item.label === 'transmission'
-                  ? 'ناقل الحركة'
-                  : 'المقاعد'}
-              </Text>
-              <Text className="text-gray-800 font-semibold text-sm">{item.value}</Text>
+          {[{
+            icon: <ManufacturingYear width={26} height={26} />,
+            label: 'سنه الصنع',
+            value: '2025'
+          }, {
+            icon: <Wheels width={26} height={26} />,
+            label: 'عجلات',
+            value: '20 انش'
+          }, {
+            icon: <Torque width={26} height={26} />,
+            label: 'عزم الدوران',
+            value: '390 نيوتن'
+          }, {
+            icon: <Horsepower width={26} height={26} />,
+            label: 'القوة',
+            value: '251 حصان'
+          }].map((item, idx) => (
+            <View
+              key={idx}
+              className="bg-white border border-[#E5E5E5] rounded-xl px-3 py-2 items-center flex-1 mx-1"
+            >
+              <View className="mb-2">{item.icon}</View>
+              <Text className="text-xs text-[#46194F] font-semibold mb-1 text-center">{item.label}</Text>
+              <Text className="text-[11px] text-gray-700 font-medium text-center">{item.value}</Text>
             </View>
           ))}
         </View>
       </View>
 
-      <View className="flex-row border-b border-gray-200 mx-4 mt-6">
-        {['specs', 'features'].map((tab) => (
-          <TouchableOpacity
-            key={tab}
-            className={`flex-1 py-3 border-b-2 ${activeTab === tab ? 'border-[#46194F]' : 'border-transparent'}`}
-            onPress={() => setActiveTab(tab)}
-          >
-            <Text className={`text-center font-medium ${activeTab === tab ? 'text-[#46194F]' : 'text-gray-500'}`}>
-              {locale === 'en'
-                ? tab === 'specs'
-                  ? 'Specifications'
-                  : 'Features'
-                : tab === 'specs'
-                ? 'المواصفات'
-                : 'المميزات'}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <View className="p-4">
-        {activeTab === 'specs' ? (
-          specGroups.map((group) => (
-            <View key={group.groupKey} className="mb-6">
-              <Text className="text-lg font-bold text-[#46194F] mb-2">
-                {group.groupName}
-              </Text>
-              <View className="bg-gray-50 rounded-lg p-3">
-                {group.specs.map((spec) => (
-                  <View
-                    key={spec.key}
-                    className="py-2 border-b border-gray-200 flex-row justify-between"
-                  >
-                    <Text className="text-sm text-gray-500">{spec.name}</Text>
-                    <Text className="text-sm text-gray-800 font-semibold">{spec.value}</Text>
-                  </View>
-                ))}
-              </View>
+      <View className="px-6 py-6">
+  <Text className="text-[#46194F] text-lg font-bold mb-4 text-right">صفات السيارة</Text>
+  {[
+    {
+      key: 'transmission',
+      title: 'ناقل الحركة',
+      icon: <CarFeatureIcon1 width={22} height={22} />,
+      data: [
+        { label: 'ناقل الحركة', value: 'اوتوماتيك' },
+        { label: 'نوع الجر', value: 'دفع رباعي' },
+        { label: 'وضع القيادة', value: 'عادي رياضي الرمال الطين' },
+      ],
+    },
+    { key: 'comfort', title: 'السهولة والراحة', icon: <CarFeatureIcon2 width={22} height={22} /> },
+    { key: 'seats1', title: 'المقاعد', icon: <CarFeatureIcon3 width={22} height={22} /> },
+    { key: 'audio1', title: 'النظام الصوتي والاتصال', icon: <CarFeatureIcon4 width={22} height={22} /> },
+    { key: 'safety1', title: 'السلامة', icon: <CarFeatureIcon5 width={22} height={22} /> },
+    { key: 'seats2', title: 'المقاعد', icon: <CarFeatureIcon3 width={22} height={22} /> },
+    { key: 'audio2', title: 'النظام الصوتي والاتصال', icon: <CarFeatureIcon4 width={22} height={22} /> },
+    { key: 'safety2', title: 'السلامة', icon: <CarFeatureIcon5 width={22} height={22} /> },
+  ].map((section) => (
+    <View key={section.key} className="mb-3 rounded-xl border border-[#e5e5e5] bg-white">
+      <TouchableOpacity
+        onPress={() => setExpanded((prev) => (prev === section.key ? null : section.key))}
+        className="flex-row justify-between items-center p-4"
+      >
+        <View className="flex-row items-center gap-2">
+          <MaterialCommunityIcons
+            name={expanded === section.key ? 'chevron-up' : 'chevron-down'}
+            size={20}
+            color="#46194F"
+          />
+          <Text className="text-[#46194F] font-semibold">{section.title}</Text>
+        </View>
+        {section.icon}
+      </TouchableOpacity>
+      {expanded === section.key && section.data && section.data.length > 0 && (
+        <View className="bg-white px-4 pb-4">
+          {section.data.map((item, index) => (
+            <View
+              key={index}
+              className="flex-row justify-between items-start py-2 border-b border-[#46194F]"
+            >
+              <Text className="text-right text-[#46194F] font-normal w-1/2">{item.value}</Text>
+              <Text className="text-left text-[#46194F] font-normal w-1/2">{item.label}</Text>
             </View>
-          ))
-        ) : (
-          <View>
-            {Object.entries(fullCar.features)
-              .filter(([_, enabled]) => enabled)
-              .map(([key], idx) => (
-                <View key={idx} className="mb-2">
-                  <View className="flex-row items-center">
-                    <Icon name="check-circle" size={16} color="#46194F" />
-                    <Text className="text-gray-800 text-sm ml-2">
-                      {getFeatureLabel(key, locale)}
-                    </Text>
-                  </View>
-                </View>
-              ))}
-          </View>
-        )}
-      </View>
-
-      <View className="p-4 bg-gray-50">
-        <TouchableOpacity className="bg-[#46194F] p-4 rounded-lg flex-row justify-center items-center">
-          <MaterialIcons name="phone" size={20} color="white" />
-          <Text className="text-white font-bold text-lg ml-2">
-            {locale === 'en' ? 'Contact Sales' : 'اتصل بالمبيعات'}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity className="border border-[#46194F] p-4 rounded-lg flex-row justify-center items-center mt-3">
-          <MaterialIcons name="schedule" size={20} color="#46194F" />
-          <Text className="text-[#46194F] font-bold text-lg ml-2">
-            {locale === 'en' ? 'Schedule Test Drive' : 'حجز تجربة قيادة'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+          ))}
+        </View>
+      )}
+    </View>
+  ))}
+</View>
     </ScrollView>
   );
 }

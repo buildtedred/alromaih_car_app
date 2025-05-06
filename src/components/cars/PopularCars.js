@@ -1,6 +1,6 @@
 import { View, Text, FlatList, TouchableOpacity, useWindowDimensions } from "react-native"
 import { useTranslation } from "react-i18next"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, CommonActions } from "@react-navigation/native"
 import { useRecentlyViewed } from "../../contexts/RecentlyViewedContext"
 import PopularCarCard from "./PopularCarCard"
 
@@ -13,7 +13,14 @@ export default function PopularCars({ cars, isRTL }) {
   const handleCarPress = (car) => {
     addToRecentlyViewed(car)
     const { brandLogo, image, ...safeCar } = car // remove non-serializable values
-    navigation.navigate("Gallery", { car: safeCar })
+
+    // Use CommonActions to navigate to the root stack navigator's Gallery screen
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: "Gallery",
+        params: { car: safeCar },
+      }),
+    )
   }
 
   const data = isRTL ? [...cars.slice(0, 6)].reverse() : cars.slice(0, 6)
