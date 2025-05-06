@@ -21,6 +21,7 @@ export default function RecommendedCars({ isRTL }) {
   return (
     <View className="mt-4">
       {/* Header */}
+     
       <View className="flex-row justify-between items-center px-4 mb-3">
         <Text className="text-xl font-bold text-gray-900">
           {t('home.recommended', { defaultValue: 'Recommended for You' })}
@@ -51,3 +52,4 @@ export default function RecommendedCars({ isRTL }) {
     </View>
   );
 }
+

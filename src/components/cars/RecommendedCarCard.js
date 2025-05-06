@@ -12,40 +12,38 @@ export default function RecommendedCarCard({ car, onPress }) {
 
   // Responsive values
   const isSmallScreen = width < 400;
-  const cardWidth = width * 0.8; // Take 80% of screen width
+  const cardWidth = width * 0.8; // 80% of screen
   const imageSize = isSmallScreen ? 100 : 120;
-  const textSize = isSmallScreen ? 'sm' : 'base';
-  const priceTextSize = isSmallScreen ? 'sm' : 'base';
+  const textSize = isSmallScreen ? 'text-sm' : 'text-base';
+  const subtitleSize = isSmallScreen ? 'text-xs' : 'text-sm';
+  const priceTextSize = isSmallScreen ? 'text-sm' : 'text-base';
   const iconSize = isSmallScreen ? 12 : 14;
 
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.9}
-      style={{
-        width: cardWidth, // Use fixed width for consistent sizing
-        marginRight: 16, // Add spacing between cards
-      }}
+      style={{ width: cardWidth, marginRight: 16 }}
       className="flex-row bg-white rounded-2xl shadow-md p-3 items-center mb-4"
     >
-      {/* Car Image */}
+      
       <Image
         source={car.image}
         resizeMode="contain"
         className="rounded-lg"
         style={{
           width: imageSize,
-          height: imageSize * 0.75, // Maintain 4:3 aspect ratio
+          height: imageSize * 0.75,
           marginRight: 12,
         }}
       />
 
-      {/* Car Details */}
+    
       <View className="flex-1">
-        {/* Model + 🔥 Badge */}
+        
         <View className="flex-row justify-between items-center mb-1">
-          <Text 
-            className={`text-${textSize} font-bold text-gray-800`} 
+          <Text
+            className={`${textSize} font-bold text-gray-800`}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
@@ -53,20 +51,20 @@ export default function RecommendedCarCard({ car, onPress }) {
           </Text>
         </View>
 
-        {/* Year + Brand */}
-        <Text className={`text-${textSize === 'sm' ? 'xs' : 'sm'} text-gray-500 mb-0.5`}>
+   
+        <Text className={`${subtitleSize} text-gray-500 mb-0.5`}>
           {car.specs?.year} | {getLocalized(car.brand)}
         </Text>
 
-        {/* Specs */}
-        <Text className={`text-${textSize === 'sm' ? 'xs' : 'sm'} text-gray-500 mb-1`}>
+       
+        <Text className={`${subtitleSize} text-gray-500 mb-1`}>
           {getLocalized(car.specs?.transmission)} | {getLocalized(car.specs?.fuelType)}
         </Text>
 
-        {/* Price */}
+        
         <View className="flex-row items-center">
           <Icon name="money" size={iconSize} color="#46194F" />
-          <Text className={`ml-1 text-[#46194F] font-bold text-${priceTextSize}`}>
+          <Text className={`ml-1 text-[#46194F] font-bold ${priceTextSize}`}>
             {car.cashPrice?.toLocaleString()} {locale === 'en' ? 'SAR' : 'ر.س'}
           </Text>
         </View>

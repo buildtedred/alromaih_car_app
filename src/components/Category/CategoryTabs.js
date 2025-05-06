@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PagerView from 'react-native-pager-view';
+import { useNavigation } from '@react-navigation/native';
 
 import carsData, {
   getBodyTypes,
@@ -9,9 +10,6 @@ import carsData, {
   modelIcons,
   bodyTypeIcons,
   categoryIcons,
-  filterCarsByModel,
-  filterCarsByBodyType,
-  filterCarsByCategory,
 } from '../../mock-data';
 
 import { useLocale } from '../../contexts/LocaleContext';
@@ -19,7 +17,7 @@ import { useLocale } from '../../contexts/LocaleContext';
 const { width } = Dimensions.get('window');
 
 // Calculate card-width-based tab width
-const tabWidth = (width - (width * 0.02 * 2 * 3) - 32) / 3; // same logic as 31.3% with 1% margin each side
+const tabWidth = (width - (width * 0.02 * 2 * 3) - 32) / 3;
 
 const getModels = (locale) => {
   const seen = new Set();
@@ -51,8 +49,9 @@ const getTabLabel = (key, locale) => {
   return labels[key][locale];
 };
 
-const CategoryTabs = ({ onSelectCategory }) => {
+const CategoryTabs = () => {
   const { locale } = useLocale();
+  const navigation = useNavigation();
   const [activeTab, setActiveTab] = useState('models');
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -72,20 +71,20 @@ const CategoryTabs = ({ onSelectCategory }) => {
     return 'car-sports';
   };
 
-  const handlePress = (itemKey) => {
-    if (!onSelectCategory) return;
-    let filtered = [];
-    if (activeTab === 'models') filtered = filterCarsByModel(itemKey);
-    else if (activeTab === 'bodyTypes') filtered = filterCarsByBodyType(itemKey);
-    else if (activeTab === 'categories') filtered = filterCarsByCategory(itemKey);
-    onSelectCategory(filtered);
+  const handlePress = (itemKey, itemName) => {
+    // Navigate to AllCarsScreen with the selected category
+    navigation.navigate('AllCars', { 
+      filterType: activeTab,
+      filterValue: itemKey,
+      title: itemName || itemKey 
+    });
   };
 
   const renderCard = (item, index) => (
     <TouchableOpacity
       key={index}
-      onPress={() => handlePress(item.key)}
-      className="w-[31.3%] mx-[1%] mb-3 p-4 bg-white rounded-[5px] shadow-2xl items-center"
+      onPress={() => handlePress(item.key, item.name || item.label)}
+      className="w-[31.3%] mx-[1%] mb-3 p-3 bg-white rounded-[5px] border-[0.3px] items-center"
     >
       <Icon name={getIconForItem(item.key) || 'car-sports'} size={26} color="#46194F" />
       <Text className="mt-2 text-xs font-semibold text-gray-800 text-center">
@@ -105,7 +104,7 @@ const CategoryTabs = ({ onSelectCategory }) => {
               setPageIndex(0);
             }}
             style={{ width: tabWidth }}
-            className={`items-center py-3 mb-4 font-semibold rounded-[2px] mx-[1%] ${
+            className={`items-center py-3 mb-4 font-semibold rounded-[5px] mx-[1%] ${
               activeTab === key ? 'bg-[#46194F]' : 'bg-gray-200'
             }`}
           >
@@ -121,7 +120,7 @@ const CategoryTabs = ({ onSelectCategory }) => {
       </ScrollView>
 
       <PagerView
-        style={{ height: 200 }}
+        style={{ height: 180 }}
         initialPage={0}
         onPageSelected={(e) => setPageIndex(e.nativeEvent.position)}
       >
@@ -132,7 +131,7 @@ const CategoryTabs = ({ onSelectCategory }) => {
             <View
               key={i}
               style={{ height }}
-              className="flex-row flex-wrap justify-center px-4"
+              className="flex-row flex-wrap justify-start px-4"
             >
               {page.map(renderCard)}
             </View>
