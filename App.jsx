@@ -1,4 +1,6 @@
 import './src/services/localization';
+import './src/utils/globalText'; // ✅ Global Almarai font patch
+
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaView, I18nManager } from 'react-native';
@@ -10,7 +12,7 @@ import { RecentlyViewedProvider } from './src/contexts/RecentlyViewedContext';
 import { FinanceFlowProvider } from './src/contexts/FinanceFlowContext';
 
 import StackNavigator from './src/components/navigation/StackNavigator';
-import FinanceFlowNavigator from './src/components/Financials/FinanceFlowNavigator'; // ✅ Added here
+import FinanceFlowNavigator from './src/components/Financials/FinanceFlowNavigator';
 
 function AppWithLocale() {
   const { direction } = useLocale();
@@ -18,8 +20,8 @@ function AppWithLocale() {
 
   useEffect(() => {
     if (I18nManager.isRTL !== isRTL) {
+      I18nManager.allowRTL(true);
       I18nManager.forceRTL(isRTL);
-      I18nManager.allowRTL(isRTL);
     }
   }, [isRTL]);
 

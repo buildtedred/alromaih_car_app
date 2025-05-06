@@ -1,105 +1,86 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  useWindowDimensions,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useLocale } from '../../contexts/LocaleContext';
+"use client"
+import { View, Text, Image, TouchableOpacity, useWindowDimensions } from "react-native"
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import { useLocale } from "../../contexts/LocaleContext"
+import AlmaraiFonts from "../../constants/fonts"
+import JetourLogo from "../../assets/brands/jetour_logo.svg"
+import CompareCarIcon from "../../assets/Icon/campare_car.svg" // ✅ Your SVG icon
 
 export default function PopularCarCard({ car, onPress }) {
-  const { locale } = useLocale();
-  const { width } = useWindowDimensions();
+  const { locale } = useLocale()
+  const { width } = useWindowDimensions()
 
   const getLocalized = (value) => {
-    if (!value) return '';
-    return typeof value === 'object' ? value[locale] : value;
-  };
+    if (!value) return ""
+    return typeof value === "object" ? value[locale] : value
+  }
 
-  // Responsive values
-  const cardWidth = width * 0.8;
-  const imageSize = width < 400 ? 100 : 120;
-  const textSize = width < 400 ? 'text-sm' : 'text-base';
+  // Fixed card width of 280 instead of dynamic calculation
+  const cardWidth = 280
+  const imageSize = 150
 
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.9}
-      style={{
-        width: cardWidth,
-        marginRight: 16,
-      }}
-      className="bg-white rounded-2xl shadow-md flex-row py-3 mb-4 items-center"
+      style={{ width: cardWidth }}
+      className="bg-white border-2 border-[#46194F] rounded-xl px-3 py-3 mb-4 shadow-sm flex-row items-center relative"
     >
+      {/* Top Left Heart Icon */}
+      <View className="absolute top-3 left-3">
+        <Icon name="heart" size={22} color="#46194F" />
+      </View>
+
+      {/* Top Right Custom Compare Icon */}
+      <View className="absolute top-3 right-4">
+        <CompareCarIcon width={22} height={22} />
+      </View>
+
+      {/* Padding Space on the Left */}
+      <View style={{ width: 10 }} />
+
+      {/* Text Info */}
+      <View className="flex-1 mr-2 mt-8 ml-1">
+        <View className="mb-1">
+          <JetourLogo width={75} height={16} />
+        </View>
+
+        <Text
+          numberOfLines={1}
+          style={{
+            fontFamily: AlmaraiFonts.bold,
+            fontSize: 18,
+            color: "#46194F",
+            marginTop: 4,
+            marginBottom: 2,
+          }}
+        >
+          {getLocalized(car.name)}
+        </Text>
+
+        <Text
+          numberOfLines={1}
+          style={{
+            fontFamily: AlmaraiFonts.regular,
+            fontSize: 12,
+            color: "#46194F",
+          }}
+        >
+          {locale === "ar" ? "لكجري فل كامل" : "Luxury Full Option"} {car.specs?.year || "2025"}
+        </Text>
+      </View>
+
       {/* Car Image */}
       <Image
         source={car.image}
         resizeMode="contain"
-        className="rounded-lg"
         style={{
           width: imageSize,
-          height: imageSize * 0.875,
-          marginLeft: 12,
-          marginRight: 12,
+          height: imageSize * 0.6,
+          marginTop: 24,
+          marginLeft: 0,
         }}
       />
-
-      {/* Car Info */}
-      <View className="flex-1 pr-2">
-        {/* Name and Brand */}
-        <Text
-          className={`${textSize} font-bold text-gray-900 mb-1`}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        >
-          {getLocalized(car.name)}{' '}
-          <Text className="text-gray-500 font-normal">| {getLocalized(car.brand)}</Text>
-        </Text>
-
-        {/* Price */}
-        <Text className="text-lg font-bold text-[#46194F] mb-2">
-          {car.cashPrice?.toLocaleString()} {locale === 'en' ? 'SAR' : 'ر.س'}
-        </Text>
-
-        {/* Specs */}
-        <View className="flex-row flex-wrap justify-between">
-          {car.specs?.fuelType && (
-            <View className="w-[48%] flex-row items-center mb-2">
-              <Icon name="gas-station" size={14} color="#777" />
-              <Text className="text-xs text-gray-600 ml-1">
-                {getLocalized(car.specs.fuelType)}
-              </Text>
-            </View>
-          )}
-
-          {car.specs?.year && (
-            <View className="w-[48%] flex-row items-center mb-2">
-              <Icon name="calendar" size={14} color="#777" />
-              <Text className="text-xs text-gray-600 ml-1">{car.specs.year}</Text>
-            </View>
-          )}
-
-          {car.specs?.mileage && (
-            <View className="w-[48%] flex-row items-center mb-2">
-              <Icon name="speedometer" size={14} color="#777" />
-              <Text className="text-xs text-gray-600 ml-1">
-                {getLocalized(car.specs.mileage)}
-              </Text>
-            </View>
-          )}
-
-          {car.specs?.location && (
-            <View className="w-[48%] flex-row items-center mb-2">
-              <Icon name="map-marker" size={14} color="#777" />
-              <Text className="text-xs text-gray-600 ml-1">
-                {getLocalized(car.specs.location)}
-              </Text>
-            </View>
-          )}
-        </View>
-      </View>
     </TouchableOpacity>
-  );
+  )
 }

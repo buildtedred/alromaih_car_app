@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import CarCard from './CarCard';
+import AlmaraiFonts from '../../constants/fonts';
 
 const FeaturedCars = ({ cars, isRTL }) => {
   const { t } = useTranslation();
@@ -12,30 +13,35 @@ const FeaturedCars = ({ cars, isRTL }) => {
 
   return (
     <View>
-      {/* ✅ Proper localized key for Featured Cars */}
-      <View className="flex-row justify-between items-center px-4 mb-3">
-        <Text className="text-xl font-bold text-gray-900">
+      {/* Header Row */}
+      <View className="flex-row justify-between items-center px-6 mb-3">
+        <Text
+          style={{
+            fontSize: 15,
+            fontFamily: AlmaraiFonts.bold,
+            color: '#111827', // Tailwind's text-gray-900
+          }}
+        >
           {t('home.title', { defaultValue: 'Featured Cars' })}
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('AllCars')}>
-          <Text className="text-sm font-medium" style={{ color: '#46194F' }}>
-            {t('common.view_all', { defaultValue: 'View All' })}
-          </Text>
-        </TouchableOpacity>
+
       </View>
 
+      {/* Car List */}
       <FlatList
         horizontal
         inverted={isRTL}
         data={data}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={{ marginHorizontal: 8 }}>
+          <View style={{ marginHorizontal: 10 }}>
             <CarCard car={item} />
           </View>
         )}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 8 }}
+        contentContainerStyle={{
+          paddingHorizontal: 8,
+        }}
       />
     </View>
   );

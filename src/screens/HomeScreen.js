@@ -1,21 +1,25 @@
-import React, { useState, useMemo } from 'react';
-import { View, ScrollView } from 'react-native';
-import AppHeader from '../components/common/AppHeader';
-import CategoryTabs from '../components/Category/CategoryTabs';
-import BrandSelector from '../components/AdvancedSearch/BrandSelector';
-import PopularCars from '../components/cars/PopularCars';
-import FeaturedCars from '../components/cars/FeaturedCars';
-import RecentlyViewedCars from '../components/cars/RecentlyViewedCars';
-import RecommendedCars from '../components/cars/RecommendedCars';
-import NewsSection from '../components/Home/NewsSection';
-import carsData from '../mock-data';
-import { useNavigation } from '@react-navigation/native';
-import { useLocale } from '../contexts/LocaleContext';
-import BrowserScreen from './BrowseScreen';
+"use client";
+
+import { useState, useMemo } from "react";
+import { View, ScrollView } from "react-native";
+import AppHeader from "../components/common/AppHeader";
+import BrandSelector from "../components/AdvancedSearch/BrandSelector";
+import PopularCars from "../components/cars/PopularCars";
+import FeaturedCars from "../components/cars/FeaturedCars";
+// import RecentlyViewedCars from "../components/cars/RecentlyViewedCars";
+// import RecommendedCars from "../components/cars/RecommendedCars";
+// import NewsSection from "../components/Home/NewsSection";
+import SliderBanner from "../components/Home/SliderBanner";
+import FinancingPartners from "../components/Home/FinancingPartners";
+import CarComparisonNew from "../components/Home/CarComparisonNew";
+import carsData from "../mock-data";
+import { useNavigation } from "@react-navigation/native";
+import { useLocale } from "../contexts/LocaleContext";
+
 export default function HomeScreen() {
   const navigation = useNavigation();
   const { direction } = useLocale();
-  const isRTL = direction === 'rtl';
+  const isRTL = direction === "rtl";
 
   const [selectedBrand, setSelectedBrand] = useState(null);
 
@@ -28,75 +32,85 @@ export default function HomeScreen() {
 
   const popularCars = useMemo(() => {
     const featuredIds = featuredCars.map((car) => car.id);
-    return carsData.filter((car) => !featuredIds.includes(car.id)).slice(0, 6);
+    return carsData
+      .filter((car) => !featuredIds.includes(car.id))
+      .slice(0, 6);
   }, [featuredCars]);
 
   const handleBrandSelect = (brandKey) => {
     if (brandKey) {
-      const brandFilteredCars = carsData
-        .filter((car) => car.brand === brandKey)
-        .map((car) => ({ id: car.id }));
-
-      navigation.navigate('FilteredCars', { filteredCars: brandFilteredCars });
+      navigation.navigate("CarsTab", {
+        screen: "AllCarsScreen",
+        params: {
+          selectedFilters: { brand: brandKey },
+        },
+      });
     }
   };
 
-  const handleCategorySelect = (filtered) => {
-    const filteredCars = filtered.map((car) => ({ id: car.id }));
-    navigation.navigate('FilteredCars', { filteredCars });
-  };
-
   return (
-    <View className="flex-1 bg-[#F9F9F9]">
+    <View className="flex-1 bg-white">
+      {/* Header */}
       <View className="z-10 bg-white">
         <AppHeader />
       </View>
 
       <ScrollView
         contentContainerStyle={{ paddingBottom: 40 }}
-        style={{ direction: isRTL ? 'rtl' : 'ltr' }}
         showsVerticalScrollIndicator={false}
+        style={{ writingDirection: isRTL ? "rtl" : "ltr" }} // ✅ Controls scroll start direction
       >
-        <View className="mt-6 mb-4 rounded-2xl px-2">
-          <CategoryTabs
-            onSelectCategory={handleCategorySelect}
-            navigation={navigation}
-            isRTL={isRTL}
-          />
-        </View>
+        {/* Top banner */}
+        <SliderBanner />
 
-        <View className="mt-6 px-2 pt-6 bg-white">
-          <BrandSelector
-            selected={selectedBrand}
-            setSelected={handleBrandSelect}
-            showTitle={false}
-            showIcon={false}
-            showText={true}
-            textClass="text-sm font-semibold"
-          />
-        </View>
-
+        {/* Brands */}
         <View className="mt-4">
-          <PopularCars cars={popularCars} isRTL={isRTL} />
+        <BrandSelector
+  selected={selectedBrand}
+  setSelected={handleBrandSelect}
+  showTitle={true}
+  showIcon={true}
+  showText={true}
+  textClass="text-sm font-semibold"
+  isRTL={isRTL} // ✅ REQUIRED
+/>
+
         </View>
 
-        <View className="mt-4">
-          <RecommendedCars isRTL={isRTL} />
-        </View>
-
-        <View className="mt-4 mb-4">
-          <RecentlyViewedCars navigation={navigation} isRTL={isRTL} />
-        </View>
-
+        {/* Featured Cars */}
         <View className="mt-4">
           <FeaturedCars cars={featuredCars} isRTL={isRTL} />
         </View>
 
-        <View className="mt-16 mb-8">
-        <NewsSection />
+        {/* Recommended Cars (optional) */}
+        {/* <View className="mt-4">
+          <RecommendedCars isRTL={isRTL} />
+        </View> */}
+
+        {/* Recently Viewed (optional) */}
+        {/* <View className="mt-4 mb-4">
+          <RecentlyViewedCars navigation={navigation} isRTL={isRTL} />
+        </View> */}
+
+        {/* Compare Cars Section */}
+        <View className="mt-4">
+          <CarComparisonNew isRTL={isRTL} />
         </View>
 
+        {/* Popular Cars */}
+        <View className="mt-4">
+          <PopularCars cars={popularCars} isRTL={isRTL} />
+        </View>
 
+        {/* Finance Partners */}
+        <View className="mt-4 mb-16">
+          <FinancingPartners isRTL={isRTL} />
+        </View>
+
+        {/* News Section (optional) */}
+        {/* <View className="mt-16 mb-8">
+          <NewsSection />
+        </View> */}
       </ScrollView>
       
     </View>
