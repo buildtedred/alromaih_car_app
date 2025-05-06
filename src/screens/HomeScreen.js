@@ -112,7 +112,6 @@ export default function HomeScreen() {
           <NewsSection />
         </View> */}
       </ScrollView>
-      
     </View>
   );
 }
