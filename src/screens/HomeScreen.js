@@ -94,6 +94,9 @@ export default function HomeScreen() {
 
         <View className="mt-16 mb-8">
         <NewsSection />
+        </View>
+
+
       </ScrollView>
       
     </View>
