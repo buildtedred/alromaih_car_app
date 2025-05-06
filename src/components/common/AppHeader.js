@@ -1,51 +1,75 @@
-import React from 'react';
-import { View, Image, TouchableOpacity, Text, Platform } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
-import { useLocale } from '../../contexts/LocaleContext';
-import { useNavigation } from '@react-navigation/native';
-import EnglishSvg from '../../assets/english.svg';
-import ArabicSvg from '../../assets/arabic.svg';
+"use client"
+import { View, TouchableOpacity, Text } from "react-native"
+import { useLocale } from "../../contexts/LocaleContext"
+import { useNavigation } from "@react-navigation/native"
+import BellIcon from "../../assets/Icon/BellIcon1.svg"
+import FavoriteIcon from "../../assets/Icon/FavoriteIcon.svg"
+import SearchIcon1 from "../../assets/Icon/SearchIcon1.svg"
+import UserIcon from "../../assets/Icon/UserIcon.svg"
+import LogoSvg from "../../assets/Icon/logo.svg"
+import { useState } from "react"
 
 export default function AppHeader() {
-  const { toggleLocale, locale } = useLocale();
-  const navigation = useNavigation();
+  const { locale, toggleLocale } = useLocale()
+  const navigation = useNavigation()
+  const [favoriteCount, setFavoriteCount] = useState(2) // Set a default value for demo
+
+  const handleUserIconPress = () => {
+    toggleLocale()
+  }
 
   return (
-    <View className="bg-white p-4 shadow-md rounded-b-2xl">
-      {/* Header top row: logo and language toggle */}
-      <View className="flex-row justify-between items-center mb-3">
-        <Image
-          source={require('../../assets/images/logo.jpg')}
-          style={{ width: 100, height: 30, resizeMode: 'contain' }}
-        />
-        <TouchableOpacity onPress={toggleLocale}>
-          {locale === 'en' ? (
-            <EnglishSvg width={32} height={24} />
-          ) : (
-            <ArabicSvg width={32} height={24} />
-          )}
-        </TouchableOpacity>
+    <View className="bg-white px-4 pt-6 pb-6 shadow-md rounded-b-2xl">
+      {/* Header row: logo and icons */}
+      <View className="flex-row items-center justify-between">
+        {/* Logo on the left */}
+        <View className="w-[140px] h-10 justify-center">
+          <LogoSvg width={140} height={40} />
+        </View>
+
+        {/* Icons container on the right */}
+        <View className="flex-row items-center">
+          <TouchableOpacity
+            className="w-9 h-9 rounded-full justify-center items-center mx-1.5"
+            onPress={() => navigation.navigate("Search")}
+          >
+            <SearchIcon1 width={24} height={24} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className="w-9 h-9 rounded-full justify-center items-center mx-1.5"
+            onPress={() => navigation.navigate("Notifications")}
+          >
+            <BellIcon width={24} height={24} />
+          </TouchableOpacity>
+
+          {/* Favorite icon with badge */}
+          <TouchableOpacity
+            className="w-9 h-9 rounded-full justify-center items-center mx-1.5 relative"
+            onPress={() => navigation.navigate("Favorites")}
+          >
+            <FavoriteIcon width={24} height={24} />
+
+            {/* Badge showing favorite count */}
+            {favoriteCount > 0 && (
+              <View className="absolute -top-1 -right-1 bg-[#46194F] rounded-full w-5 h-5 flex items-center justify-center">
+                <Text className="text-white text-xs font-bold">{favoriteCount}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+
+          {/* Gap before user icon */}
+          <View className="w-2" />
+
+          {/* Larger user icon */}
+          <TouchableOpacity
+            className="w-11 h-11 rounded-full justify-center items-center ml-1.5"
+            onPress={handleUserIconPress}
+          >
+            <UserIcon width={28} height={28} />
+          </TouchableOpacity>
+        </View>
       </View>
-
-      {/* Tappable search bar (navigates to Search screen) */}
-      <TouchableOpacity
-  onPress={() => navigation.navigate('Search')}
-  className="flex-row items-center bg-[#F1F3F5] rounded-[10px] px-4 py-3 mt-2"
-  activeOpacity={0.8}
-  style={{
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.07,
-    shadowRadius: 3,
-    elevation: 2,
-  }}
->
-  <Feather name="search" size={18} color="#777" />
-  <Text className="ml-3 text-sm text-gray-700 font-medium">
-    {locale === 'en' ? 'Search used cars' : 'ابحث عن السيارات'}
-  </Text>
-</TouchableOpacity>
-
     </View>
-  );
+  )
 }
