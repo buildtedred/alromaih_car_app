@@ -23,10 +23,13 @@ import AboutScreen from "../moresection/AboutScreen"
 import TermsScreen from "../moresection/TermsScreen"
 import PrivacyScreen from "../moresection/PrivacyScreen"
 import ContactUsScreen from "../moresection/ContactUsScreen"
+import FAQScreen from "../moresection/FAQScreen"
 import BlogScreen from "../../screens/BlogScreen"
 import NewsDetailScreen from "../../screens/NewsDetailScreen"
 import BrowseScreen from "../../screens/BrowseScreen"
 import ReviewScreen from "../../screens/ReviewScreen"
+import AccountScreen from '../../components/moresection/AccountScreen';
+
 
 // Icons
 import TabCarsIcon from "../../assets/Icon/TabCarsIcon.svg"
@@ -80,6 +83,8 @@ function ServicesStack() {
       <Stack.Screen name="Terms" component={TermsScreen} options={{ headerShown: true, title: "Terms & Conditions" }} />
       <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true, title: "Privacy Policy" }} />
       <Stack.Screen name="ContactUs" component={ContactUsScreen} options={{ headerShown: true, title: "Contact Us" }} />
+      <Stack.Screen name="FAQ" component={FAQScreen} options={{ headerShown: true, title: "FAQs / Help" }} />
+      <Stack.Screen name="AccountScreen" component={AccountScreen} options={{ headerShown: true, title: "My Account" }} />
     </Stack.Navigator>
   )
 }

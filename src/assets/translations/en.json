@@ -71,6 +71,15 @@
       "finance_bank": "Select Bank (Finance)"
     },
     "more": {
+      "account": "Account",
+      "edit_profile": "Edit personal profile",
+      "edit": "Edit",
+      "my_orders": "My Orders",
+      "app_info": "App Information",
+      "faq": "FAQs / Help",
+      "language": "Language",
+      "notifications": "Notifications",
+      "arabic": "Arabic",
       "company_name": "Alromaih Motors",
       "tagline": "Premium Car Dealership",
       "call_us": "Call Us",
