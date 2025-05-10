@@ -64,16 +64,17 @@ export default function HomeScreen() {
         <SliderBanner />
 
         {/* Brands */}
-        <View className="mt-4">
+        <View className="mt-4" style={{ marginLeft: isRTL ? 0 : 12, marginRight: isRTL ? 12 : 0 }}>
         <BrandSelector
-  selected={selectedBrand}
-  setSelected={handleBrandSelect}
-  showTitle={true}
-  showIcon={true}
-  showText={true}
-  textClass="text-sm font-semibold"
-  isRTL={isRTL} // ✅ REQUIRED
-/>
+          selected={selectedBrand}
+          setSelected={handleBrandSelect}
+          showTitle={true}
+          showIcon={true}
+          showText={true}
+          textClass="text-sm font-semibold"
+          isRTL={isRTL} // ✅ REQUIRED
+          titlePadding="px-4" // more spacious for homepage
+        />
 
         </View>
 

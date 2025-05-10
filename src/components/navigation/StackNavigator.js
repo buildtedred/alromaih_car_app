@@ -10,9 +10,9 @@ import CustomTabBarBackground from "./CustomTabBarBackground"
 // Screens
 import HomeScreen from "../../screens/HomeScreen"
 import AllCarScreen from "../../screens/AllCarsScreen"
-import CompareBuilderScreen from "../../screens/CompareBuilderScreen"
 import MoreScreen from "../../screens/MoreScreen"
 import ChatScreen from "../../screens/ChatScreen"
+import CarDiscoverScreen from "../../screens/CarDiscoverScreen" // Import the new screen
 
 // Additional Screens (Gallery moved globally)
 import Gallery from "../../screens/Gallery"
@@ -66,8 +66,13 @@ function ChatStack() {
 function ExploreStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="CompareBuilderScreen" component={CompareBuilderScreen} />
-      <Stack.Screen name="CompareScreen" component={CompareScreen} options={{ headerShown: true, title: "Comparison" }} />
+      {/* Replace CompareBuilderScreen with CarDiscoverScreen */}
+      <Stack.Screen name="CarDiscoverScreen" component={CarDiscoverScreen} />
+      <Stack.Screen
+        name="CompareScreen"
+        component={CompareScreen}
+        options={{ headerShown: true, title: "Comparison" }}
+      />
     </Stack.Navigator>
   )
 }
@@ -131,30 +136,42 @@ function CustomTabBarIcon({ focused, Icon, label, index, activeIndex }) {
     >
       {focused ? (
         <View
-          style={[{
-            position: "absolute",
-            top: -2,
-            width: 80,
-            height: 80,
-            borderRadius: 40,
-            backgroundColor: "white",
-            borderWidth: 1,
-            borderColor: "#E5E7EB",
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.05,
-            shadowRadius: 1,
-            elevation: 2,
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 50,
-          }, getActiveTabPositionStyle()]}
+          style={[
+            {
+              position: "absolute",
+              top: -2,
+              width: 80,
+              height: 80,
+              borderRadius: 40,
+              backgroundColor: "white",
+              borderWidth: 1,
+              borderColor: "#E5E7EB",
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.05,
+              shadowRadius: 1,
+              elevation: 2,
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 50,
+            },
+            getActiveTabPositionStyle(),
+          ]}
         >
           <Icon width={28} height={28} fill="#46194F" />
           <Text style={{ fontSize: 11, color: "#46194F", marginTop: 4, fontWeight: "bold" }}>{label}</Text>
         </View>
       ) : (
-        <View style={{ alignItems: "center", justifyContent: "center", padding: 8, borderRadius: 8, marginTop: 10, opacity: 0.5 }}>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 8,
+            borderRadius: 8,
+            marginTop: 10,
+            opacity: 0.5,
+          }}
+        >
           <Icon width={24} height={24} fill="#9CA3AF" />
         </View>
       )}

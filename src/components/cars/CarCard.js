@@ -1,8 +1,9 @@
 "use client"
 import { useState } from "react"
-import { View, Image, TouchableOpacity, Animated } from "react-native"
+import { View, Image, TouchableOpacity, Animated, useWindowDimensions } from "react-native"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { useNavigation } from "@react-navigation/native"
+
 import { useLocale } from "../../contexts/LocaleContext"
 import { brands, brandLogos } from "../../mock-data"
 import { useRecentlyViewed } from "../../contexts/RecentlyViewedContext"
@@ -15,6 +16,14 @@ export default function CarCard({ car }) {
   const navigation = useNavigation()
   const { addToRecentlyViewed } = useRecentlyViewed()
   const [scale] = useState(new Animated.Value(1))
+  const { width } = useWindowDimensions()
+
+  // Function to truncate text after 10 characters
+  const truncateText = (text, maxLength = 10) => {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
 
   const getLang = (field) => (typeof field === "object" ? field?.[locale] : field)
 
@@ -37,6 +46,7 @@ export default function CarCard({ car }) {
 
   const goToGallery = () => {
     addToRecentlyViewed(car)
+
     navigation.navigate("Gallery", {
       car: {
         ...car,
@@ -56,8 +66,13 @@ export default function CarCard({ car }) {
 
   return (
     <Animated.View
-      className="w-[280px] bg-white border-2 border-[#46194F] rounded-xl"
-      style={{ transform: [{ scale }] }}
+      style={{
+        flex: 2,
+        margin: 2,
+        minWidth: 180,
+        transform: [{ scale }],
+      }}
+      className="bg-white border-2 border-[#46194F] rounded-xl"
     >
       <TouchableOpacity
         onPress={goToGallery}
@@ -66,59 +81,134 @@ export default function CarCard({ car }) {
         activeOpacity={0.95}
         className="overflow-hidden rounded-2xl"
       >
-        <View className="flex-row justify-between items-center px-4 pt-2">
-          <Icon name="heart-outline" size={22} color="#46194F" />
-          <CompareCarIcon width={22} height={22} />
+        {/* Top Icons Row */}
+        <View className="flex-row justify-between items-center px-3 pt-1">
+          <Icon name="heart-outline" size={18} color="#46194F" />
+          <CompareCarIcon width={18} height={18} />
         </View>
 
-        <View className="w-full h-28 px-4 mt-2 mb-1">
+        {/* Car Image */}
+        <View className="w-full h-20 px-3 mt-0 mb-0">
           <Image source={car.image} className="w-full h-full" resizeMode="contain" />
         </View>
 
-        <View className="h-[1px] bg-[#46194F] my-2" />
+        {/* Divider */}
+        <View className="h-[1px] bg-[#46194F] my-0.5" />
 
-        <View className="flex-row justify-between items-center px-4">
-          <View className="items-start">
-            <AppText bold style={{ fontSize: 14, color: "#46194F" }}>{getLang(car.name)}</AppText>
-            <AppText style={{ fontSize: 12, color: "#666", marginTop: 2 }}>
-              {getLang(car.subtext)
-                ? getLang(car.subtext)
-                : `${locale === "ar" ? "لكجري فل كامل" : "Luxury Full Option"} ${car.specs?.year}`}
+        {/* Name + Brand */}
+        <View className="flex-row justify-between items-center px-3 py-0.5">
+          <View className="items-start flex-1 mr-2" style={{ maxWidth: '65%' }}>
+            <AppText 
+              bold 
+              style={{ 
+                fontSize: 12, 
+                color: "#46194F",
+                width: '100%' 
+              }} 
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {truncateText(getLang(car.name))}
+            </AppText>
+            <AppText 
+              style={{ 
+                fontSize: 10, 
+                color: "#666",
+                width: '100%' 
+              }} 
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {truncateText(getLang(car.subtext) || `${locale === "ar" ? "لكجري فل كامل" : "Luxury Full Option"} ${car.specs?.year}`)}
             </AppText>
           </View>
           {LogoComponent ? (
-            <LogoComponent width={75} height={22} />
+            <View className="ml-1" style={{ maxWidth: '30%' }}>
+              <LogoComponent width={55} height={18} />
+            </View>
           ) : (
-            <AppText bold style={{ fontSize: 14, color: "#000" }}>{brandName}</AppText>
+            <AppText 
+              bold 
+              style={{ 
+                fontSize: 12, 
+                color: "#000",
+                maxWidth: '30%' 
+              }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {truncateText(brandName)}
+            </AppText>
           )}
         </View>
 
-        <View className="h-[1px] bg-[#46194F] my-3 mx-4" />
+        {/* Divider */}
+        <View className="h-[1px] bg-[#46194F] my-0.5 mx-2" />
 
-        <View className="flex-row justify-between items-center px-4 pb-3">
+        {/* Prices Row */}
+        <View className="flex-row justify-between items-center px-3 pb-1">
+          {/* Cash Price */}
           <View className="items-center flex-1">
-            <AppText style={{ fontSize: 12, color: "#666", marginBottom: 4 }}>
+            <AppText 
+              style={{ 
+                fontSize: 10, 
+                color: "#666", 
+                marginBottom: 1 
+              }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {locale === "ar" ? "سعر الكاش" : "Cash Price"}
             </AppText>
             <View className="flex-row items-center justify-center">
-              <AppText bold style={{ fontSize: 16, color: "#46194F", marginRight: 4 }}>
+              <AppText 
+                bold 
+                style={{ 
+                  fontSize: 12, 
+                  color: "#46194F", 
+                  marginRight: 2,
+                  maxWidth: 70 
+                }}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 {car.cashPrice?.toLocaleString()}
               </AppText>
-              <RiyalIcon width={20} height={20} />
+              <RiyalIcon width={16} height={16} />
             </View>
           </View>
 
+          {/* Divider */}
           <View className="w-px h-8 bg-[#46194F] mx-2" />
 
+          {/* Installment */}
           <View className="items-center flex-1">
-            <AppText style={{ fontSize: 12, color: "#666", marginBottom: 4 }}>
+            <AppText 
+              style={{ 
+                fontSize: 10, 
+                color: "#666", 
+                marginBottom: 1 
+              }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {locale === "ar" ? "يبدأ القسط من" : "Installment From"}
             </AppText>
             <View className="flex-row items-center justify-center">
-              <AppText bold style={{ fontSize: 16, color: "#46194F", marginRight: 4 }}>
+              <AppText 
+                bold 
+                style={{ 
+                  fontSize: 12, 
+                  color: "#46194F", 
+                  marginRight: 2,
+                  maxWidth: 70 
+                }}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 {car.installmentPrice?.toLocaleString()}
               </AppText>
-              <RiyalIcon width={20} height={20} />
+              <RiyalIcon width={16} height={16} />
             </View>
           </View>
         </View>

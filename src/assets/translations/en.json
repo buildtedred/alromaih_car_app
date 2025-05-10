@@ -12,10 +12,14 @@
     "sort": "Sort",
     "sorted": "Sorted",
     "filter": "Filter",
-    "result": "result",
-    "results": "results",
+    "result": "Result",
+    "results": "Results",
     "no_results": "No cars match your search.",
-    "loading_error": "An error occurred while loading."
+    "loading_error": "An error occurred while loading.",
+    "brand_instruction": "Choose the brand and model that suits you",
+     "filter_results": "Filter Results",
+  "no_cars_found": "No cars found",
+  "sort_by": "Sort By"
   },
   "home": {
     "title": "Featured Cars",
@@ -25,10 +29,10 @@
   },
   "screens": {
     "search": {
-      "title": "Search",
+      "title": "Filter Results",
       "filters": "Filters",
       "reset": "Reset",
-      "recent_searches": "Recent searches",
+      "recent_searches": "Recent Searches",
       "advanced_search": "Advanced Search",
       "popular": "Popular Used Cars",
       "recent_filter_note": "All Cities, Any Price, Any Year"
@@ -82,58 +86,58 @@
     },
     "privacy": {
       "title": "Privacy Policy",
-      "introduction": "At Al Rumaih Cars, we value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and safeguard your information when you use our application. We encourage you to read this policy carefully to understand how we handle your data.",
+      "introduction": "At Al Rumaih Cars, we value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and safeguard your information when you use our application.",
       "section1_title": "1. Information We Collect",
-      "section1_content": "Al Rumaih Cars may collect personal information from you when you visit our application or interact with us in any way. This information may include your name, email address, phone number, and any other information you provide to us.",
+      "section1_content": "We may collect your name, email address, phone number, and other information you provide to us.",
       "section2_title": "2. How We Use Your Information",
-      "section2_content": "We may use the information we collect from you to communicate with you, personalize your experience, and provide offers and promotions to you.",
+      "section2_content": "We may use your information to communicate with you, personalize your experience, and provide offers.",
       "section3_title": "3. Information Sharing",
-      "section3_content": "We may share your information with third-party service providers who help us operate our application, conduct our business, or serve you. We may also share your information when required by law or to protect our rights.",
+      "section3_content": "We may share your information with third-party service providers or as required by law.",
       "section4_title": "4. Security",
-      "section4_content": "We take reasonable measures to protect the information we collect from you against unauthorized access, alteration, disclosure, or destruction.",
+      "section4_content": "We take reasonable measures to protect your data from unauthorized access or disclosure.",
       "section5_title": "5. Your Choices",
-      "section5_content": "You can choose not to provide certain information to us, but this may limit your ability to use some features of our services. You can also opt out of receiving promotional emails from us.",
+      "section5_content": "You can opt out of some data collection and promotional emails.",
       "section6_title": "6. Changes to This Privacy Policy",
-      "section6_content": "Al Rumaih Cars reserves the right to update or change this Privacy Policy at any time. Any changes will be posted on this page. By using our application or services, you consent to the collection and use of your information as described in this Privacy Policy. If you have any questions about our Terms of Service or Privacy Policy, please contact us through our 'Contact Us' page."
+      "section6_content": "We may update this policy from time to time. Continued use of our services means you accept the changes."
     },
     "about": {
       "heading": "About Al Rumaih Cars",
-      "description": "Since 1996, we've embarked on a journey full of passion and innovation toward a bright future in the automotive world. With confidence and a clear vision, we have built bridges of trust with our clients and achieved continuous success we are proud of.",
+      "description": "Since 1996, we’ve been passionate about redefining the car buying experience with innovation and trust.",
       "vision_title": "Creating a Massive Entity",
       "vision_main": "With multiple branches",
-      "vision_extra": "We aim to be the first destination for clients in the luxury car sector, offering a unique and outstanding experience that meets all their expectations.",
+      "vision_extra": "We aim to be the #1 destination for luxury vehicles with unmatched service.",
       "values_description": "Our Values",
-      "values": "Trust, quality, innovation, and commitment to customer experience are the core values that drive our business.",
+      "values": "Trust, quality, innovation, and customer-first thinking.",
       "experience_title": "Our Expertise",
-      "experience": "Over two decades of experience in luxury vehicles and providing exceptional solutions to our valued clients.",
-      "financing_title": "Facilitating Sales Through",
-      "financing_sub": "Various financing sources",
-      "financing_note": "(Cash - Banks - Financing companies)"
+      "experience": "Over 20 years in premium automotive excellence.",
+      "financing_title": "Simplifying Car Buying with",
+      "financing_sub": "Diverse Financing Options",
+      "financing_note": "(Cash - Banks - Financing Companies)"
     },
     "terms": {
       "title": "Terms & Conditions",
-      "intro": "Welcome to Al Rumaih Cars! These Terms of Service govern your access to and use of Al Rumaih Cars application, products, and services. By using our services, you agree to be bound by these terms. Please read them carefully.",
+      "intro": "Welcome to Al Rumaih Cars! These terms govern your use of our app and services. Please read them carefully.",
       "section1": {
         "title": "1. Acceptance of Terms",
-        "body": "By accessing or using Al Rumaih Cars application, products, or services, you agree to be bound by these Terms of Service. If you do not agree to all the terms and conditions of this agreement, you may not access the application or use any services."
+        "body": "By accessing our services, you agree to abide by these terms. If not, you may not use the app."
       },
       "section2": {
         "title": "2. Use of Services",
-        "body": "You agree to use Al Rumaih Cars services only for lawful purposes and in a manner consistent with all applicable laws and regulations. You may not use the car services in any unauthorized or unlawful activities."
+        "body": "You agree to use the services lawfully and not for any illegal or unauthorized purposes."
       },
       "section3": {
         "title": "3. Intellectual Property",
-        "body": "All content included on Al Rumaih Cars application, such as text, graphics, logos, button icons, images, audio clips, digital downloads, data compilations, and software, is the property of Al Rumaih Cars or its content suppliers and protected by copyright laws."
+        "body": "All content is property of Al Rumaih Cars and protected by copyright law."
       },
       "section4": {
         "title": "4. Limitation of Liability",
-        "body": "Al Rumaih Cars, its officers, directors, employees, or agents will not be liable to you under any circumstances for any direct, indirect, incidental, special, punitive, or consequential damages whatsoever resulting from any errors, mistakes, or inaccuracies in content or personal information, injury or property damage, of any nature whatsoever, resulting from your access to and use of our services."
+        "body": "Al Rumaih Cars is not responsible for any damages arising from your use of our services."
       },
       "section5": {
         "title": "5. Governing Law",
-        "body": "These Terms of Service shall be governed by and construed in accordance with the laws of the Kingdom of Saudi Arabia."
+        "body": "These terms are governed by the laws of the Kingdom of Saudi Arabia."
       },
-      "contact": "If you have any questions about these Terms, please contact us at info@alrumaihcars.com."
+      "contact": "If you have questions, contact us at info@alrumaihcars.com"
     },
     "appDesign": {
       "welcomeTitle": "Welcome",
@@ -143,7 +147,7 @@
       "paymentTitle": "We Accept",
       "about": "About Us",
       "privacy": "Privacy Policy",
-      "terms": "Terms & Condition",
+      "terms": "Terms & Conditions",
       "rights": "All rights reserved"
     }
   },
@@ -190,49 +194,36 @@
     "all": "All"
   },
   "location": {
-  "select_location": "Select Location",
-  "riyadh": "Riyadh",
-  "arar": "Ar Ar"
-},
-"advanced": {
-  "car_make_model": "Car Make & Model",
+    "select_location": "Select Location",
+    "riyadh": "Riyadh",
+    "arar": "Arar"
+  },
+  "advanced": {
+    "car_make_model": "Car Make & Model",
     "search_placeholder": "Search makes and models...",
-  "apply": "Apply"
-},
-"appDesign": {
-  "welcomeTitle": "Welcome",
-  "welcomeMessage": "Discover our premium services and exclusive offers tailored just for you.",
-  "phoneLabel": "Phone Number",
-  "emailLabel": "Email Address",
-  "paymentTitle": "We Accept",
-  "about": "About Us",
-  "privacy": "Privacy Policy",
-  "terms": "Terms & Condition",
-  "rights": "All rights reserved"
-},
-"compare": {
-  "title": "Compare Cars",
-  "car": "Car",
-  "brand": "Brand",
-  "model": "Model",
-  "year": "Year",
-  "select_brand": "Select Brand",
-  "select_model": "Select Model",
-  "select_year": "Select Year",
-  "add_car": "Add Another Car",
-  "remove": "Remove",
-  "select_more": "Select 2 or more cars to compare",
-  "compare_now": "Compare {{count}} Cars",
-  "select_two_cars": "Select at least 2 cars to compare.",
-  "vs": "VS",
-  "download_pdf": "Download Comparison PDF",
-  "pdf_title": "Car Comparison Report",
-  "specification": "Specification",
-  "success": "Success",
-  "error": "Error",
-  "pdf_saved": "Comparison PDF saved to your Downloads folder!",
-  "pdf_failed": "Failed to generate or save the PDF."
-}
-
-
+    "apply": "Apply"
+  },
+  "compare": {
+    "title": "Compare Cars",
+    "car": "Car",
+    "brand": "Brand",
+    "model": "Model",
+    "year": "Year",
+    "select_brand": "Select Brand",
+    "select_model": "Select Model",
+    "select_year": "Select Year",
+    "add_car": "Add Another Car",
+    "remove": "Remove",
+    "select_more": "Select 2 or more cars to compare",
+    "compare_now": "Compare {{count}} Cars",
+    "select_two_cars": "Select at least 2 cars to compare.",
+    "vs": "VS",
+    "download_pdf": "Download Comparison PDF",
+    "pdf_title": "Car Comparison Report",
+    "specification": "Specification",
+    "success": "Success",
+    "error": "Error",
+    "pdf_saved": "Comparison PDF saved to your Downloads folder!",
+    "pdf_failed": "Failed to generate or save the PDF."
+  }
 }

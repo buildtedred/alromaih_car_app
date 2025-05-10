@@ -1027,7 +1027,7 @@ const carsData = [
     bodyType: "suv",
     category: "fullsize",
     brandLogo: brandLogos.jetour,
-    image: require("./assets/images/GalleryCar.png"),
+    image: require("./assets/images/car20.png"),
     additionalImages: [require("./assets/images/car2.png"), require("./assets/images/car3.png")],
     status: "discount",
     modelYear: {
@@ -1267,7 +1267,7 @@ const carsData = [
     bodyType: "suv",
     category: "luxury",
     brandLogo: brandLogos.jetour,
-    image: require("./assets/images/GalleryCar.png"),
+    image: require("./assets/images/car20.png"),
     additionalImages: [require("./assets/images/car6.png"), require("./assets/images/car5.png")],
     status: "unavailable",
     modelYear: {

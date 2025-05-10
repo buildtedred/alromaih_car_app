@@ -25,8 +25,8 @@ export default function PopularCars({ cars, isRTL }) {
 
   const data = isRTL ? [...cars.slice(0, 6)].reverse() : cars.slice(0, 6)
 
-  // Item separator component to create gap between cards
-  const ItemSeparatorComponent = () => <View style={{ width: 16 }} />
+  // Item separator component to create gap between cards - reduced from 16 to 6
+  const ItemSeparatorComponent = () => <View style={{ width: 6 }} />
 
   return (
     <View>
@@ -52,10 +52,10 @@ export default function PopularCars({ cars, isRTL }) {
         ItemSeparatorComponent={ItemSeparatorComponent}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: 10,
+          paddingHorizontal: 6, // Reduced from 10 to 6
           paddingVertical: 8,
         }}
-        snapToInterval={width * 0.65 + 16} // Updated to match the new card width (65%)
+        snapToInterval={width * 0.65 + 6} // Updated to match the new gap (6px)
         decelerationRate="fast"
       />
     </View>

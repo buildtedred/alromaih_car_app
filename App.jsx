@@ -10,6 +10,7 @@ import './global.css';
 import { LocaleProvider, useLocale } from './src/contexts/LocaleContext';
 import { RecentlyViewedProvider } from './src/contexts/RecentlyViewedContext';
 import { FinanceFlowProvider } from './src/contexts/FinanceFlowContext';
+import { FilterProvider } from './src/contexts/FilterContext'; // ✅ Added FilterProvider
 
 import StackNavigator from './src/components/navigation/StackNavigator';
 import FinanceFlowNavigator from './src/components/Financials/FinanceFlowNavigator';
@@ -45,7 +46,9 @@ export default function App() {
     <LocaleProvider>
       <RecentlyViewedProvider>
         <FinanceFlowProvider>
-          <AppWithLocale />
+          <FilterProvider>
+            <AppWithLocale />
+          </FilterProvider>
         </FinanceFlowProvider>
       </RecentlyViewedProvider>
     </LocaleProvider>

@@ -1,5 +1,6 @@
 "use client"
-import { View, Text, Image, TouchableOpacity, useWindowDimensions } from "react-native"
+import { useState } from "react"
+import { View, Text, Image, TouchableOpacity, Animated, useWindowDimensions } from "react-native"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { useLocale } from "../../contexts/LocaleContext"
 import AlmaraiFonts from "../../constants/fonts"
@@ -9,78 +10,97 @@ import CompareCarIcon from "../../assets/Icon/campare_car.svg" // ✅ Your SVG i
 export default function PopularCarCard({ car, onPress }) {
   const { locale } = useLocale()
   const { width } = useWindowDimensions()
+  const [scale] = useState(new Animated.Value(1))
 
   const getLocalized = (value) => {
     if (!value) return ""
     return typeof value === "object" ? value[locale] : value
   }
 
-  // Fixed card width of 280 instead of dynamic calculation
-  const cardWidth = 280
-  const imageSize = 150
+  const onPressIn = () => {
+    Animated.spring(scale, {
+      toValue: 1.02,
+      useNativeDriver: true,
+    }).start()
+  }
+
+  const onPressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start()
+  }
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.9}
-      style={{ width: cardWidth }}
-      className="bg-white border-2 border-[#46194F] rounded-xl px-3 py-3 mb-4 shadow-sm flex-row items-center relative"
+    <Animated.View
+      style={{
+        flex: 1,
+        margin: 2,
+        transform: [{ scale }],
+      }}
+      className="bg-white border-2 border-[#46194F] rounded-xl"
     >
-      {/* Top Left Heart Icon */}
-      <View className="absolute top-3 left-3">
-        <Icon name="heart" size={22} color="#46194F" />
-      </View>
-
-      {/* Top Right Custom Compare Icon */}
-      <View className="absolute top-3 right-4">
-        <CompareCarIcon width={22} height={22} />
-      </View>
-
-      {/* Padding Space on the Left */}
-      <View style={{ width: 10 }} />
-
-      {/* Text Info */}
-      <View className="flex-1 mr-2 mt-8 ml-1">
-        <View className="mb-1">
-          <JetourLogo width={75} height={16} />
+      <TouchableOpacity
+        onPress={onPress}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        activeOpacity={0.95}
+        className="overflow-hidden rounded-2xl flex-row items-center relative py-2"
+      >
+        {/* Top Left Heart Icon */}
+        <View className="absolute top-2 left-2">
+          <Icon name="heart-outline" size={18} color="#46194F" />
         </View>
 
-        <Text
-          numberOfLines={1}
-          style={{
-            fontFamily: AlmaraiFonts.bold,
-            fontSize: 18,
-            color: "#46194F",
-            marginTop: 4,
-            marginBottom: 2,
-          }}
-        >
-          {getLocalized(car.name)}
-        </Text>
+        {/* Top Right Custom Compare Icon */}
+        <View className="absolute top-2 right-2">
+          <CompareCarIcon width={18} height={18} />
+        </View>
 
-        <Text
-          numberOfLines={1}
-          style={{
-            fontFamily: AlmaraiFonts.regular,
-            fontSize: 12,
-            color: "#46194F",
-          }}
-        >
-          {locale === "ar" ? "لكجري فل كامل" : "Luxury Full Option"} {car.specs?.year || "2025"}
-        </Text>
-      </View>
+        {/* Text Info */}
+        <View className="flex-1 ml-2 mr-1 mt-8">
+          <View className="mb-1">
+            <JetourLogo width={60} height={16} />
+          </View>
 
-      {/* Car Image */}
-      <Image
-        source={car.image}
-        resizeMode="contain"
-        style={{
-          width: imageSize,
-          height: imageSize * 0.6,
-          marginTop: 24,
-          marginLeft: 0,
-        }}
-      />
-    </TouchableOpacity>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontFamily: AlmaraiFonts.bold,
+              fontSize: 14,
+              color: "#46194F",
+              marginTop: 3,
+              marginBottom: 2,
+            }}
+          >
+            {getLocalized(car.name)}
+          </Text>
+
+          <Text
+            numberOfLines={1}
+            style={{
+              fontFamily: AlmaraiFonts.regular,
+              fontSize: 11,
+              color: "#46194F",
+            }}
+          >
+            {locale === "ar" ? "لكجري فل كامل" : "Luxury Full Option"} {car.specs?.year || "2025"}
+          </Text>
+        </View>
+
+        {/* Car Image */}
+        <View className="h-24 px-1">
+          <Image
+            source={car.image}
+            resizeMode="contain"
+            style={{
+              width: 110,
+              height: "100%",
+              marginTop: 10,
+            }}
+          />
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
   )
 }

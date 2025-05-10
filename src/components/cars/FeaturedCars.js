@@ -1,15 +1,14 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
-import CarCard from './CarCard';
-import AlmaraiFonts from '../../constants/fonts';
+import { View, Text, FlatList } from "react-native"
+import { useNavigation } from "@react-navigation/native"
+import { useTranslation } from "react-i18next"
+import CarCard from "./CarCard"
+import AlmaraiFonts from "../../constants/fonts"
 
 const FeaturedCars = ({ cars, isRTL }) => {
-  const { t } = useTranslation();
-  const navigation = useNavigation();
+  const { t } = useTranslation()
+  const navigation = useNavigation()
 
-  const data = isRTL ? [...cars.slice(0, 6)].reverse() : cars.slice(0, 6);
+  const data = isRTL ? [...cars.slice(0, 6)].reverse() : cars.slice(0, 6)
 
   return (
     <View>
@@ -19,12 +18,11 @@ const FeaturedCars = ({ cars, isRTL }) => {
           style={{
             fontSize: 15,
             fontFamily: AlmaraiFonts.bold,
-            color: '#111827', // Tailwind's text-gray-900
+            color: "#111827", // Tailwind's text-gray-900
           }}
         >
-          {t('home.title', { defaultValue: 'Featured Cars' })}
+          {t("home.title", { defaultValue: "Featured Cars" })}
         </Text>
-
       </View>
 
       {/* Car List */}
@@ -34,7 +32,7 @@ const FeaturedCars = ({ cars, isRTL }) => {
         data={data}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={{ marginHorizontal: 10 }}>
+          <View style={{ marginHorizontal: 4 }}>
             <CarCard car={item} />
           </View>
         )}
@@ -44,7 +42,7 @@ const FeaturedCars = ({ cars, isRTL }) => {
         }}
       />
     </View>
-  );
-};
+  )
+}
 
-export default FeaturedCars;
+export default FeaturedCars
