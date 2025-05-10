@@ -29,6 +29,8 @@ import NewsDetailScreen from "../../screens/NewsDetailScreen"
 import BrowseScreen from "../../screens/BrowseScreen"
 import ReviewScreen from "../../screens/ReviewScreen"
 import AccountScreen from '../../components/moresection/AccountScreen';
+import PersonalInfo  from "../../components/moresection/PersonalInfo";
+
 
 
 // Icons
@@ -84,7 +86,9 @@ function ServicesStack() {
       <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true, title: "Privacy Policy" }} />
       <Stack.Screen name="ContactUs" component={ContactUsScreen} options={{ headerShown: true, title: "Contact Us" }} />
       <Stack.Screen name="FAQ" component={FAQScreen} options={{ headerShown: true, title: "FAQs / Help" }} />
-      <Stack.Screen name="AccountScreen" component={AccountScreen} options={{ headerShown: true, title: "My Account" }} />
+      <Stack.Screen name="AccountScreen" component={AccountScreen} options={{ headerShown: false, title: "My Account" }} />
+      <Stack.Screen name="PersonalInfo" component={PersonalInfo} options={{headerShown:false, title: "Personal Info"}} />
+      
     </Stack.Navigator>
   )
 }
