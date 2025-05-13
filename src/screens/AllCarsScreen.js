@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import {
   View,
   Text,
@@ -21,8 +21,9 @@ import AllCarCard from "../components/cars/AllCarCard"
 import SortBottomSheet from "../components/AdvancedSearch/SortBottomSheet"
 import BrandSelector from "../components/AdvancedSearch/BrandSelector"
 import { useLocale } from "../contexts/LocaleContext"
-import { useFilters } from "../contexts/FilterContext" // Import the filter context
+import { useFilters } from "../contexts/FilterContext"
 import AlmaraiFonts from "../constants/fonts"
+import ComparePop from "../components/cars/ComparePop"
 
 const sliderImages = [
   require("../assets/images/allcar_slide1.png"),
@@ -40,6 +41,7 @@ export default function AllCarsScreen() {
   const { width } = useWindowDimensions()
   const { locale } = useLocale()
   const scrollViewRef = useRef(null)
+  const [showComparePop, setShowComparePop] = useState(false)
 
   // Use the filter context
   const {
@@ -92,6 +94,20 @@ export default function AllCarsScreen() {
     return () => clearInterval(autoScrollTimer.current)
   }, [activePair])
 
+  useFocusEffect(
+    useCallback(() => {
+      // Show the popup when the screen is focused
+      setShowComparePop(true)
+      
+      // Hide after 5 seconds
+      const timer = setTimeout(() => {
+        setShowComparePop(false)
+      }, 20000000)
+      
+      return () => clearTimeout(timer)
+    }, [])
+  )
+
   const startAutoScroll = () => {
     clearInterval(autoScrollTimer.current)
     autoScrollTimer.current = setInterval(() => {
@@ -135,7 +151,7 @@ export default function AllCarsScreen() {
     }
 
     loadCars()
-  }, []) // Empty dependency array - only run once
+  }, [])
 
   // Handle filter changes from context
   useEffect(() => {
@@ -156,7 +172,6 @@ export default function AllCarsScreen() {
     }
   }, [isFiltered, contextFilteredCars, filters])
 
-  // Handle brand selection in the UI
   const handleBrandSelection = useCallback(
     (brand) => {
       handlingBrandSelectionRef.current = true
@@ -213,11 +228,6 @@ export default function AllCarsScreen() {
     },
     [allCars, activeFilters, filters, selectedSortOption],
   )
-
-  // Replace the useEffect for selectedBrand with the direct handler
-  useEffect(() => {
-    // This effect is now empty as we handle brand selection directly in the handler
-  }, [selectedBrand])
 
   // Apply sort option
   useEffect(() => {
@@ -348,6 +358,7 @@ export default function AllCarsScreen() {
   }
 
   const handlePress = (car) => {
+    setShowComparePop(false) // Hide popup when a car is selected
     navigation.navigate("Gallery", { car })
   }
 
@@ -547,6 +558,17 @@ export default function AllCarsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <AppHeader />
+
+      {/* Compare Popup - shown when Cars tab is opened */}
+      {showComparePop && (
+        <ComparePop 
+          onClose={() => setShowComparePop(false)}
+          onStartCompare={() => {
+            setShowComparePop(false)
+            navigation.navigate('CompareScreen')
+          }}
+        />
+      )}
 
       <ScrollView
         ref={scrollViewRef}

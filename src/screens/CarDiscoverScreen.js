@@ -111,7 +111,7 @@ export default function CarDiscoverScreen() {
                 : "Choose the method that suits you to own your new car, either through flexible financing or direct cash payment"}
             </Text>
 
-            <View className="flex-row justify-center mt-4">
+            <View className="flex-row justify-center mb-32 mt-4">
               {/* Cash Button */}
               <TouchableOpacity
                 className={`rounded-[5px] py-2 px-4 mx-2 min-w-[170px] bg-white ${
