@@ -12,9 +12,10 @@ import HomeScreen from "../../screens/HomeScreen"
 import AllCarScreen from "../../screens/AllCarsScreen"
 import MoreScreen from "../../screens/MoreScreen"
 import ChatScreen from "../../screens/ChatScreen"
-import CarDiscoverScreen from "../../screens/CarDiscoverScreen" // Import the new screen
+import CarDiscoverScreen from "../../screens/CarDiscoverScreen"
+import WishlistScreen from "../../screens/WishlistScreen"
 
-// Additional Screens (Gallery moved globally)
+// Additional Screens
 import Gallery from "../../screens/Gallery"
 import SearchScreen from "../../screens/SearchScreen"
 import AdvancedSearchScreen from "../../screens/AdvancedSearchScreen"
@@ -28,10 +29,8 @@ import BlogScreen from "../../screens/BlogScreen"
 import NewsDetailScreen from "../../screens/NewsDetailScreen"
 import BrowseScreen from "../../screens/BrowseScreen"
 import ReviewScreen from "../../screens/ReviewScreen"
-import AccountScreen from '../../components/moresection/AccountScreen';
-import PersonalInfo  from "../../components/moresection/PersonalInfo";
-
-
+import AccountScreen from "../../components/moresection/AccountScreen"
+import PersonalInfo from "../../components/moresection/PersonalInfo"
 
 // Icons
 import TabCarsIcon from "../../assets/Icon/TabCarsIcon.svg"
@@ -71,7 +70,6 @@ function ChatStack() {
 function ExploreStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {/* Replace CompareBuilderScreen with CarDiscoverScreen */}
       <Stack.Screen name="CarDiscoverScreen" component={CarDiscoverScreen} />
       <Stack.Screen
         name="CompareScreen"
@@ -91,19 +89,56 @@ function ServicesStack() {
       <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true, title: "Privacy Policy" }} />
       <Stack.Screen name="ContactUs" component={ContactUsScreen} options={{ headerShown: true, title: "Contact Us" }} />
       <Stack.Screen name="FAQ" component={FAQScreen} options={{ headerShown: true, title: "FAQs / Help" }} />
-      <Stack.Screen name="AccountScreen" component={AccountScreen} options={{ headerShown: false, title: "My Account" }} />
-      <Stack.Screen name="PersonalInfo" component={PersonalInfo} options={{headerShown:false, title: "Personal Info"}} />
-      
+      <Stack.Screen
+        name="AccountScreen"
+        component={AccountScreen}
+        options={{ headerShown: false, title: "My Account" }}
+      />
+      <Stack.Screen
+        name="PersonalInfo"
+        component={PersonalInfo}
+        options={{ headerShown: false, title: "Personal Info" }}
+      />
     </Stack.Navigator>
   )
 }
 
 const tabList = [
-  { name: "CarsTab", icon: TabCarsIcon, labelAr: "السيارات", labelEn: "Cars", component: CarsStack },
-  { name: "ChatTab", icon: TabChatIcon, labelAr: "المحادثة", labelEn: "Chat", component: ChatStack },
-  { name: "HomeTab", icon: TabHomeIcon, labelAr: "الرئيسية", labelEn: "Home", component: HomeStack },
-  { name: "ExploreTab", icon: TabExploreIcon, labelAr: "الاستكشاف", labelEn: "Explore", component: ExploreStack },
-  { name: "ServicesTab", icon: TabServicesIcon, labelAr: "خدماتي", labelEn: "Services", component: ServicesStack },
+  {
+    name: "CarsTab",
+    icon: TabCarsIcon,
+    labelAr: "السيارات",
+    labelEn: "Cars",
+    component: CarsStack,
+  },
+  {
+    name: "ChatTab",
+    icon: TabChatIcon,
+    labelAr: "المحادثة",
+    labelEn: "Chat",
+    component: ChatStack,
+  },
+  {
+    name: "HomeTab",
+    icon: TabHomeIcon,
+    labelAr: "الرئيسية",
+    labelEn: "Home",
+    component: HomeStack,
+  },
+  {
+    name: "ExploreTab",
+    icon: TabExploreIcon,
+    labelAr: "الاستكشاف",
+    labelEn: "Explore",
+    component: ExploreStack,
+  },
+  {
+    name: "ServicesTab",
+    icon: TabServicesIcon,
+    labelAr: "خدماتي",
+    labelEn: "Services",
+    component: ServicesStack,
+  },
 ]
 
 function CustomTabButton(props) {
@@ -116,18 +151,8 @@ function CustomTabButton(props) {
   )
 }
 
-function CustomTabBarIcon({ focused, Icon, label, index, activeIndex }) {
-  const tabWidth = width / tabList.length
-  const distanceFromActive = Math.abs(index - activeIndex)
-  const isFirstTab = index === 0
-  const isLastTab = index === tabList.length - 1
-  const shiftAmount = focused ? 0 : distanceFromActive * (tabWidth * 0)
-
-  const getActiveTabPositionStyle = () => {
-    if (isFirstTab) return { right: -17 }
-    if (isLastTab) return { left: -17 }
-    return { alignSelf: "center" }
-  }
+function CustomTabBarIcon({ focused, Icon, label = "", index, activeIndex }) {
+  const tabWidth = (width * 0.9) / tabList.length
 
   return (
     <View
@@ -135,53 +160,56 @@ function CustomTabBarIcon({ focused, Icon, label, index, activeIndex }) {
         width: tabWidth,
         alignItems: "center",
         justifyContent: "center",
-        height: 110,
-        transform: [
-          {
-            translateX: focused ? 0 : index < activeIndex ? -shiftAmount : shiftAmount,
-          },
-        ],
+        height: 70,
       }}
     >
       {focused ? (
         <View
-          style={[
-            {
-              position: "absolute",
-              top: -2,
-              width: 80,
-              height: 80,
-              borderRadius: 40,
-              backgroundColor: "white",
-              borderWidth: 1,
-              borderColor: "#E5E7EB",
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.05,
-              shadowRadius: 1,
-              elevation: 2,
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 50,
-            },
-            getActiveTabPositionStyle(),
-          ]}
+          style={{
+            position: "absolute",
+            top: -8,
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            backgroundColor: "white",
+            borderWidth: 1,
+            borderColor: "#E5E7EB",
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.05,
+            shadowRadius: 1,
+            elevation: 2,
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 50,
+          }}
         >
-          <Icon width={28} height={28} fill="#46194F" />
-          <Text style={{ fontSize: 11, color: "#46194F", marginTop: 4, fontWeight: "bold" }}>{label}</Text>
+          <Icon width={22} height={22} fill="#4CAF50" />
+          {label ? (
+            <Text
+              style={{
+                fontSize: 9,
+                color: "#000000",
+                marginTop: 1,
+                fontWeight: "bold",
+              }}
+            >
+              {label}
+            </Text>
+          ) : null}
         </View>
       ) : (
         <View
           style={{
             alignItems: "center",
             justifyContent: "center",
-            padding: 8,
+            padding: 6,
             borderRadius: 8,
-            marginTop: 10,
+            marginTop: 6,
             opacity: 0.5,
           }}
         >
-          <Icon width={24} height={24} fill="#9CA3AF" />
+          <Icon width={24} height={24} fill="#FFFFFF" />
         </View>
       )}
     </View>
@@ -192,31 +220,63 @@ function TabNavigator() {
   const { locale } = useLocale()
   const isRTL = locale === "ar"
   const [activeIndex, setActiveIndex] = useState(2)
+  const tabBarHeight = 60
+  const effectiveWidth = width * 0.9
+  const sideMargin = (width - effectiveWidth) / 2
 
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
       screenListeners={{
         state: (e) => {
-          const index = e.data.state.index
+          const index = e.data?.state?.index ?? 2
           setActiveIndex(index)
         },
       }}
       tabBar={(props) => (
-        <View style={{ position: "absolute", bottom: 0, width, height: 70 }}>
+        <View style={{ position: "absolute", bottom: 0, width, height: tabBarHeight }}>
           <CustomTabBarBackground
             width={width}
-            height={80}
+            height={tabBarHeight}
             activeIndex={activeIndex}
             tabCount={tabList.length}
             isRTL={isRTL}
+            effectiveWidth={effectiveWidth}
+            sideMargin={sideMargin}
           />
-          <BottomTabBar {...props} />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              width: width,
+              position: "absolute",
+              bottom: 0,
+            }}
+          >
+            <View
+              style={{
+                width: effectiveWidth,
+                flexDirection: "row",
+                height: tabBarHeight,
+              }}
+            >
+              <BottomTabBar
+                {...props}
+                style={{
+                  width: effectiveWidth,
+                  backgroundColor: "transparent",
+                  borderTopWidth: 0,
+                  elevation: 0,
+                  height: tabBarHeight,
+                }}
+              />
+            </View>
+          </View>
         </View>
       )}
       screenOptions={{
         tabBarStyle: {
-          height: 70,
+          height: tabBarHeight,
           backgroundColor: "transparent",
           borderTopWidth: 0,
           position: "absolute",
@@ -276,6 +336,7 @@ export default function MainNavigator() {
       <Stack.Screen name="NewsDetail" component={NewsDetailScreen} />
       <Stack.Screen name="ReviewScreen" component={ReviewScreen} options={{ title: "Car Reviews" }} />
       <Stack.Screen name="BrowseScreen" component={BrowseScreen} />
+      <Stack.Screen name="Wishlist" component={WishlistScreen} options={{ title: "Wishlist" }} />
     </Stack.Navigator>
   )
 }

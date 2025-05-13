@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native"
 import { useLocale } from "../../contexts/LocaleContext"
 import { brands, brandLogos } from "../../mock-data"
 import { useRecentlyViewed } from "../../contexts/RecentlyViewedContext"
+import { useWishlist } from "../../contexts/WishlistContext"
 import AppText from "../common/AppText"
 import CompareCarIcon from "../../assets/Icon/campare_car.svg"
 import RiyalIcon from "../../assets/Icon/riyal_icon.svg"
@@ -15,15 +16,19 @@ export default function CarCard({ car }) {
   const { locale } = useLocale()
   const navigation = useNavigation()
   const { addToRecentlyViewed } = useRecentlyViewed()
+  const { isInWishlist, toggleWishlist } = useWishlist()
   const [scale] = useState(new Animated.Value(1))
   const { width } = useWindowDimensions()
 
+  // Check if this car is in the wishlist
+  const inWishlist = isInWishlist(car.id)
+
   // Function to truncate text after 10 characters
   const truncateText = (text, maxLength = 10) => {
-    if (!text) return '';
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
-  };
+    if (!text) return ""
+    if (text.length <= maxLength) return text
+    return text.substring(0, maxLength) + "..."
+  }
 
   const getLang = (field) => (typeof field === "object" ? field?.[locale] : field)
 
@@ -64,6 +69,11 @@ export default function CarCard({ car }) {
     })
   }
 
+  const handleWishlistToggle = (e) => {
+    e.stopPropagation() // Prevent triggering the parent TouchableOpacity
+    toggleWishlist(car)
+  }
+
   return (
     <Animated.View
       style={{
@@ -83,7 +93,9 @@ export default function CarCard({ car }) {
       >
         {/* Top Icons Row */}
         <View className="flex-row justify-between items-center px-3 pt-1">
-          <Icon name="heart-outline" size={18} color="#46194F" />
+          <TouchableOpacity onPress={handleWishlistToggle}>
+            <Icon name={inWishlist ? "heart" : "heart-outline"} size={18} color="#46194F" />
+          </TouchableOpacity>
           <CompareCarIcon width={18} height={18} />
         </View>
 
@@ -97,42 +109,45 @@ export default function CarCard({ car }) {
 
         {/* Name + Brand */}
         <View className="flex-row justify-between items-center px-3 py-0.5">
-          <View className="items-start flex-1 mr-2" style={{ maxWidth: '65%' }}>
-            <AppText 
-              bold 
-              style={{ 
-                fontSize: 12, 
+          <View className="items-start flex-1 mr-2" style={{ maxWidth: "65%" }}>
+            <AppText
+              bold
+              style={{
+                fontSize: 12,
                 color: "#46194F",
-                width: '100%' 
-              }} 
+                width: "100%",
+              }}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
               {truncateText(getLang(car.name))}
             </AppText>
-            <AppText 
-              style={{ 
-                fontSize: 10, 
+            <AppText
+              style={{
+                fontSize: 10,
                 color: "#666",
-                width: '100%' 
-              }} 
+                width: "100%",
+              }}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {truncateText(getLang(car.subtext) || `${locale === "ar" ? "لكجري فل كامل" : "Luxury Full Option"} ${car.specs?.year}`)}
+              {truncateText(
+                getLang(car.subtext) ||
+                  `${locale === "ar" ? "لكجري فل كامل" : "Luxury Full Option"} ${car.specs?.year}`,
+              )}
             </AppText>
           </View>
           {LogoComponent ? (
-            <View className="ml-1" style={{ maxWidth: '30%' }}>
+            <View className="ml-1" style={{ maxWidth: "30%" }}>
               <LogoComponent width={55} height={18} />
             </View>
           ) : (
-            <AppText 
-              bold 
-              style={{ 
-                fontSize: 12, 
+            <AppText
+              bold
+              style={{
+                fontSize: 12,
                 color: "#000",
-                maxWidth: '30%' 
+                maxWidth: "30%",
               }}
               numberOfLines={1}
               ellipsizeMode="tail"
@@ -149,11 +164,11 @@ export default function CarCard({ car }) {
         <View className="flex-row justify-between items-center px-3 pb-1">
           {/* Cash Price */}
           <View className="items-center flex-1">
-            <AppText 
-              style={{ 
-                fontSize: 10, 
-                color: "#666", 
-                marginBottom: 1 
+            <AppText
+              style={{
+                fontSize: 10,
+                color: "#666",
+                marginBottom: 1,
               }}
               numberOfLines={1}
               ellipsizeMode="tail"
@@ -161,13 +176,13 @@ export default function CarCard({ car }) {
               {locale === "ar" ? "سعر الكاش" : "Cash Price"}
             </AppText>
             <View className="flex-row items-center justify-center">
-              <AppText 
-                bold 
-                style={{ 
-                  fontSize: 12, 
-                  color: "#46194F", 
+              <AppText
+                bold
+                style={{
+                  fontSize: 12,
+                  color: "#46194F",
                   marginRight: 2,
-                  maxWidth: 70 
+                  maxWidth: 70,
                 }}
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -183,11 +198,11 @@ export default function CarCard({ car }) {
 
           {/* Installment */}
           <View className="items-center flex-1">
-            <AppText 
-              style={{ 
-                fontSize: 10, 
-                color: "#666", 
-                marginBottom: 1 
+            <AppText
+              style={{
+                fontSize: 10,
+                color: "#666",
+                marginBottom: 1,
               }}
               numberOfLines={1}
               ellipsizeMode="tail"
@@ -195,13 +210,13 @@ export default function CarCard({ car }) {
               {locale === "ar" ? "يبدأ القسط من" : "Installment From"}
             </AppText>
             <View className="flex-row items-center justify-center">
-              <AppText 
-                bold 
-                style={{ 
-                  fontSize: 12, 
-                  color: "#46194F", 
+              <AppText
+                bold
+                style={{
+                  fontSize: 12,
+                  color: "#46194F",
                   marginRight: 2,
-                  maxWidth: 70 
+                  maxWidth: 70,
                 }}
                 numberOfLines={1}
                 ellipsizeMode="tail"

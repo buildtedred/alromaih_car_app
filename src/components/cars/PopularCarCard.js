@@ -5,12 +5,17 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { useLocale } from "../../contexts/LocaleContext"
 import AlmaraiFonts from "../../constants/fonts"
 import JetourLogo from "../../assets/brands/jetour_logo.svg"
-import CompareCarIcon from "../../assets/Icon/campare_car.svg" // ✅ Your SVG icon
+import CompareCarIcon from "../../assets/Icon/campare_car.svg"
+import { useWishlist } from "../../contexts/WishlistContext"
 
 export default function PopularCarCard({ car, onPress }) {
   const { locale } = useLocale()
   const { width } = useWindowDimensions()
   const [scale] = useState(new Animated.Value(1))
+  const { isInWishlist, toggleWishlist } = useWishlist()
+
+  // Check if this car is in the wishlist
+  const inWishlist = isInWishlist(car.id)
 
   const getLocalized = (value) => {
     if (!value) return ""
@@ -31,6 +36,11 @@ export default function PopularCarCard({ car, onPress }) {
     }).start()
   }
 
+  const handleWishlistToggle = (e) => {
+    e.stopPropagation() // Prevent triggering the parent TouchableOpacity
+    toggleWishlist(car)
+  }
+
   return (
     <Animated.View
       style={{
@@ -48,9 +58,17 @@ export default function PopularCarCard({ car, onPress }) {
         className="overflow-hidden rounded-2xl flex-row items-center relative py-2"
       >
         {/* Top Left Heart Icon */}
-        <View className="absolute top-2 left-2">
-          <Icon name="heart-outline" size={18} color="#46194F" />
-        </View>
+        <TouchableOpacity 
+          onPress={handleWishlistToggle}
+          className="absolute top-2 left-2"
+          style={{ zIndex: 1 }} // Ensure it's above other elements
+        >
+          <Icon 
+            name={inWishlist ? "heart" : "heart-outline"} 
+            size={18} 
+            color="#46194F" 
+          />
+        </TouchableOpacity>
 
         {/* Top Right Custom Compare Icon */}
         <View className="absolute top-2 right-2">

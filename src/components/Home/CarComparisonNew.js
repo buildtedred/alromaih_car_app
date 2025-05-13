@@ -1,7 +1,8 @@
 "use client"
-import { View, Text, Image, FlatList, TouchableOpacity } from "react-native"
+import { View, Text, Image, FlatList, TouchableOpacity, Dimensions } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { useLocale } from "../../contexts/LocaleContext"
+import { useState, useEffect, useMemo } from "react"
 import CompareVsIcon from "../../assets/Icon/campar_vs.svg"
 import JetourLogo from "../../assets/brands/jetour_logo.svg"
 import AlmaraiFonts from "../../constants/fonts"
@@ -69,9 +70,71 @@ const carComparisons = [
   },
 ]
 
-export default function CarComparisonNew({ isRTL }) {
+export default function CarComparisonNew({ isRTL, sizeClass: propSizeClass }) {
   const { locale } = useLocale()
   const navigation = useNavigation()
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width)
+
+  // Listen for dimension changes
+  useEffect(() => {
+    const dimensionsHandler = ({ window }) => {
+      setScreenWidth(window.width)
+    }
+
+    const subscription = Dimensions.addEventListener("change", dimensionsHandler)
+
+    return () => subscription.remove()
+  }, [])
+
+  // Determine size class based on screen width if not provided by parent
+  const sizeClass = useMemo(() => {
+    if (propSizeClass) return propSizeClass
+    if (screenWidth < 360) return "small"
+    if (screenWidth < 480) return "medium"
+    return "large"
+  }, [screenWidth, propSizeClass])
+
+  // Get responsive values based on size class
+  const sizes = useMemo(() => {
+    switch (sizeClass) {
+      case "small":
+        return {
+          titleSize: 13,
+          cardWidth: 180, // Match CarCard width
+          vsIconSize: 24,
+          logoWidth: 40,
+          logoHeight: 12,
+          carNameSize: 11,
+          carDescSize: 9,
+          imageHeight: 70,
+          itemMargin: 2, // Reduced from 4
+        }
+      case "medium":
+        return {
+          titleSize: 14,
+          cardWidth: 180, // Match CarCard width
+          vsIconSize: 26,
+          logoWidth: 45,
+          logoHeight: 13,
+          carNameSize: 12,
+          carDescSize: 10,
+          imageHeight: 80,
+          itemMargin: 3, // Reduced from 5
+        }
+      default: // large
+        return {
+          titleSize: 15,
+          cardWidth: 180, // Match CarCard width
+          vsIconSize: 30,
+          logoWidth: 50,
+          logoHeight: 15,
+          carNameSize: 13,
+          carDescSize: 10,
+          imageHeight: 90,
+          itemMargin: 2, // Reduced from 6
+        }
+    }
+  }, [sizeClass])
 
   const handleComparisonPress = (comparison) => {
     // navigation.navigate('ComparisonDetails', { comparisonId: comparison.id });
@@ -79,11 +142,25 @@ export default function CarComparisonNew({ isRTL }) {
 
   const renderVsIcon = () => {
     try {
-      return <CompareVsIcon width={30} height={30} />
+      return <CompareVsIcon width={sizes.vsIconSize} height={sizes.vsIconSize} />
     } catch {
       return (
-        <View className="w-8 h-8 rounded-full bg-[#46194F] items-center justify-center">
-          <Text style={{ fontSize: 12, color: "#fff", fontFamily: AlmaraiFonts.bold }}>VS</Text>
+        <View
+          className="bg-[#46194F] items-center justify-center rounded-full"
+          style={{
+            width: sizes.vsIconSize + 2,
+            height: sizes.vsIconSize + 2,
+          }}
+        >
+          <Text
+            className="text-white"
+            style={{
+              fontSize: sizes.vsIconSize / 2.5,
+              fontFamily: AlmaraiFonts.bold,
+            }}
+          >
+            VS
+          </Text>
         </View>
       )
     }
@@ -91,14 +168,14 @@ export default function CarComparisonNew({ isRTL }) {
 
   const renderJetourLogo = () => {
     try {
-      return <JetourLogo width={50} height={15} />
+      return <JetourLogo width={sizes.logoWidth} height={sizes.logoHeight} />
     } catch {
       return (
         <Text
+          className="text-[#46194F]"
           style={{
-            fontSize: 11,
+            fontSize: sizes.carNameSize - 2,
             fontFamily: AlmaraiFonts.bold,
-            color: "#46194F",
           }}
         >
           JETOUR
@@ -107,63 +184,52 @@ export default function CarComparisonNew({ isRTL }) {
     }
   }
 
+  // Item separator component for consistent spacing
+  const ItemSeparatorComponent = () => <View style={{ width: sizes.itemMargin * 2 }} />
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       onPress={() => handleComparisonPress(item)}
       activeOpacity={0.9}
-      className="bg-[#ede8ee] rounded-xl p-3 pb-4 shadow-sm"
+      className="bg-[#ede8ee] rounded-xl overflow-hidden shadow"
       style={{
-        width: 180,
-        overflow: "hidden",
-        marginHorizontal: 6,
+        width: sizes.cardWidth,
+        marginHorizontal: sizes.itemMargin,
+        padding: sizeClass === "small" ? 8 : sizeClass === "medium" ? 10 : 12,
+        paddingBottom: sizeClass === "small" ? 12 : sizeClass === "medium" ? 14 : 16,
       }}
     >
       {/* Images */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          height: 90,
-          position: "relative",
-        }}
-      >
+      <View className="flex-row justify-between relative" style={{ height: sizes.imageHeight }}>
         <View
+          className="absolute z-10"
           style={{
-            position: "absolute",
             left: -30,
             top: 0,
-            width: 100,
-            height: 90,
-            zIndex: 1,
+            width: sizes.cardWidth / 1.8,
+            height: sizes.imageHeight,
           }}
         >
           <Image
             source={locale === "ar" ? item.car2.image : item.car1.image}
-            style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "contain",
-            }}
+            className="w-full h-full"
+            resizeMode="contain"
           />
         </View>
 
         <View
+          className="absolute z-10"
           style={{
-            position: "absolute",
             right: -30,
             top: 0,
-            width: 100,
-            height: 90,
-            zIndex: 1,
+            width: sizes.cardWidth / 1.8,
+            height: sizes.imageHeight,
           }}
         >
           <Image
             source={locale === "ar" ? item.car1.image : item.car2.image}
-            style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "contain",
-            }}
+            className="w-full h-full"
+            resizeMode="contain"
           />
         </View>
       </View>
@@ -172,37 +238,26 @@ export default function CarComparisonNew({ isRTL }) {
       <View className="items-center">{renderVsIcon()}</View>
 
       {/* Details */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: 0,
-          marginTop: 1,
-        }}
-      >
+      <View className="flex-row justify-between px-0 mt-0.5">
         {/* Car 1 */}
-        <View style={{ alignItems: "center", width: "48%" }}>
+        <View className="items-center w-[48%]">
           <View className="mb-1">{renderJetourLogo()}</View>
           <Text
             numberOfLines={1}
+            className="text-center w-full text-[#46194F]"
             style={{
-              fontSize: 13,
+              fontSize: sizes.carNameSize,
               fontFamily: AlmaraiFonts.bold,
-              color: "#46194F",
-              textAlign: "center",
-              width: "100%",
             }}
           >
             {locale === "ar" ? `جيتور ${item.car2.name}` : `Jetour ${item.car1.name}`}
           </Text>
           <Text
             numberOfLines={1}
+            className="text-center w-full text-[#46194F]"
             style={{
-              fontSize: 10,
+              fontSize: sizes.carDescSize,
               fontFamily: AlmaraiFonts.regular,
-              color: "#46194F",
-              textAlign: "center",
-              width: "100%",
             }}
           >
             {locale === "ar"
@@ -212,28 +267,24 @@ export default function CarComparisonNew({ isRTL }) {
         </View>
 
         {/* Car 2 */}
-        <View style={{ alignItems: "center", width: "48%" }}>
+        <View className="items-center w-[48%]">
           <View className="mb-1">{renderJetourLogo()}</View>
           <Text
             numberOfLines={1}
+            className="text-center w-full text-[#46194F]"
             style={{
-              fontSize: 13,
+              fontSize: sizes.carNameSize,
               fontFamily: AlmaraiFonts.bold,
-              color: "#46194F",
-              textAlign: "center",
-              width: "100%",
             }}
           >
             {locale === "ar" ? `جيتور ${item.car1.name}` : `Jetour ${item.car2.name}`}
           </Text>
           <Text
             numberOfLines={1}
+            className="text-center w-full text-[#46194F]"
             style={{
-              fontSize: 10,
+              fontSize: sizes.carDescSize,
               fontFamily: AlmaraiFonts.regular,
-              color: "#46194F",
-              textAlign: "center",
-              width: "100%",
             }}
           >
             {locale === "ar"
@@ -248,13 +299,14 @@ export default function CarComparisonNew({ isRTL }) {
   const data = isRTL ? [...carComparisons].reverse() : carComparisons
 
   return (
-    <View className="my-4">
-      <View className="flex-row justify-between items-center px-6 mb-3">
+    <View className="my-1">
+      <View className="flex-row justify-between items-center px-3 mb-1">
         <Text
+          className="text-[#46194F]"
           style={{
-            fontSize: 15,
+            fontSize: sizes.titleSize,
             fontFamily: AlmaraiFonts.bold,
-            color: "#46194F",
+            textAlign: isRTL ? "right" : "left",
           }}
         >
           {locale === "ar" ? "قارن بين السيارات" : "Compare Cars"}
@@ -266,8 +318,15 @@ export default function CarComparisonNew({ isRTL }) {
         data={data}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparatorComponent}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 8 }}
+        contentContainerStyle={{
+          paddingLeft: 4,
+          paddingRight: 4,
+          paddingVertical: 2,
+        }}
+        snapToInterval={sizes.cardWidth + sizes.itemMargin * 4}
+        decelerationRate="fast"
       />
     </View>
   )

@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { useRef, useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import { useLocale } from "../../contexts/LocaleContext";
-import { getBrands, brandLogos } from "../../mock-data";
-import AlmaraiFonts from "../../constants/fonts";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useRef, useEffect, useState, useMemo } from "react"
+import { View, Text, TouchableOpacity, ScrollView, Dimensions } from "react-native"
+import { useLocale } from "../../contexts/LocaleContext"
+import { getBrands, brandLogos } from "../../mock-data"
+import AlmaraiFonts from "../../constants/fonts"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 
 export default function BrandSelector({
   selected,
@@ -17,31 +17,96 @@ export default function BrandSelector({
   isRTL = false,
   titlePadding = "px-1",
   layout = "scroll", // NEW: default layout is scroll
+  sizeClass: propSizeClass, // Accept sizeClass from parent
 }) {
-  const { locale } = useLocale();
-  const allBrands = isRTL ? [...getBrands(locale)].reverse() : getBrands(locale);
-  const scrollViewRef = useRef(null);
-  const [contentWidth, setContentWidth] = useState(0);
-  const [showAll, setShowAll] = useState(false);
+  const { locale } = useLocale()
+  const allBrands = isRTL ? [...getBrands(locale)].reverse() : getBrands(locale)
+  const scrollViewRef = useRef(null)
+  const [contentWidth, setContentWidth] = useState(0)
+  const [showAll, setShowAll] = useState(false)
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width)
+
+  // Listen for dimension changes
+  useEffect(() => {
+    const dimensionsHandler = ({ window }) => {
+      setScreenWidth(window.width)
+    }
+
+    const subscription = Dimensions.addEventListener("change", dimensionsHandler)
+
+    return () => subscription.remove()
+  }, [])
+
+  // Determine size class based on screen width if not provided by parent
+  const sizeClass = useMemo(() => {
+    if (propSizeClass) return propSizeClass
+    if (screenWidth < 360) return "small"
+    if (screenWidth < 480) return "medium"
+    return "large"
+  }, [screenWidth, propSizeClass])
+
+  // Get responsive values based on size class
+  const sizes = useMemo(() => {
+    switch (sizeClass) {
+      case "small":
+        return {
+          logoSize: { width: 30, height: 22 },
+          titleSize: 13,
+          textSize: 10,
+          iconSize: 12,
+          itemMargin: 4,
+          itemPadding: 8,
+          gridItemWidth: "30%", // Slightly larger percentage for small screens
+          closeButtonSize: 16,
+          closeIconSize: 12,
+          titlePaddingClass: "px-4 mb-0.5", // Updated to px-4 for consistent padding
+        }
+      case "medium":
+        return {
+          logoSize: { width: 35, height: 26 },
+          titleSize: 14,
+          textSize: 11,
+          iconSize: 13,
+          itemMargin: 4,
+          itemPadding: 12,
+          gridItemWidth: "22%",
+          closeButtonSize: 18,
+          closeIconSize: 13,
+          titlePaddingClass: "px-4 mb-1", // Updated to px-4 for consistent padding
+        }
+      default: // large
+        return {
+          logoSize: { width: 40, height: 30 },
+          titleSize: 15,
+          textSize: 12,
+          iconSize: 14,
+          itemMargin: 8,
+          itemPadding: 16,
+          gridItemWidth: "22%",
+          closeButtonSize: 20,
+          closeIconSize: 14,
+          titlePaddingClass: "px-4 mb-1", // Updated to px-4 for consistent padding
+        }
+    }
+  }, [sizeClass])
 
   const handleContentSizeChange = (width) => {
-    setContentWidth(width);
-  };
+    setContentWidth(width)
+  }
 
   useEffect(() => {
     if (isRTL && scrollViewRef.current && contentWidth > 0) {
       setTimeout(() => {
-        scrollViewRef.current.scrollToEnd({ animated: false });
-      }, 100);
+        scrollViewRef.current.scrollToEnd({ animated: false })
+      }, 100)
     }
-  }, [isRTL, contentWidth, locale]);
+  }, [isRTL, contentWidth, locale])
 
-  const displayedBrands =
-    layout === "grid" && !showAll ? allBrands.slice(0, 11) : allBrands;
+  const displayedBrands = layout === "grid" && !showAll ? allBrands.slice(0, 11) : allBrands
 
   const renderBrand = (brand) => {
-    const isSelected = selected === brand.key;
-    const LogoComponent = brandLogos[brand.key];
+    const isSelected = selected === brand.key
+    const LogoComponent = brandLogos[brand.key]
 
     return (
       <TouchableOpacity
@@ -49,10 +114,10 @@ export default function BrandSelector({
         onPress={() => setSelected(isSelected ? null : brand.key)}
         activeOpacity={0.85}
         style={{
-          margin: layout === "grid" ? 4 : isRTL ? 0 : 12,
-          marginLeft: layout === "grid" ? 4 : isRTL ? 12 : 0,
-          paddingHorizontal: layout === "grid" ? 0 : 16,
-          paddingVertical: 10,
+          margin: layout === "grid" ? sizes.itemMargin : isRTL ? 0 : sizes.itemMargin * 1.5,
+          marginLeft: layout === "grid" ? sizes.itemMargin / 2 : isRTL ? sizes.itemMargin * 1.5 : 0,
+          paddingHorizontal: layout === "grid" ? 0 : sizes.itemPadding,
+          paddingVertical: layout === "grid" ? sizes.itemPadding / 2 : 0,
           borderRadius: 10,
           backgroundColor: "#fff",
           borderWidth: isSelected ? 2 : 1,
@@ -60,7 +125,7 @@ export default function BrandSelector({
           elevation: isSelected ? 3 : 1,
           alignItems: "center",
           justifyContent: "center",
-          width: layout === "grid" ? "22%" : undefined,
+          width: layout === "grid" ? sizes.gridItemWidth : undefined,
           position: "relative",
         }}
       >
@@ -74,8 +139,8 @@ export default function BrandSelector({
               zIndex: 10,
               backgroundColor: "white",
               borderRadius: 12,
-              width: 20,
-              height: 20,
+              width: sizes.closeButtonSize,
+              height: sizes.closeButtonSize,
               alignItems: "center",
               justifyContent: "center",
               borderWidth: 1,
@@ -87,23 +152,22 @@ export default function BrandSelector({
               elevation: 2,
             }}
           >
-            <MaterialIcons name="close" size={14} color="#333" />
+            <MaterialIcons name="close" size={sizes.closeIconSize} color="#333" />
           </View>
         )}
 
         <View className="items-center">
           {showIcon && LogoComponent && (
-            <LogoComponent width={40} height={30} style={{ marginBottom: 6 }} />
+            <LogoComponent width={sizes.logoSize.width} height={sizes.logoSize.height} style={{ marginBottom: 0 }} />
           )}
           {showText && (
             <Text
               style={{
-                fontSize: 12,
-                fontFamily: isSelected
-                  ? AlmaraiFonts.bold
-                  : AlmaraiFonts.regular,
+                fontSize: sizes.textSize,
+                fontFamily: isSelected ? AlmaraiFonts.bold : AlmaraiFonts.regular,
                 color: isSelected ? "#46194F" : "#4B5563",
                 textAlign: "center",
+                marginBottom: 5,
               }}
             >
               {brand.name}
@@ -111,16 +175,25 @@ export default function BrandSelector({
           )}
         </View>
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
   return (
     <View>
       {showTitle && (
-        <View className={`flex-row items-center justify-between ${titlePadding} mb-3`}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 4,
+            paddingLeft: 16,
+            paddingRight: 16,
+          }}
+        >
           <Text
             style={{
-              fontSize: 15,
+              fontSize: sizes.titleSize,
               fontFamily: AlmaraiFonts.bold,
               color: "#46194F",
               textAlign: isRTL ? "right" : "left",
@@ -139,7 +212,8 @@ export default function BrandSelector({
           showsHorizontalScrollIndicator={false}
           onContentSizeChange={handleContentSizeChange}
           contentContainerStyle={{
-            paddingHorizontal: 8,
+            paddingLeft: isRTL ? 8 : sizes.itemMargin,
+            paddingRight: isRTL ? sizes.itemMargin : 8,
           }}
         >
           {allBrands.map(renderBrand)}
@@ -152,9 +226,9 @@ export default function BrandSelector({
             <TouchableOpacity
               onPress={() => setShowAll(true)}
               style={{
-                flexBasis: "22%",
-                margin: 4,
-                paddingVertical: 10,
+                flexBasis: sizes.gridItemWidth,
+                margin: sizes.itemMargin,
+                paddingVertical: sizes.itemPadding / 2,
                 borderRadius: 10,
                 borderWidth: 1,
                 borderColor: "#D1D5DB",
@@ -166,7 +240,7 @@ export default function BrandSelector({
               <Text
                 style={{
                   fontFamily: AlmaraiFonts.bold,
-                  fontSize: 12,
+                  fontSize: sizes.textSize,
                   color: "#46194F",
                 }}
               >
@@ -177,5 +251,5 @@ export default function BrandSelector({
         </View>
       )}
     </View>
-  );
+  )
 }
