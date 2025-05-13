@@ -1,36 +1,39 @@
-import './src/services/localization';
-import './src/utils/globalText'; // ✅ Global Almarai font patch
+"use client"
 
-import React, { useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaView, I18nManager } from 'react-native';
+import "./src/services/localization"
+import "./src/utils/globalText" // ✅ Global Almarai font patch
 
-import './global.css';
+import { useEffect } from "react"
+import { NavigationContainer } from "@react-navigation/native"
+import { SafeAreaView, I18nManager } from "react-native"
 
-import { LocaleProvider, useLocale } from './src/contexts/LocaleContext';
-import { RecentlyViewedProvider } from './src/contexts/RecentlyViewedContext';
-import { FinanceFlowProvider } from './src/contexts/FinanceFlowContext';
-import { FilterProvider } from './src/contexts/FilterContext'; // ✅ Added FilterProvider
+import "./global.css"
 
-import StackNavigator from './src/components/navigation/StackNavigator';
-import FinanceFlowNavigator from './src/components/Financials/FinanceFlowNavigator';
+import { LocaleProvider, useLocale } from "./src/contexts/LocaleContext"
+import { RecentlyViewedProvider } from "./src/contexts/RecentlyViewedContext"
+import { FinanceFlowProvider } from "./src/contexts/FinanceFlowContext"
+import { FilterProvider } from "./src/contexts/FilterContext" // ✅ Added FilterProvider
+import { WishlistProvider } from "./src/contexts/WishlistContext" // ✅ Added WishlistProvider
+
+import StackNavigator from "./src/components/navigation/StackNavigator"
+import FinanceFlowNavigator from "./src/components/Financials/FinanceFlowNavigator"
 
 function AppWithLocale() {
-  const { direction } = useLocale();
-  const isRTL = direction === 'rtl';
+  const { direction } = useLocale()
+  const isRTL = direction === "rtl"
 
   useEffect(() => {
     if (I18nManager.isRTL !== isRTL) {
-      I18nManager.allowRTL(true);
-      I18nManager.forceRTL(isRTL);
+      I18nManager.allowRTL(true)
+      I18nManager.forceRTL(isRTL)
     }
-  }, [isRTL]);
+  }, [isRTL])
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        direction: isRTL ? 'rtl' : 'ltr',
+        direction: isRTL ? "rtl" : "ltr",
       }}
     >
       <NavigationContainer>
@@ -38,7 +41,7 @@ function AppWithLocale() {
         <FinanceFlowNavigator />
       </NavigationContainer>
     </SafeAreaView>
-  );
+  )
 }
 
 export default function App() {
@@ -47,10 +50,12 @@ export default function App() {
       <RecentlyViewedProvider>
         <FinanceFlowProvider>
           <FilterProvider>
-            <AppWithLocale />
+            <WishlistProvider>
+              <AppWithLocale />
+            </WishlistProvider>
           </FilterProvider>
         </FinanceFlowProvider>
       </RecentlyViewedProvider>
     </LocaleProvider>
-  );
+  )
 }
