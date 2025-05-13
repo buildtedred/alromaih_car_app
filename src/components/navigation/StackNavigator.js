@@ -6,6 +6,7 @@ import { createBottomTabNavigator, BottomTabBar } from "@react-navigation/bottom
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { useLocale } from "../../contexts/LocaleContext"
 import CustomTabBarBackground from "./CustomTabBarBackground"
+import ScreenLayout from "../common/ScreenLayout"
 
 // Screens
 import HomeScreen from "../../screens/HomeScreen"
@@ -43,107 +44,88 @@ const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 const { width } = Dimensions.get("window")
 
-function HomeStack() {
-  return (
+const excludedScreensFromHeader = ["Gallery"]
+
+const wrapWithLayout = (Component, screenName) => (props) => (
+  excludedScreensFromHeader.includes(screenName) ? (
+    <Component {...props} />
+  ) : (
+    <ScreenLayout>
+      <Component {...props} />
+    </ScreenLayout>
+  )
+)
+
+const createStackWithCommonScreens = (initialScreen, initialScreenName, additionalScreens = []) => {
+  return () => (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name={initialScreenName} component={wrapWithLayout(initialScreen, initialScreenName)} />
+      {additionalScreens.map((screen) => (
+        <Stack.Screen
+          key={screen.name}
+          name={screen.name}
+          component={wrapWithLayout(screen.component, screen.name)}
+          options={screen.options || {}}
+        />
+      ))}
+      {[{
+        name: "Gallery", component: Gallery
+      }, {
+        name: "Search", component: SearchScreen
+      }, {
+        name: "AdvancedSearch", component: AdvancedSearchScreen
+      }, {
+        name: "Blog", component: BlogScreen
+      }, {
+        name: "NewsDetail", component: NewsDetailScreen
+      }, {
+        name: "ReviewScreen", component: ReviewScreen
+      }, {
+        name: "BrowseScreen", component: BrowseScreen
+      }, {
+        name: "Wishlist", component: WishlistScreen
+      }].map((screen) => (
+        <Stack.Screen
+          key={screen.name}
+          name={screen.name}
+          component={wrapWithLayout(screen.component, screen.name)}
+          options={{ headerShown: false }}
+        />
+      ))}
     </Stack.Navigator>
   )
 }
 
-function CarsStack() {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="AllCarsScreen" component={AllCarScreen} />
-    </Stack.Navigator>
-  )
-}
+const exploreAdditionalScreens = [
+  { name: "CompareScreen", component: CompareScreen, options: { headerShown: false } },
+]
 
-function ChatStack() {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ChatScreen" component={ChatScreen} />
-    </Stack.Navigator>
-  )
-}
+const servicesAdditionalScreens = [
+  { name: "About", component: AboutScreen, options: { headerShown: false } },
+  { name: "Terms", component: TermsScreen, options: { headerShown: false } },
+  { name: "Privacy", component: PrivacyScreen, options: { headerShown: false } },
+  { name: "ContactUs", component: ContactUsScreen, options: { headerShown: false } },
+  { name: "FAQ", component: FAQScreen, options: { headerShown: false } },
+  { name: "AccountScreen", component: AccountScreen, options: { headerShown: false } },
+  { name: "PersonalInfo", component: PersonalInfo, options: { headerShown: false } },
+]
 
-function ExploreStack() {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="CarDiscoverScreen" component={CarDiscoverScreen} />
-      <Stack.Screen
-        name="CompareScreen"
-        component={CompareScreen}
-        options={{ headerShown: true, title: "Comparison" }}
-      />
-    </Stack.Navigator>
-  )
-}
-
-function ServicesStack() {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="MoreScreen" component={MoreScreen} />
-      <Stack.Screen name="About" component={AboutScreen} options={{ headerShown: true, title: "About Us" }} />
-      <Stack.Screen name="Terms" component={TermsScreen} options={{ headerShown: true, title: "Terms & Conditions" }} />
-      <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: true, title: "Privacy Policy" }} />
-      <Stack.Screen name="ContactUs" component={ContactUsScreen} options={{ headerShown: true, title: "Contact Us" }} />
-      <Stack.Screen name="FAQ" component={FAQScreen} options={{ headerShown: true, title: "FAQs / Help" }} />
-      <Stack.Screen
-        name="AccountScreen"
-        component={AccountScreen}
-        options={{ headerShown: false, title: "My Account" }}
-      />
-      <Stack.Screen
-        name="PersonalInfo"
-        component={PersonalInfo}
-        options={{ headerShown: false, title: "Personal Info" }}
-      />
-    </Stack.Navigator>
-  )
-}
+const HomeStack = createStackWithCommonScreens(HomeScreen, "HomeScreen")
+const CarsStack = createStackWithCommonScreens(AllCarScreen, "AllCarsScreen")
+const ChatStack = createStackWithCommonScreens(ChatScreen, "ChatScreen")
+const ExploreStack = createStackWithCommonScreens(CarDiscoverScreen, "CarDiscoverScreen", exploreAdditionalScreens)
+const ServicesStack = createStackWithCommonScreens(MoreScreen, "MoreScreen", servicesAdditionalScreens)
 
 const tabList = [
-  {
-    name: "CarsTab",
-    icon: TabCarsIcon,
-    labelAr: "السيارات",
-    labelEn: "Cars",
-    component: CarsStack,
-  },
-  {
-    name: "ChatTab",
-    icon: TabChatIcon,
-    labelAr: "المحادثة",
-    labelEn: "Chat",
-    component: ChatStack,
-  },
-  {
-    name: "HomeTab",
-    icon: TabHomeIcon,
-    labelAr: "الرئيسية",
-    labelEn: "Home",
-    component: HomeStack,
-  },
-  {
-    name: "ExploreTab",
-    icon: TabExploreIcon,
-    labelAr: "الاستكشاف",
-    labelEn: "Explore",
-    component: ExploreStack,
-  },
-  {
-    name: "ServicesTab",
-    icon: TabServicesIcon,
-    labelAr: "خدماتي",
-    labelEn: "Services",
-    component: ServicesStack,
-  },
+  { name: "CarsTab", icon: TabCarsIcon, labelAr: "السيارات", labelEn: "Cars", component: CarsStack },
+  { name: "ChatTab", icon: TabChatIcon, labelAr: "المحادثة", labelEn: "Chat", component: ChatStack },
+  { name: "HomeTab", icon: TabHomeIcon, labelAr: "الرئيسية", labelEn: "Home", component: HomeStack },
+  { name: "ExploreTab", icon: TabExploreIcon, labelAr: "الاستكشاف", labelEn: "Explore", component: ExploreStack },
+  { name: "ServicesTab", icon: TabServicesIcon, labelAr: "خدماتي", labelEn: "Services", component: ServicesStack },
 ]
 
 function CustomTabButton(props) {
   const { onPress, children } = props
-
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>{children}</View>
@@ -153,62 +135,15 @@ function CustomTabButton(props) {
 
 function CustomTabBarIcon({ focused, Icon, label = "", index, activeIndex }) {
   const tabWidth = (width * 0.9) / tabList.length
-
   return (
-    <View
-      style={{
-        width: tabWidth,
-        alignItems: "center",
-        justifyContent: "center",
-        height: 70,
-      }}
-    >
+    <View style={{ width: tabWidth, alignItems: "center", justifyContent: "center", height: 70 }}>
       {focused ? (
-        <View
-          style={{
-            position: "absolute",
-            top: -8,
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            backgroundColor: "white",
-            borderWidth: 1,
-            borderColor: "#E5E7EB",
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.05,
-            shadowRadius: 1,
-            elevation: 2,
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 50,
-          }}
-        >
+        <View style={{ position: "absolute", top: -8, width: 60, height: 60, borderRadius: 30, backgroundColor: "white", borderWidth: 1, borderColor: "#E5E7EB", shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 1, elevation: 2, alignItems: "center", justifyContent: "center", zIndex: 50 }}>
           <Icon width={22} height={22} fill="#4CAF50" />
-          {label ? (
-            <Text
-              style={{
-                fontSize: 9,
-                color: "#000000",
-                marginTop: 1,
-                fontWeight: "bold",
-              }}
-            >
-              {label}
-            </Text>
-          ) : null}
+          {label ? <Text style={{ fontSize: 9, color: "#000000", marginTop: 1, fontWeight: "bold" }}>{label}</Text> : null}
         </View>
       ) : (
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 6,
-            borderRadius: 8,
-            marginTop: 6,
-            opacity: 0.5,
-          }}
-        >
+        <View style={{ alignItems: "center", justifyContent: "center", padding: 6, borderRadius: 8, marginTop: 6, opacity: 0.5 }}>
           <Icon width={24} height={24} fill="#FFFFFF" />
         </View>
       )}
@@ -227,68 +162,20 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
-      screenListeners={{
-        state: (e) => {
-          const index = e.data?.state?.index ?? 2
-          setActiveIndex(index)
-        },
-      }}
+      screenListeners={{ state: (e) => { const index = e.data?.state?.index ?? 2; setActiveIndex(index) } }}
       tabBar={(props) => (
         <View style={{ position: "absolute", bottom: 0, width, height: tabBarHeight }}>
-          <CustomTabBarBackground
-            width={width}
-            height={tabBarHeight}
-            activeIndex={activeIndex}
-            tabCount={tabList.length}
-            isRTL={isRTL}
-            effectiveWidth={effectiveWidth}
-            sideMargin={sideMargin}
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              width: width,
-              position: "absolute",
-              bottom: 0,
-            }}
-          >
-            <View
-              style={{
-                width: effectiveWidth,
-                flexDirection: "row",
-                height: tabBarHeight,
-              }}
-            >
-              <BottomTabBar
-                {...props}
-                style={{
-                  width: effectiveWidth,
-                  backgroundColor: "transparent",
-                  borderTopWidth: 0,
-                  elevation: 0,
-                  height: tabBarHeight,
-                }}
-              />
+          <CustomTabBarBackground width={width} height={tabBarHeight} activeIndex={activeIndex} tabCount={tabList.length} isRTL={isRTL} effectiveWidth={effectiveWidth} sideMargin={sideMargin} />
+          <View style={{ flexDirection: "row", justifyContent: "center", width: width, position: "absolute", bottom: 0 }}>
+            <View style={{ width: effectiveWidth, flexDirection: "row", height: tabBarHeight }}>
+              <BottomTabBar {...props} style={{ width: effectiveWidth, backgroundColor: "transparent", borderTopWidth: 0, elevation: 0, height: tabBarHeight }} />
             </View>
           </View>
         </View>
       )}
       screenOptions={{
-        tabBarStyle: {
-          height: tabBarHeight,
-          backgroundColor: "transparent",
-          borderTopWidth: 0,
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          elevation: 0,
-        },
-        tabBarItemStyle: {
-          padding: 0,
-          margin: 0,
-        },
+        tabBarStyle: { height: tabBarHeight, backgroundColor: "transparent", borderTopWidth: 0, position: "absolute", bottom: 0, left: 0, right: 0, elevation: 0 },
+        tabBarItemStyle: { padding: 0, margin: 0 },
         headerShown: false,
         tabBarShowLabel: false,
         tabBarPressColor: "transparent",
@@ -302,13 +189,7 @@ function TabNavigator() {
           component={tab.component}
           options={{
             tabBarIcon: ({ focused }) => (
-              <CustomTabBarIcon
-                focused={focused}
-                Icon={tab.icon}
-                label={locale === "ar" ? tab.labelAr : tab.labelEn}
-                index={index}
-                activeIndex={activeIndex}
-              />
+              <CustomTabBarIcon focused={focused} Icon={tab.icon} label={locale === "ar" ? tab.labelAr : tab.labelEn} index={index} activeIndex={activeIndex} />
             ),
             tabBarButton: (props) => <CustomTabButton {...props} />,
           }}
@@ -319,24 +200,5 @@ function TabNavigator() {
 }
 
 export default function MainNavigator() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: "#46194F" },
-        headerTintColor: "#fff",
-        headerTitleStyle: { fontWeight: "bold" },
-        headerBackTitleVisible: false,
-      }}
-    >
-      <Stack.Screen name="Main" component={TabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="Gallery" component={Gallery} options={{ title: "Gallery" }} />
-      <Stack.Screen name="Search" component={SearchScreen} options={{ title: "Search" }} />
-      <Stack.Screen name="AdvancedSearch" component={AdvancedSearchScreen} options={{ title: "Refine Your Search" }} />
-      <Stack.Screen name="Blog" component={BlogScreen} />
-      <Stack.Screen name="NewsDetail" component={NewsDetailScreen} />
-      <Stack.Screen name="ReviewScreen" component={ReviewScreen} options={{ title: "Car Reviews" }} />
-      <Stack.Screen name="BrowseScreen" component={BrowseScreen} />
-      <Stack.Screen name="Wishlist" component={WishlistScreen} options={{ title: "Wishlist" }} />
-    </Stack.Navigator>
-  )
+  return <TabNavigator />
 }

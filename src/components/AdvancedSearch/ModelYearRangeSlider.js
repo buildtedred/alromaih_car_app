@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
-import { Slider } from '@miblanchard/react-native-slider';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useLocale } from '../../contexts/LocaleContext';
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { View, Text } from "react-native";
+import { Slider } from "@miblanchard/react-native-slider";
+import { useLocale } from "../../contexts/LocaleContext";
+import AlmaraiFonts from "../../constants/fonts";
 
 export default function ModelYearRangeSlider({
   min = 1970,
@@ -29,67 +31,86 @@ export default function ModelYearRangeSlider({
         marginTop: 24,
         padding: 24,
         paddingHorizontal: 8,
-        backgroundColor: 'white',
+        backgroundColor: "white",
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: '#D1D5DB',
+        borderColor: "#D1D5DB",
       }}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-        <View
+      {/* Title */}
+      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+        <Text
           style={{
-            width: 36,
-            height: 36,
-            backgroundColor: '#F3F4F6',
-            borderRadius: 18,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginRight: 12,
+            fontSize: 18,
+            fontFamily: AlmaraiFonts.bold,
+            color: "#46194F",
           }}
         >
-          <Ionicons name="calendar-outline" size={22} color="#6B7280" />
-        </View>
-        <Text style={{ fontSize: 18, fontWeight: '600', color: '#46194F' }}>
-          {locale === 'ar' ? 'نطاق سنة الموديل' : 'Model Year Range'}
+          {locale === "ar" ? "نطاق سنة الموديل" : "Model Year Range"}
         </Text>
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+      {/* Value Boxes */}
+      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}>
         <View
           style={{
             flex: 1,
-            backgroundColor: 'white',
+            backgroundColor: "white",
             paddingVertical: 8,
             paddingHorizontal: 16,
             borderRadius: 8,
             borderWidth: 1,
-            borderColor: '#D1D5DB',
-            alignItems: 'center',
+            borderColor: "#D1D5DB",
+            alignItems: "center",
             marginRight: 4,
           }}
         >
-          <Text style={{ fontSize: 16, color: '#4B5563' }}>{localValue[0]}</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: AlmaraiFonts.regular,
+              color: "#4B5563",
+            }}
+          >
+            {localValue[0]}
+          </Text>
         </View>
-        <Text style={{ marginHorizontal: 8, fontSize: 14, color: '#6B7280' }}>
-          {locale === 'ar' ? 'إلى' : 'to'}
+        <Text
+          style={{
+            marginHorizontal: 8,
+            fontSize: 14,
+            color: "#6B7280",
+            fontFamily: AlmaraiFonts.regular,
+          }}
+        >
+          {locale === "ar" ? "إلى" : "to"}
         </Text>
         <View
           style={{
             flex: 1,
-            backgroundColor: 'white',
+            backgroundColor: "white",
             paddingVertical: 8,
             paddingHorizontal: 16,
             borderRadius: 8,
             borderWidth: 1,
-            borderColor: '#D1D5DB',
-            alignItems: 'center',
+            borderColor: "#D1D5DB",
+            alignItems: "center",
             marginLeft: 4,
           }}
         >
-          <Text style={{ fontSize: 16, color: '#4B5563' }}>{localValue[1]}</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: AlmaraiFonts.regular,
+              color: "#4B5563",
+            }}
+          >
+            {localValue[1]}
+          </Text>
         </View>
       </View>
 
+      {/* Slider */}
       <View style={{ marginTop: 12, paddingHorizontal: 8 }}>
         <Slider
           value={localValue}
@@ -101,15 +122,15 @@ export default function ModelYearRangeSlider({
           thumbTintColor="#46194F"
           minimumTrackTintColor="#46194F"
           maximumTrackTintColor="#E5E7EB"
-          containerStyle={{ height: 50, justifyContent: 'center' }}
+          containerStyle={{ height: 50, justifyContent: "center" }}
           trackStyle={{ height: 4, borderRadius: 2 }}
           thumbStyle={{
             width: 24,
             height: 24,
             borderRadius: 12,
-            backgroundColor: '#fff',
+            backgroundColor: "#fff",
             borderWidth: 2,
-            borderColor: '#003366',
+            borderColor: "#003366",
             elevation: 2,
           }}
         />

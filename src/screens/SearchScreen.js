@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   Dimensions,
 } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, CommonActions } from "@react-navigation/native"
 import Feather from "react-native-vector-icons/Feather"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import carsData from "../mock-data"
@@ -21,10 +21,12 @@ import { useLocale } from "../contexts/LocaleContext"
 import { useTranslation } from "react-i18next"
 import { brandLogos } from "../mock-data"
 import AlmaraiFonts from "../constants/fonts"
+import { useFilters } from "../contexts/FilterContext"
 
 export default function SearchScreen() {
   const navigation = useNavigation()
   const { locale, direction } = useLocale()
+  const { filters, setFilters, setFilteredCars, setIsFiltered, clearFilters } = useFilters()
   const isRTL = direction === "rtl"
   const { t } = useTranslation()
   const [searchStep, setSearchStep] = useState("brands") // "brands", "models", "results"
@@ -42,6 +44,16 @@ export default function SearchScreen() {
 
     const subscription = Dimensions.addEventListener("change", dimensionsHandler)
     return () => subscription.remove()
+  }, [])
+
+  // Clear filters when component unmounts
+  useEffect(() => {
+    return () => {
+      // This ensures filters are cleared when navigating away from search screen
+      if (navigation.isFocused()) {
+        clearFilters()
+      }
+    }
   }, [])
 
   // Determine size class based on screen width
@@ -148,12 +160,16 @@ export default function SearchScreen() {
   }
 
   // Handle model selection
-  const handleSelectModel = (model) => {
-    setIsLoading(true)
-    setSelectedModel(model)
+ const handleSelectModel = (model) => {
+  setIsLoading(true)
+  setSelectedModel(model)
 
-    // Simulate loading
-    setTimeout(() => {
+  // Simulate loading
+  setTimeout(() => {
+    try {
+      // First clear any existing filters
+      clearFilters()
+
       // Filter cars by brand and model
       const filteredCars = carsData.filter(
         (car) =>
@@ -161,22 +177,33 @@ export default function SearchScreen() {
           (car.model === model.name || car.name?.en === model.name || car.name === model.name),
       )
 
-      // Navigate to results screen
-      navigation.navigate("AllCarsScreen", {
-        selectedFilters: {
-          brand: selectedBrand.brand,
-          model: model.name,
-        },
-        filteredCars: filteredCars,
-      })
+      // Set filters in context
+      const filterParams = {
+        brand: selectedBrand.brand,
+        models: [model.name], // Always use array
+      }
 
+      // Update filter context
+      setFilters(filterParams)
+      setFilteredCars(filteredCars)
+      setIsFiltered(true)
+
+      // ✅ Navigate directly to AllCarsScreen inside CarsTab
+      navigation.navigate("CarsTab", {
+        screen: "AllCarsScreen",
+        params: { selectedFilters: filterParams },
+      })
+    } catch (error) {
+      console.error("Error applying filters:", error)
+    } finally {
       setIsLoading(false)
-      // Reset search state for next time
       setSearchStep("brands")
       setSelectedBrand(null)
       setSelectedModel(null)
-    }, 500)
-  }
+    }
+  }, 500)
+}
+
 
   // Handle back button
   const handleBack = () => {
@@ -184,6 +211,8 @@ export default function SearchScreen() {
       setSearchStep("brands")
       setSelectedBrand(null)
     } else {
+      // Clear filters when navigating back
+      clearFilters()
       navigation.goBack()
     }
   }

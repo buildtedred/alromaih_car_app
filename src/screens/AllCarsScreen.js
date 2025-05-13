@@ -49,6 +49,7 @@ export default function AllCarsScreen() {
     setFilters,
     setFilteredCars,
     setIsFiltered,
+    clearFilters,
   } = useFilters()
 
   const [activePair, setActivePair] = useState(0)
@@ -141,7 +142,9 @@ export default function AllCarsScreen() {
   useEffect(() => {
     if (!initialLoadRef.current || handlingBrandSelectionRef.current || handlingNavParamsRef.current) return
 
-    if (isFiltered && contextFilteredCars.length > 0) {
+    if (isFiltered) {
+      // Even if contextFilteredCars is empty, we should still show the empty state
+      // when filters are applied
       setLocalFilteredCars(contextFilteredCars)
       setCars(contextFilteredCars.slice(0, CARS_PER_PAGE))
       setTotalPages(Math.ceil(contextFilteredCars.length / CARS_PER_PAGE))
@@ -153,8 +156,17 @@ export default function AllCarsScreen() {
       } else if (!filters.brand && selectedBrand) {
         setSelectedBrand(null)
       }
+    } else {
+      // If filters are cleared, reset to all cars
+      if (allCars.length > 0) {
+        setLocalFilteredCars(allCars)
+        setCars(allCars.slice(0, CARS_PER_PAGE))
+        setTotalPages(Math.ceil(allCars.length / CARS_PER_PAGE))
+        setActiveFilters({})
+        setSelectedBrand(null)
+      }
     }
-  }, [isFiltered, contextFilteredCars, filters])
+  }, [isFiltered, contextFilteredCars, filters, allCars])
 
   // Handle brand selection in the UI
   const handleBrandSelection = useCallback(
@@ -243,6 +255,26 @@ export default function AllCarsScreen() {
     useCallback(() => {
       if (!initialLoadRef.current || !allCars.length) return
 
+      // Check if filters were cleared from AdvancedSearchScreen
+      if (route.params?.filtersCleared) {
+        console.log("Filters were cleared from AdvancedSearchScreen")
+
+        // Reset all filter-related state
+        setActiveFilters({})
+        setSelectedBrand(null)
+        setIsFiltered(false)
+
+        // Reset to all cars
+        setLocalFilteredCars(allCars)
+        setCars(allCars.slice(0, CARS_PER_PAGE))
+        setTotalPages(Math.ceil(allCars.length / CARS_PER_PAGE))
+        setCurrentPage(1)
+
+        // Clear the params to prevent re-processing
+        navigation.setParams({ filtersCleared: undefined })
+        return
+      }
+
       if (route.params?.selectedFilters) {
         handlingNavParamsRef.current = true
         console.log("Received filters from navigation:", route.params.selectedFilters)
@@ -260,11 +292,30 @@ export default function AllCarsScreen() {
         }
 
         // Filter the cars
-        let filtered = allCars
+        let filtered = [...allCars]
+
+        // Apply all filters from the params
         if (route.params.selectedFilters.brand) {
           filtered = filtered.filter((car) => car.brand === route.params.selectedFilters.brand)
         }
 
+        if (route.params.selectedFilters.models) {
+          const modelArr = Array.isArray(route.params.selectedFilters.models)
+            ? route.params.selectedFilters.models
+            : route.params.selectedFilters.models.split(",").map((m) => m.trim())
+
+          filtered = filtered.filter((car) => modelArr.includes(car.model))
+        }
+
+        if (route.params.selectedFilters.category) {
+          filtered = filtered.filter((car) => car.category === route.params.selectedFilters.category)
+        }
+
+        if (route.params.selectedFilters.bodyType) {
+          filtered = filtered.filter((car) => car.bodyType === route.params.selectedFilters.bodyType)
+        }
+
+        // Always update the filtered cars list, even if it's empty
         setLocalFilteredCars(filtered)
         setFilteredCars(filtered)
         setCars(filtered.slice(0, CARS_PER_PAGE))
@@ -278,7 +329,24 @@ export default function AllCarsScreen() {
           handlingNavParamsRef.current = false
         }, 100)
       }
-    }, [route.params?.selectedFilters, allCars]),
+    }, [route.params, allCars]),
+  )
+
+  // Check filter context state when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      // If filters are cleared but UI hasn't updated, reset the UI
+      if (!isFiltered && Object.keys(activeFilters).length > 0) {
+        setActiveFilters({})
+        setSelectedBrand(null)
+
+        if (allCars.length > 0) {
+          setLocalFilteredCars(allCars)
+          setCars(allCars.slice(0, CARS_PER_PAGE))
+          setTotalPages(Math.ceil(allCars.length / CARS_PER_PAGE))
+        }
+      }
+    }, [isFiltered, activeFilters, allCars]),
   )
 
   const applyFiltersAndSort = (filters, sortOption) => {
@@ -341,6 +409,7 @@ export default function AllCarsScreen() {
       newList.sort((a, b) => (a.specs?.year || 0) - (b.specs?.year || 0))
     }
 
+    // Always update the filtered cars list, even if it's empty
     setLocalFilteredCars(newList)
     setFilteredCars(newList)
     setTotalPages(Math.ceil(newList.length / CARS_PER_PAGE))
@@ -546,8 +615,6 @@ export default function AllCarsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <AppHeader />
-
       <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
@@ -657,7 +724,35 @@ export default function AllCarsScreen() {
           ) : (
             <View style={{ width: "100%", alignItems: "center", justifyContent: "center", paddingVertical: 40 }}>
               <Icon name="car-off" size={40} color="#9ca3af" />
-              <Text style={{ marginTop: 8, color: "#6b7280" }}>{t("common.no_cars_found")}</Text>
+              <Text style={{ marginTop: 8, color: "#6b7280", textAlign: "center" }}>
+                {hasActiveFilters
+                  ? t("common.no_cars_match_filters", "No cars match your selected filters")
+                  : t("common.no_cars_found", "No cars found")}
+              </Text>
+              {hasActiveFilters && (
+                <TouchableOpacity
+                  onPress={() => {
+                    clearFilters()
+                    setActiveFilters({})
+                    setSelectedBrand(null)
+                    setIsFiltered(false)
+                    setLocalFilteredCars(allCars)
+                    setCars(allCars.slice(0, CARS_PER_PAGE))
+                    setTotalPages(Math.ceil(allCars.length / CARS_PER_PAGE))
+                  }}
+                  style={{
+                    marginTop: 16,
+                    paddingHorizontal: 16,
+                    paddingVertical: 8,
+                    backgroundColor: "#46194F",
+                    borderRadius: 8,
+                  }}
+                >
+                  <Text style={{ color: "white", fontFamily: AlmaraiFonts.regular }}>
+                    {t("common.clear_filters", "Clear Filters")}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           )}
         </View>

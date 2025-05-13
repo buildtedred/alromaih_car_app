@@ -82,7 +82,7 @@ export default function FavoritesScreen() {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <AppHeader />
+     
 
       <View className="px-4 pt-4 pb-20">
         <Text className="text-2xl font-bold text-gray-800 mb-6">{locale === "ar" ? "المفضلة" : "Favorites"}</Text>
