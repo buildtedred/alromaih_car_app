@@ -16,13 +16,15 @@ import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/nativ
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 import { fetchCars } from "../mock-data"
-import AppHeader from "../components/common/AppHeader"
 import AllCarCard from "../components/cars/AllCarCard"
 import SortBottomSheet from "../components/AdvancedSearch/SortBottomSheet"
 import BrandSelector from "../components/AdvancedSearch/BrandSelector"
 import { useLocale } from "../contexts/LocaleContext"
 import { useFilters } from "../contexts/FilterContext" // Import the filter context
 import AlmaraiFonts from "../constants/fonts"
+import CompareCarModal from "../components/cars/CompareCarModal"
+import { useCompare } from "../contexts/CompareContext"
+import CompareResultModal from "../components/cars/CompareResultModal"
 
 const sliderImages = [
   require("../assets/images/allcar_slide1.png"),
@@ -52,6 +54,8 @@ export default function AllCarsScreen() {
     clearFilters,
   } = useFilters()
 
+  const { isCompareModalVisible, closeCompareModal, selectedCarForComparison, addCarToCompare } = useCompare()
+
   const [activePair, setActivePair] = useState(0)
   const autoScrollTimer = useRef(null)
 
@@ -78,6 +82,9 @@ export default function AllCarsScreen() {
   const handlingBrandSelectionRef = useRef(false)
   // Track if we're handling navigation params
   const handlingNavParamsRef = useRef(false)
+
+  // Add this near the top of the file where you get route params
+  const { selectingForComparison = false } = route.params || {}
 
   const imagePairs = []
   for (let i = 0; i < sliderImages.length; i += 2) {
@@ -718,7 +725,11 @@ export default function AllCarsScreen() {
           {cars.length > 0 ? (
             cars.map((item) => (
               <View key={item.id} style={{ width: "50%", padding: 4 }}>
-                <AllCarCard car={item} onPress={() => handlePress(item)} />
+                <AllCarCard
+                  car={item}
+                  onPress={() => handlePress(item)}
+                  isSelectingForComparison={selectingForComparison}
+                />
               </View>
             ))
           ) : (
@@ -773,6 +784,8 @@ export default function AllCarsScreen() {
           <ActivityIndicator size="large" color="#46194F" />
         </View>
       )}
+      <CompareCarModal />
+      <CompareResultModal />
     </SafeAreaView>
   )
 }
