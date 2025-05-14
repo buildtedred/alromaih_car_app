@@ -1,22 +1,26 @@
+"use client"
+
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
+import AlmaraiFonts from '../../constants/fonts';
 
 export default function EngineSelector({ selected, setSelected, engineOptions }) {
   const { t } = useTranslation();
 
   return (
     <View className="mb-6 px-1 p-6 bg-white border rounded-xl border-gray-300 gap-2">
+      {/* Header Title */}
       <View className="flex-row items-center mb-3">
-        <View className="w-9 h-9 bg-gray-100 rounded-full items-center justify-center mr-3">
-          <Ionicons name="car-outline" size={22} color="#6B7280" />
-        </View>
-        <Text className="text-lg font-semibold text-brand">
+        <Text
+          className="text-lg text-brand"
+          style={{ fontFamily: AlmaraiFonts.bold }}
+        >
           {t('car_specs.engine', { defaultValue: 'Engine' })}
         </Text>
       </View>
 
+      {/* Option Buttons */}
       <View className="flex-row flex-wrap gap-2">
         {engineOptions.map((type) => {
           const isSelected = selected === type;
@@ -29,9 +33,10 @@ export default function EngineSelector({ selected, setSelected, engineOptions })
               }`}
             >
               <Text
-                className={`text-sm ${
-                  isSelected ? 'text-white font-semibold' : 'text-gray-800'
-                }`}
+                className={`text-sm ${isSelected ? 'text-white' : 'text-gray-800'}`}
+                style={{
+                  fontFamily: isSelected ? AlmaraiFonts.bold : AlmaraiFonts.regular,
+                }}
               >
                 {t(`car_specs.${type}`, { defaultValue: type })}
               </Text>

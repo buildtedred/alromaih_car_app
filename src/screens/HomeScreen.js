@@ -95,7 +95,7 @@ export default function HomeScreen() {
     <View className="flex-1 bg-white">
 
       <View className="z-10 bg-white">
-        <AppHeader />
+     
       </View>
 
       <ScrollView

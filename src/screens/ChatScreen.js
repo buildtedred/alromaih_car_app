@@ -23,7 +23,7 @@ export default function ChatScreen() {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <AppHeader />
+      
       <ScrollView contentContainerStyle={{ padding: 16 }} className="flex-1">
         <View className="space-y-6">
 

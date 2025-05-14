@@ -5,7 +5,6 @@ import { View, Text, TouchableOpacity, ScrollView, Dimensions } from "react-nati
 import { useLocale } from "../../contexts/LocaleContext"
 import { getBrands, brandLogos } from "../../mock-data"
 import AlmaraiFonts from "../../constants/fonts"
-import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 
 export default function BrandSelector({
   selected,
@@ -16,8 +15,8 @@ export default function BrandSelector({
   textClass = "",
   isRTL = false,
   titlePadding = "px-1",
-  layout = "scroll", // NEW: default layout is scroll
-  sizeClass: propSizeClass, // Accept sizeClass from parent
+  layout = "scroll",
+  sizeClass: propSizeClass,
 }) {
   const { locale } = useLocale()
   const allBrands = isRTL ? [...getBrands(locale)].reverse() : getBrands(locale)
@@ -26,7 +25,6 @@ export default function BrandSelector({
   const [showAll, setShowAll] = useState(false)
   const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width)
 
-  // Listen for dimension changes
   useEffect(() => {
     const dimensionsHandler = ({ window }) => {
       setScreenWidth(window.width)
@@ -37,7 +35,6 @@ export default function BrandSelector({
     return () => subscription.remove()
   }, [])
 
-  // Determine size class based on screen width if not provided by parent
   const sizeClass = useMemo(() => {
     if (propSizeClass) return propSizeClass
     if (screenWidth < 360) return "small"
@@ -45,7 +42,6 @@ export default function BrandSelector({
     return "large"
   }, [screenWidth, propSizeClass])
 
-  // Get responsive values based on size class
   const sizes = useMemo(() => {
     switch (sizeClass) {
       case "small":
@@ -56,10 +52,10 @@ export default function BrandSelector({
           iconSize: 12,
           itemMargin: 4,
           itemPadding: 8,
-          gridItemWidth: "30%", // Slightly larger percentage for small screens
+          gridItemWidth: "30%",
           closeButtonSize: 16,
           closeIconSize: 12,
-          titlePaddingClass: "px-4 mb-0.5", // Updated to px-4 for consistent padding
+          titlePaddingClass: "px-4 mb-0.5",
         }
       case "medium":
         return {
@@ -72,9 +68,9 @@ export default function BrandSelector({
           gridItemWidth: "22%",
           closeButtonSize: 18,
           closeIconSize: 13,
-          titlePaddingClass: "px-4 mb-1", // Updated to px-4 for consistent padding
+          titlePaddingClass: "px-4 mb-1",
         }
-      default: // large
+      default:
         return {
           logoSize: { width: 40, height: 30 },
           titleSize: 15,
@@ -85,7 +81,7 @@ export default function BrandSelector({
           gridItemWidth: "22%",
           closeButtonSize: 20,
           closeIconSize: 14,
-          titlePaddingClass: "px-4 mb-1", // Updated to px-4 for consistent padding
+          titlePaddingClass: "px-4 mb-1",
         }
     }
   }, [sizeClass])
@@ -152,7 +148,17 @@ export default function BrandSelector({
               elevation: 2,
             }}
           >
-            <MaterialIcons name="close" size={sizes.closeIconSize} color="#333" />
+            <Text
+              style={{
+                fontSize: sizes.closeIconSize,
+                color: "#333",
+                fontFamily: AlmaraiFonts.bold,
+                marginTop: -1,
+                lineHeight: sizes.closeIconSize + 2,
+              }}
+            >
+              ×
+            </Text>
           </View>
         )}
 

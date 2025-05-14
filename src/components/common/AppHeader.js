@@ -97,7 +97,7 @@ export default function AppHeader() {
   }
 
   return (
-    <View className={`bg-white shadow-md rounded-b-2xl ${sizes.containerPadding}`}>
+    <View className={`bg-white shadow-md ${sizes.containerPadding}`}>
       {/* Header row: logo and icons */}
       <View className="flex-row items-center justify-between">
         {/* Logo on the left */}

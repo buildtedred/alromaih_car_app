@@ -6,8 +6,8 @@ import { useNavigation } from "@react-navigation/native"
 import { useTranslation } from "react-i18next"
 import { useLocale } from "../contexts/LocaleContext"
 
-import AppHeader from "../components/common/AppHeader"
 import CarSelectionModal from "../components/car-selection/CarSelectionModal"
+import CashFlowModal from "../components/cashflow/CashFlowModal"
 
 import CashIcon from "../assets/icons/cash.svg"
 import FinanceIcon from "../assets/icons/finance.svg"
@@ -21,10 +21,19 @@ export default function CarDiscoverScreen() {
   const isRTL = direction === "rtl"
 
   const [loading, setLoading] = useState(true)
-  const [isSelectionModalVisible, setSelectionModalVisible] = useState(false)
-  const [modalType, setModalType] = useState(null)
+  const [isFinanceModalVisible, setFinanceModalVisible] = useState(false)
+  const [isCashModalVisible, setCashModalVisible] = useState(false)
   const [activeButton, setActiveButton] = useState(null)
   const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width)
+
+  // Debug logging
+  useEffect(() => {
+    console.log("Finance Modal Visible:", isFinanceModalVisible)
+  }, [isFinanceModalVisible])
+
+  useEffect(() => {
+    console.log("Cash Modal Visible:", isCashModalVisible)
+  }, [isCashModalVisible])
 
   // Listen for dimension changes
   useEffect(() => {
@@ -90,14 +99,20 @@ export default function CarDiscoverScreen() {
     return () => clearTimeout(timer)
   }, [])
 
-  const closeSelectionModal = () => {
-    setSelectionModalVisible(false)
+  const closeFinanceModal = () => {
+    console.log("Closing finance modal")
+    setFinanceModalVisible(false)
+  }
+
+  const closeCashModal = () => {
+    console.log("Closing cash modal")
+    setCashModalVisible(false)
   }
 
   if (loading) {
     return (
       <View className="flex-1 bg-white">
-        <AppHeader sizeClass={sizeClass} />
+   
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color="#46194F" />
         </View>
@@ -107,7 +122,7 @@ export default function CarDiscoverScreen() {
 
   return (
     <View className="flex-1 bg-white">
-      <AppHeader sizeClass={sizeClass} />
+
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -164,7 +179,6 @@ export default function CarDiscoverScreen() {
             </Text>
 
             <View className="flex-row justify-center mt-1">
-           
               <TouchableOpacity
                 className={`rounded-lg py-1.5 px-2 bg-white shadow-md ${
                   activeButton === "cash" ? "border-2 border-[#46194F]" : "border border-gray-200"
@@ -174,9 +188,9 @@ export default function CarDiscoverScreen() {
                   marginHorizontal: sizes.buttonGap * 2,
                 }}
                 onPress={() => {
-                  setModalType("cash")
+                  console.log("Cash button pressed")
                   setActiveButton("cash")
-                  setSelectionModalVisible(true)
+                  setCashModalVisible(true) // Open cash modal
                 }}
               >
                 <View className={`flex-row items-center ${isRTL ? "justify-end" : "justify-start"} gap-1.5`}>
@@ -204,9 +218,9 @@ export default function CarDiscoverScreen() {
                   marginHorizontal: sizes.buttonGap * 2,
                 }}
                 onPress={() => {
-                  setModalType("finance")
+                  console.log("Finance button pressed")
                   setActiveButton("finance")
-                  setSelectionModalVisible(true)
+                  setFinanceModalVisible(true) // Open finance modal
                 }}
               >
                 <View className={`flex-row items-center ${isRTL ? "justify-end" : "justify-start"} gap-1.5`}>
@@ -229,11 +243,20 @@ export default function CarDiscoverScreen() {
         </View>
       </ScrollView>
 
-
+      {/* Finance flow modal */}
       <CarSelectionModal
-        isVisible={isSelectionModalVisible}
-        onClose={closeSelectionModal}
-        paymentType={modalType}
+        isVisible={isFinanceModalVisible}
+        onClose={closeFinanceModal}
+        paymentType="finance"
+        locale={locale}
+        navigation={navigation}
+        sizeClass={sizeClass}
+      />
+
+      {/* Cash flow modal */}
+      <CashFlowModal
+        isVisible={isCashModalVisible}
+        onClose={closeCashModal}
         locale={locale}
         navigation={navigation}
         sizeClass={sizeClass}

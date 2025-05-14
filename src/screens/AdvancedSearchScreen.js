@@ -137,6 +137,7 @@ export default function AdvancedSearchScreen() {
   }
 
   const clearAllFilters = () => {
+    // Reset local state
     setSelectedModels([])
     setModelSearch("")
     setPriceRange([minPriceDefault, maxPriceDefault])
@@ -150,6 +151,18 @@ export default function AdvancedSearchScreen() {
 
     // Clear filters in context
     clearFilters()
+
+    // Set isFiltered to false to ensure AllCarsScreen knows filters are cleared
+    setIsFiltered(false)
+
+    // Set filteredCars to empty array to reset the filtered cars list
+    setFilteredCars([])
+
+    // Navigate back to AllCarsScreen with a flag indicating filters were cleared
+    navigation.navigate("Main", {
+      screen: "CarsTab",
+      params: { filtersCleared: true },
+    })
   }
 
   const handleSearch = () => {
@@ -290,18 +303,21 @@ export default function AdvancedSearchScreen() {
           {/* 7. Transmission */}
           <TransmissionSelector selected={selectedTransmission} setSelected={setSelectedTransmission} />
 
-          {/* 8. Engine */}
-          <EngineSelector
-            selected={selectedEngine}
-            setSelected={setSelectedEngine}
-            engineOptions={engineOptions}
-            locale={locale}
-          />
+         {/* 8. Engine */}
+<View className="mb-10">
+  <EngineSelector
+    selected={selectedEngine}
+    setSelected={setSelectedEngine}
+    engineOptions={engineOptions}
+    locale={locale}
+  />
+</View>
+
         </View>
       </ScrollView>
 
       {/* Footer Buttons */}
-      <View className="absolute bottom-0 left-0 right-0 bg-white px-4 py-2 flex-row border-t border-gray-200 shadow-sm">
+      <View className="absolute bottom-24 left-0 right-0 bg-white px-4 py-2 flex-row ">
         <TouchableOpacity
           onPress={clearAllFilters}
           className="flex-1 mr-2 py-2 rounded-lg bg-white border border-[#46194F] items-center justify-center"
