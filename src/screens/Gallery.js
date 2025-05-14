@@ -27,6 +27,15 @@ import CarFeatureIcon3 from '../assets/icons/CarFeatureIcon3.svg';
 import CarFeatureIcon4 from '../assets/icons/CarFeatureIcon4.svg';
 import CarFeatureIcon5 from '../assets/icons/CarFeatureIcon5.svg';
 import RiyalIcon from '../assets/icons/RiyalIcon.svg'; // Add this at top
+import JetourLogo from "../assets/brands/jetour_logo.svg";
+
+
+
+const limitWords = (text, maxWords) => {
+  const words = text.trim().split(/\s+/);
+  if (words.length <= maxWords) return text;
+  return words.slice(0, maxWords).join(' ') + '...';
+};
 
 
 const { width } = Dimensions.get('window');
@@ -112,9 +121,9 @@ export default function GalleryScreen({ route }) {
             { useNativeDriver: false }
           )}
           renderItem={({ item }) => (
-            <View style={{ width }} className="items-center justify-center">
-              <View className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm" style={{ width: width * 0.9, marginHorizontal: width * 0.05 }}>
-                <Image source={item} resizeMode="cover" style={{ width: '100%', height: 210 }} />
+            <View style={{ width }} className="items-center justify-center ">
+              <View className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm pl-4 px-4" style={{ width: width * 0.9, marginHorizontal: width * 0.05 }}>
+                <Image source={item} resizeMode="contain" style={{ width: '100%', height: 210  }} />
               </View>
             </View>
           )}
@@ -129,176 +138,122 @@ export default function GalleryScreen({ route }) {
         </View>
       </View>
 
-      <View className="border-2 border-[#46194F] mx-8 mt-6 rounded-2xl px-4 pt-6 pb-4 bg-white relative">
+ <View className="flex-row-reverse justify-between items-end px-2 gap-2 mt-4 ml-4 mr-2">
 
-{/* Brand Box */}
-<View className="absolute -top-6 left-1/4 right-1/4 z-10">
-  <View className="border-2 border-[#46194F] rounded-xl px-6 py-3 bg-white mx-auto items-center">
-    <Text className="text-[#000] font-extrabold text-xs text-center">JETOUR</Text>
-    <Text className="text-[10px] text-center text-gray-700 -mt-1">Drive Your Future</Text>
-  </View>
-</View>
+  {/* === Left Card: Purchase Method === */}
+  <View className="w-1/2 max-w-[180px] h-[180px] bg-white rounded-2xl border-2 border-[#46194F] p-2 justify-between">
 
+    <View>
+      <Text className="text-[11px] text-[#46194F] text-center mb-1">
+        اختر الطريقة المناسبة لشراء هذه السيارة؟
+      </Text>
 
-{/* Top Icons + Info */}
-<View className="flex-row justify-between mt-2 mb-2 items-center">
-  <View className="flex-row gap-4">
-    <Icon name="heart" size={20} color="#46194F" />
-    <ShareIcon width={20} height={20} />
-    <PdfIcon width={20} height={20} />
-  </View>
-
-  <View className="items-end">
-    <Text className="text-xl font-bold text-[#46194F]">جيتور T2</Text>
-    <Text className="text-sm text-gray-500">لدكري فل كامل 2025</Text>
-  </View>
-</View>
-
-{/* Divider */}
-<View className="h-[1px] bg-[#46194F] mb-2" />
-
-{/* Price Section */}
-<View className="flex-row justify-between items-center">
-  {/* Cash Price */}
-  <View className="items-center flex-1">
-    <Text className="text-sm text-gray-500 mb-1">سعر الكاش</Text>
-    <View className="flex-row items-center justify-center gap-1">
-      <RiyalIcon width={20} height={20} />
-      <Text className="text-xl font-extrabold text-[#46194F]">200000</Text>
-    </View>
-  </View>
-
-  {/* Divider */}
-  <View className="w-[1px] h-12 bg-[#46194F] mx-2" />
-
-  {/* Installment Price */}
-  <View className="items-center flex-1">
-    <Text className="text-sm text-gray-500 mb-1">بدأ القسط من</Text>
-    <View className="flex-row items-center justify-center gap-1">
-      <RiyalIcon width={20} height={20} />
-      <Text className="text-xl font-extrabold text-[#46194F]">1940</Text>
-    </View>
-  </View>
-</View>
-
-
-
-{/* Divider */}
-<View className="h-[1px] bg-[#46194F] my-4" />
-
-{/* Colors */}
-<View className="items-end">
-  <Text className="text-semibold text-gray-500 mb-2 text-end">لون السيارة</Text>
-  <ScrollView
-    horizontal
-    showsHorizontalScrollIndicator={false}
-    className="flex-row px"
-    contentContainerStyle={{ gap: 14 }}
-  >
-    {[
-      { color: '#b42f0f', label: 'أحمر' },
-      { color: '#d2dce7', label: 'رمادي هاواي' },
-      { color: '#8f8f8f', label: 'رمادي' },
-      { color: '#4b3b2c', label: 'بني' },
-      { color: '#000000', label: 'أسود' },
-      { color: '#e7e51b', label: 'أصفر' },
-      { color: '#6fa0d9', label: 'أزرق فاتح' },
-      { color: '#374259', label: 'أزرق غامق' },
-    ].map((item, idx) => {
-      const isSelected = selectedColor === item.color;
-
-      return (
+      <View className="flex-row bg-white rounded-3xl overflow-hidden border border-[#46194F] mb-2">
         <TouchableOpacity
-          key={idx}
-          onPress={() => setSelectedColor(item.color)}
-          className="items-center justify-center"
+          onPress={() => setSelectedMethod('cash')}
+          className={`flex-1  ${selectedMethod === 'cash' ? 'bg-[#46194F]' : ''}`}
         >
-          {isSelected ? (
-            <View className="flex-row items-center gap-2 px-2 py-1 rounded-lg border border-[#94a3b8] bg-white">
-              <Text className="text-xs text-[#374151]">{item.label || 'اللون المحدد'}</Text>
-              <View
-                className="w-10 h-10 rounded-full"
-                style={{ backgroundColor: item.color }}
-              />
-            </View>
-          ) : (
-            <View
-              className="w-10 h-10 rounded-full border-2 border-white"
-              style={{ backgroundColor: item.color }}
-            />
-          )}
+          <Text className={`text-center text-[11px] font-bold ${selectedMethod === 'cash' ? 'text-white' : 'text-[#46194F]'}`}>
+            كاش
+          </Text>
         </TouchableOpacity>
-      );
-    })}
-  </ScrollView>
-</View>
+        <TouchableOpacity
+          onPress={() => setSelectedMethod('finance')}
+          className={`flex-1  ${selectedMethod === 'finance' ? 'bg-[#46194F]' : ''}`}
+        >
+          <Text className={`text-center text-[11px] font-bold ${selectedMethod === 'finance' ? 'text-white' : 'text-[#46194F]'}`}>
+            التمويل
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-</View>
-
-
-
-
-
-
-
-
-
-<View className="border-2 border-[#46194F] mx-8 rounded-xl p-4 mt-6">
-  <Text className="text-sm text-[#46194F] text-center mb-3">
-    اختر الطريقة المناسبة لشراء هذه السيارة؟
-  </Text>
-
-  {/* Tabs */}
-  <View className="flex-row bg-white rounded-xl overflow-hidden border border-[#46194F] mx-4">
-    <TouchableOpacity
-      onPress={() => setSelectedMethod('finance')}
-      className={`flex-1 py-2 rounded-l-xl ${
-        selectedMethod === 'finance' ? 'bg-[#46194F]' : ''
-      }`}
-    >
-      <Text
-        className={`text-center font-bold ${
-          selectedMethod === 'finance' ? 'text-white' : 'text-[#46194F]'
-        }`}
-      >
-        التمويل
-      </Text>
-    </TouchableOpacity>
-    <TouchableOpacity
-      onPress={() => setSelectedMethod('cash')}
-      className={`flex-1 py-2 rounded-r-xl ${
-        selectedMethod === 'cash' ? 'bg-[#46194F]' : ''
-      }`}
-    >
-      <Text
-        className={`text-center font-bold ${
-          selectedMethod === 'cash' ? 'text-white' : 'text-[#46194F]'
-        }`}
-      >
-        كاش
-      </Text>
-    </TouchableOpacity>
-  </View>
-
-  {/* Price Info */}
-  <View className="items-center mt-3">
-    <Text className="text-sm text-[#46194F]">سعر الكاش</Text>
-    <View className="flex-row items-center justify-center my-0.5 space-x-1 rtl:space-x-reverse">
-      <RiyalIcon width={22} height={22} />
-      <Text className="text-2xl font-extrabold text-[#46194F]">
-        {fullCar.cashPrice?.toLocaleString()}
-      </Text>
+      <View className="items-center">
+        <Text className="text-xs text-[#46194F] mb-1">سعر الكاش</Text>
+        <View className="flex-row-reverse items-center justify-center gap-2 mb-1">
+          <RiyalIcon width={12} height={12} />
+          <Text className="text-sm font-extrabold text-[#46194F]">146,000</Text>
+        </View>
+        <Text className="text-[10px] text-[#46194F] text-center leading-4 w-full" numberOfLines={2}>
+          شامل الضريبه و اللوحات
+        </Text>
+      </View>
     </View>
-    <Text className="text-sm text-[#46194F]">شامل الضريبه و اللوحات</Text>
+
+    <TouchableOpacity className="bg-[#46194F] py-1.5 rounded-xl">
+      <Text className="text-white text-center text-xs font-bold">طلب شراء</Text>
+    </TouchableOpacity>
   </View>
 
- {/* Buy Button */}
-<TouchableOpacity className="w-11/12 bg-[#46194F] py-3 px-6 mt-3 rounded-xl self-center">
+  {/* === Right Card: Car Info === */}
+  <View className="w-1/2 max-w-[180px] h-[180px] bg-white rounded-2xl border-2 border-[#46194F] p-2 justify-between">
 
-  <Text className="text-white text-center font-bold">طلب شراء</Text>
-</TouchableOpacity>
+    <View>
+      <View className="flex-row-reverse justify-between items-end mb-2">
+        <View className="items-end">
+          <JetourLogo width={48} height={24} />
+          <View className="flex-row-reverse gap-1 mt-1">
+            <Icon name="heart" size={10} color="#46194F" />
+            <ShareIcon width={10} height={10} />
+            <PdfIcon width={11} height={11} />
+          </View>
+        </View>
 
+        <View className="items-start w-[100px]">
+          <Text numberOfLines={1} ellipsizeMode="tail" className="text-[10px] font-bold text-[#46194F] truncate w-full">
+            جيتور T2
+          </Text>
+          <Text className="text-xs text-gray-500 mt-0.5 w-full">
+            {limitWords("لدكري فل كامل 2025", 2)}
+          </Text>
+        </View>
+      </View>
+
+      <View className="h-[1px] bg-[#46194F] my-2" />
+
+      <View className="flex-row justify-between items-center mb-2">
+        <View className="flex-1 items-center">
+          <Text className="text-[10px] text-gray-500 mb-1 text-start">سعر الكاش</Text>
+          <View className="flex-row gap-1 justify-center items-center">
+            <Text className="text-sm font-extrabold text-[#46194F]">146,000</Text>
+            <RiyalIcon width={12} height={12} />
+          </View>
+        </View>
+
+        <View className="w-[1px] h-8 bg-[#46194F] mx-2" />
+
+        <View className="flex-1 items-center">
+          <Text className="text-[10px] text-gray-500 mb-1 text-start">بدأ القسط من</Text>
+          <View className="flex-row gap-1 justify-center items-center">
+            <Text className="text-sm font-extrabold text-[#46194F]">1,940</Text>
+            <RiyalIcon width={12} height={12} />
+          </View>
+        </View>
+      </View>
+
+      <View className="h-[1px] bg-[#46194F] my-2" />
+
+      <View className="items-start">
+        <Text className="text-xs text-gray-500 mb-1 text-start">لون السيارة</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 4, justifyContent: 'center', flexDirection: 'row' }}
+        >
+          {['#4b3b2c', '#8f8f8f', '#d2dce7', '#e7e51b', '#b42f0f'].map((color, idx) => (
+            <View
+              key={idx}
+              className="w-5 h-5 rounded-full border border-white"
+              style={{ backgroundColor: color }}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    </View>
+
+  </View>
 </View>
+
+
 
 
       {/* Car Quick Info Section */}
