@@ -12,11 +12,11 @@ import "./global.css"
 import { LocaleProvider, useLocale } from "./src/contexts/LocaleContext"
 import { RecentlyViewedProvider } from "./src/contexts/RecentlyViewedContext"
 import { FinanceFlowProvider } from "./src/contexts/FinanceFlowContext"
-import { FilterProvider } from "./src/contexts/FilterContext" // ✅ Added FilterProvider
-import { WishlistProvider } from "./src/contexts/WishlistContext" // ✅ Added WishlistProvider
+import { FilterProvider } from "./src/contexts/FilterContext"
+import { WishlistProvider } from "./src/contexts/WishlistContext"
 
 import StackNavigator from "./src/components/navigation/StackNavigator"
-import FinanceFlowNavigator from "./src/components/Financials/FinanceFlowNavigator"
+// 🚫 Removed FinanceFlowNavigator import
 
 function AppWithLocale() {
   const { direction } = useLocale()
@@ -38,7 +38,7 @@ function AppWithLocale() {
     >
       <NavigationContainer>
         <StackNavigator />
-        <FinanceFlowNavigator />
+        {/* 🚫 Removed <FinanceFlowNavigator /> */}
       </NavigationContainer>
     </SafeAreaView>
   )
@@ -57,5 +57,5 @@ export default function App() {
         </FinanceFlowProvider>
       </RecentlyViewedProvider>
     </LocaleProvider>
-  )
+  )
 }
