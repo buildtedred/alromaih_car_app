@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { BackHandler } from "react-native"
 import { useNavigation } from "@react-navigation/native"
+import { canGoBack, goBack } from "../utils/navigationUtils"
 
 /**
  * Custom hook to handle back button presses
@@ -21,8 +22,8 @@ export default function useBackHandler(handleBack, deps = []) {
       }
 
       // Check if we can go back in the navigation stack
-      if (navigation.canGoBack()) {
-        navigation.goBack()
+      if (canGoBack()) {
+        goBack()
         return true
       }
 

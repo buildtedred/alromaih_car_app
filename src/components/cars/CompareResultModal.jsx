@@ -1,95 +1,78 @@
 "use client"
-import { View, TouchableOpacity, Image } from "react-native"
-import Modal from "react-native-modal"
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import { View, TouchableOpacity, Image, Dimensions } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { useLocale } from "../../contexts/LocaleContext"
 import { useCompare } from "../../contexts/CompareContext"
 import AppText from "../common/AppText"
 import useBackHandler from "../../hooks/useBackHandler"
+import CompareVsIcon from "../../assets/Icon/campar_vs.svg"
 
 export default function CompareResultModal() {
   const { locale } = useLocale()
   const navigation = useNavigation()
   const { isCompareResultModalVisible, closeCompareResultModal, carsToCompare, clearComparison } = useCompare()
+  const screenWidth = Dimensions.get("window").width
 
-  // Use our custom back handler hook
-  useBackHandler(() => {
-    if (isCompareResultModalVisible) {
-      closeCompareResultModal()
-      return true // Prevent default behavior
-    }
-    return false // Let default behavior happen
-  }, [isCompareResultModalVisible, closeCompareResultModal])
-
-  if (carsToCompare.length !== 2) return null
-
-  const handleComparePress = () => {
-    // First close the modal
+  const handleGoBack = () => {
     closeCompareResultModal()
-
-    // Then navigate with a slight delay to ensure the modal is closed
-    setTimeout(() => {
-      try {
-        navigation.navigate("CompareDetails", { cars: carsToCompare })
-      } catch (error) {
-        console.error("Navigation error:", error)
-        // Fallback - clear comparison if navigation fails
-        clearComparison()
-      }
-    }, 300)
+    clearComparison()
+    navigation.navigate("AllCarsScreen")
   }
 
+  useBackHandler(handleGoBack, [handleGoBack])
+
+  const handleComparePress = () => {
+    closeCompareResultModal()
+    navigation.navigate("CompareDetails", { 
+      cars: carsToCompare,
+      onGoBack: handleGoBack 
+    })
+  }
+
+  if (carsToCompare.length !== 2 || !isCompareResultModalVisible) return null
+
   return (
-    <Modal
-      isVisible={isCompareResultModalVisible}
-      onBackdropPress={closeCompareResultModal}
-      onBackButtonPress={closeCompareResultModal}
-      backdropOpacity={0.5}
-      animationIn="slideInUp"
-      animationOut="slideOutDown"
-      style={{ margin: 0, justifyContent: "flex-end" }}
-    >
-      <View className="bg-white rounded-t-[20px] py-5 px-4 max-h-[80%]">
-        {/* Header */}
-        <View className="flex-row justify-between items-center mb-5">
-          <AppText bold className="text-[18px] text-[#46194F]">
-            {locale === "ar" ? "مقارنة السيارات" : "Compare Cars"}
-          </AppText>
-          <TouchableOpacity onPress={closeCompareResultModal}>
-            <Icon name="close" size={24} color="#46194F" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Cars Container */}
-        <View className="flex-row justify-between mb-5">
-          {/* First Car */}
-          <View className="w-[48%] aspect-square border border-[#E5E7EB] rounded-[10px] p-2.5 justify-center items-center">
-            <Image source={carsToCompare[0].image} className="w-[80%] h-[70%]" resizeMode="contain" />
-            <AppText className="mt-2.5 text-[14px] text-[#46194F] text-center" numberOfLines={1}>
-              {typeof carsToCompare[0].name === "object" ? carsToCompare[0].name[locale] : carsToCompare[0].name}
-            </AppText>
-          </View>
-
-          {/* Second Car */}
-          <View className="w-[48%] aspect-square border border-[#E5E7EB] rounded-[10px] p-2.5 justify-center items-center">
-            <Image source={carsToCompare[1].image} className="w-[80%] h-[70%]" resizeMode="contain" />
-            <AppText className="mt-2.5 text-[14px] text-[#46194F] text-center" numberOfLines={1}>
-              {typeof carsToCompare[1].name === "object" ? carsToCompare[1].name[locale] : carsToCompare[1].name}
-            </AppText>
-          </View>
-        </View>
-
-        {/* Compare Button */}
-        <TouchableOpacity
-          className="w-full h-[50px] rounded-[10px] bg-[#46194F] justify-center items-center"
-          onPress={handleComparePress}
-        >
-          <AppText bold className="text-white text-[16px]">
-            {locale === "ar" ? "قارن الآن" : "Compare Now"}
-          </AppText>
-        </TouchableOpacity>
-      </View>
-    </Modal>
+    <View className="absolute bottom-0 left-0 right-0 flex items-center p-4 mb-24">
+      <TouchableOpacity
+        style={{ width: screenWidth * 0.85 }}
+        className="h-[65px] rounded-[10px] bg-[#46194F] flex-row items-center px-4"
+        onPress={handleComparePress}
+      >
+        {/* Your exact design implementation remains unchanged */}
+        {locale === "ar" ? (
+          <>
+            <View className="bg-white rounded-[5px] py-1 px-2">
+              <AppText bold className="text-[#46194F] text-[10px]">
+                ابدأ المقارنة الآن
+              </AppText>
+            </View>
+            <View className="w-[1px] h-[30px] bg-white mx-3" />
+            <View className="flex-1 flex-row justify-end items-center">
+              <Image source={carsToCompare[0].image} className="w-[65px] h-[45px]" resizeMode="contain" />
+              <View className="mx-1.5 bg-white rounded-full p-0.5 z-20">
+                <CompareVsIcon width={20} height={20} />
+              </View>
+              <Image source={carsToCompare[1].image} className="w-[65px] h-[45px]" resizeMode="contain" />
+            </View>
+          </>
+        ) : (
+          <>
+            <View className="flex-1 flex-row items-center">
+              <Image source={carsToCompare[0].image} className="w-[65px] h-[45px]" resizeMode="contain" />
+              <View className="mx-1.5 bg-white rounded-full p-0.5 z-20">
+                <CompareVsIcon width={20} height={20} />
+              </View>
+              <Image source={carsToCompare[1].image} className="w-[65px] h-[45px]" resizeMode="contain" />
+            </View>
+            <View className="w-[1px] h-[30px] bg-white mx-3" />
+            <View className="bg-white rounded-[5px] py-1 px-2">
+              <AppText bold className="text-[#46194F] text-[10px]">
+                Compare Now
+              </AppText>
+            </View>
+          </>
+        )}
+      </TouchableOpacity>
+    </View>
   )
 }

@@ -1,11 +1,19 @@
 "use client"
-import { View, ScrollView, TouchableOpacity, Image } from "react-native"
+import { View, TouchableOpacity, Image, ScrollView } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import { useLocale } from "../contexts/LocaleContext"
 import { useCompare } from "../contexts/CompareContext"
 import AppText from "../components/common/AppText"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import useBackHandler from "../hooks/useBackHandler"
+import { useCallback } from "react"
+import { brandLogos } from "../mock-data"
+import VsIcon from "../assets/Icon/vs.svg"
+import RiyalIcon from "../assets/Icon/riyal_icon.svg"
+import SpecificIcon from "../assets/Icon/specific_icon.svg"
+import SeatsIcon from "../assets/Icon/seats_icon.svg"
+import SoundIcon from "../assets/Icon/sound_icon.svg"
+import ProtectIcon from "../assets/Icon/protect_icon.svg"
 
 export default function CompareDetailsScreen() {
   const { locale } = useLocale()
@@ -14,24 +22,27 @@ export default function CompareDetailsScreen() {
   const { clearComparison } = useCompare()
   const { cars = [] } = route.params || {}
 
-  // Use our custom back handler hook
-  useBackHandler(() => {
-    handleGoBack()
-    return true // Prevent default behavior
-  }, [])
-
-  const handleGoBack = () => {
-    // Navigate back to the previous screen
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      // Fallback if there's no screen to go back to
-      navigation.navigate("AllCarsScreen")
+  const truncateText = (text, maxLength = 14) => {
+    if (!text) return "";
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
     }
-  }
+    return text;
+  };
+
+  const handleGoBack = useCallback(() => {
+    if (navigation && navigation.canGoBack()) {
+      navigation.goBack()
+      return true
+    } else {
+      navigation.navigate("AllCarsScreen")
+      return true
+    }
+  }, [navigation])
+
+  useBackHandler(handleGoBack, [handleGoBack])
 
   if (cars.length !== 2) {
-    // Handle invalid state
     return (
       <View className="flex-1 justify-center items-center bg-white">
         <AppText className="text-[#46194F] text-lg">
@@ -47,111 +58,319 @@ export default function CompareDetailsScreen() {
   const car1 = cars[0]
   const car2 = cars[1]
 
-  const getLang = (field) => (typeof field === "object" ? field?.[locale] : field)
+  const handleCompareAnotherCar = () => {
+    navigation.navigate("CompareScreen")
+  }
 
-  // Define comparison categories
-  const categories = [
-    {
-      title: locale === "ar" ? "المواصفات العامة" : "General Specifications",
-      items: [
-        {
-          label: locale === "ar" ? "السنة" : "Year",
-          car1Value: car1.specs?.year,
-          car2Value: car2.specs?.year,
-        },
-        {
-          label: locale === "ar" ? "ناقل الحركة" : "Transmission",
-          car1Value: getLang(car1.specs?.transmission),
-          car2Value: getLang(car2.specs?.transmission),
-        },
-        {
-          label: locale === "ar" ? "نوع الوقود" : "Fuel Type",
-          car1Value: getLang(car1.specs?.fuelType),
-          car2Value: getLang(car2.specs?.fuelType),
-        },
-      ],
-    },
-    {
-      title: locale === "ar" ? "الأسعار" : "Pricing",
-      items: [
-        {
-          label: locale === "ar" ? "سعر الكاش" : "Cash Price",
-          car1Value: car1.cashPrice?.toLocaleString(),
-          car2Value: car2.cashPrice?.toLocaleString(),
-          isPrice: true,
-        },
-        {
-          label: locale === "ar" ? "القسط الشهري" : "Monthly Installment",
-          car1Value: car1.installmentPrice?.toLocaleString(),
-          car2Value: car2.installmentPrice?.toLocaleString(),
-          isPrice: true,
-        },
-      ],
-    },
-  ]
+  const BrandLogo1 = brandLogos[car1.brand]
+  const BrandLogo2 = brandLogos[car2.brand]
 
   return (
-    <View className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row justify-between items-center p-4 border-b border-gray-200">
-        <TouchableOpacity onPress={handleGoBack}>
-          <Icon name="arrow-left" size={24} color="#46194F" />
+      <View className="flex-row justify-center items-center py-2 px-3 relative border-b border-gray-200">
+        <TouchableOpacity onPress={handleGoBack} className="absolute left-3">
+          <Icon name="close" size={24} color="#46194F" />
         </TouchableOpacity>
-        <AppText bold className="text-[18px] text-[#46194F]">
-          {locale === "ar" ? "مقارنة السيارات" : "Car Comparison"}
+        <AppText bold className="text-base text-center text-[#46194F]">
+          {truncateText(locale === "ar" ? "قارن بين السيارات" : "Compare Cars")}
         </AppText>
-        <View style={{ width: 24 }} />
       </View>
 
-      <ScrollView className="flex-1">
-        {/* Car Headers */}
-        <View className="flex-row border-b border-gray-200 pb-4">
-          <View className="w-[30%]" />
-          <View className="w-[35%] items-center">
-            <Image source={car1.image} className="w-[80%] h-[80px]" resizeMode="contain" />
-            <AppText bold className="text-[14px] text-[#46194F] text-center mt-2" numberOfLines={2}>
-              {getLang(car1.name)}
-            </AppText>
+      {/* Car Comparison Cards */}
+      <View className="px-3 pt-3">
+        <View className="flex-row justify-center items-center">
+          {/* Car 1 */}
+          <View className="w-[42%] bg-white border border-gray-200 rounded-xl overflow-hidden p-3 h-[140px] shadow-sm">
+            <View className="items-center justify-center h-[60px]">
+              <Image source={car1.image} className="w-[90%] h-[50px]" resizeMode="contain" />
+            </View>
+
+            <View className="items-center my-1">
+              {BrandLogo1 && <BrandLogo1 width={40} height={12} />}
+            </View>
+
+            <View className="flex-row justify-between items-start mt-1">
+              <View className="items-start">
+                <AppText bold className="text-[#46194F] text-xs">
+                  {truncateText(locale === "ar" ? "جيتور T2" : "Jetour T2")}
+                </AppText>
+                <AppText className="text-[8px] text-gray-500 mt-0.5">
+                  {truncateText(locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine")}
+                </AppText>
+              </View>
+
+              <View className="items-start">
+                <AppText className="text-[8px] text-gray-500">
+                  {truncateText(locale === "ar" ? "سعر الكاش" : "Cash Price")}
+                </AppText>
+                <View className="flex-row items-center">
+                  <AppText bold className="text-[#46194F] text-xs">
+                    {truncateText("146,000")}
+                  </AppText>
+                  <RiyalIcon width={10} height={10} fill="#46194F" className="ml-1" />
+                </View>
+              </View>
+            </View>
           </View>
-          <View className="w-[35%] items-center">
-            <Image source={car2.image} className="w-[80%] h-[80px]" resizeMode="contain" />
-            <AppText bold className="text-[14px] text-[#46194F] text-center mt-2" numberOfLines={2}>
-              {getLang(car2.name)}
-            </AppText>
+
+          <View className="z-10 flex items-center justify-center mx-4">
+            <VsIcon width={30} height={15} fill="#46194F" />
+          </View>
+
+          {/* Car 2 */}
+          <View className="w-[42%] bg-white border border-gray-200 rounded-xl overflow-hidden p-3 h-[140px] shadow-sm">
+            <View className="items-center justify-center h-[60px]">
+              <Image source={car2.image} className="w-[90%] h-[50px]" resizeMode="contain" />
+            </View>
+
+            <View className="items-center my-1">
+              {BrandLogo2 && <BrandLogo2 width={40} height={12} />}
+            </View>
+
+            <View className="flex-row justify-between items-start mt-1">
+              <View className="items-start">
+                <AppText bold className="text-[#46194F] text-xs">
+                  {truncateText(locale === "ar" ? "جيتور T2" : "Jetour T2")}
+                </AppText>
+                <AppText className="text-[8px] text-gray-500 mt-0.5">
+                  {truncateText(locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine")}
+                </AppText>
+              </View>
+
+              <View className="items-start">
+                <AppText className="text-[8px] text-gray-500">
+                  {truncateText(locale === "ar" ? "سعر الكاش" : "Cash Price")}
+                </AppText>
+                <View className="flex-row items-center">
+                  <AppText bold className="text-[#46194F] text-xs">
+                    {truncateText("146,000")}
+                  </AppText>
+                  <RiyalIcon width={8} height={8} fill="#46194F" className="ml-1" />
+                </View>
+              </View>
+            </View>
           </View>
         </View>
 
-        {/* Comparison Categories */}
-        {categories.map((category, categoryIndex) => (
-          <View key={categoryIndex} className="mb-6">
-            <View className="bg-[#F5F0F7] p-3">
-              <AppText bold className="text-[16px] text-[#46194F]">
-                {category.title}
-              </AppText>
+        <View className="mt-4 flex items-center justify-center">
+          <TouchableOpacity
+            className="bg-[#46194F] py-1.5 px-4 w-[45%] rounded-xl"
+            onPress={handleCompareAnotherCar}
+          >
+            <AppText bold className="text-white text-center text-base">
+              {(locale === "ar" ? "قارن بسيارة أخرى" : "Compare Another Car")}
+            </AppText>
+          </TouchableOpacity>
+        </View>
+
+        <View className="mt-6">
+          <AppText bold className="text-base text-[#46194F] mb-4">
+            {truncateText(locale === "ar" ? "صفات السيارة" : "Car Specifications")}
+          </AppText>
+
+          {/* Transmission Section */}
+          <View className="border border-gray-200 rounded-md mx-2 mb-4">
+            <View className="flex-row justify-between items-center p-3">
+              <View className="flex-row items-center">
+                <SpecificIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <AppText bold className="text-base text-[#46194F] ml-2">
+                  {truncateText(locale === "ar" ? "ناقل الحركة" : "Transmission")}
+                </AppText>
+              </View>
+              <TouchableOpacity>
+                <Icon name="chevron-up" size={22} color="#46194F" />
+              </TouchableOpacity>
             </View>
 
-            {category.items.map((item, itemIndex) => (
-              <View key={itemIndex} className="flex-row border-b border-gray-200 py-3">
-                <View className="w-[30%] px-3 justify-center">
-                  <AppText className="text-[14px] text-gray-700">{item.label}</AppText>
+            <View className="border border-[#46194F] mx-10 mb-10">
+              <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
+                <View className="items-start">
+                  <AppText bold className="text-[#46194F] text-xs">
+                    {truncateText(locale === "ar" ? "جيتور T2" : "Jetour T2")}
+                  </AppText>
+                  <AppText className="text-[8px] text-gray-500">
+                    {truncateText(locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine")}
+                  </AppText>
                 </View>
-                <View className="w-[35%] items-center justify-center">
-                  <View className="flex-row items-center">
-                    {item.isPrice && <Icon name="currency-riyal" size={16} color="#46194F" />}
-                    <AppText className="text-[14px] text-[#46194F]">{item.car1Value || "-"}</AppText>
-                  </View>
+                <View className="flex-row items-center">{BrandLogo1 && <BrandLogo1 width={60} height={15} />}</View>
+              </View>
+
+              <View>
+                <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
+                  <AppText bold className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "ناقل الحركة" : "Transmission")}
+                  </AppText>
+                  <AppText className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "أوتوماتيك" : "Automatic")}
+                  </AppText>
                 </View>
-                <View className="w-[35%] items-center justify-center">
-                  <View className="flex-row items-center">
-                    {item.isPrice && <Icon name="currency-riyal" size={16} color="#46194F" />}
-                    <AppText className="text-[14px] text-[#46194F]">{item.car2Value || "-"}</AppText>
+
+                <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
+                  <AppText bold className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "نوع الجير" : "Gear Type")}
+                  </AppText>
+                  <AppText className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "دفع رباعي" : "Four-wheel Drive")}
+                  </AppText>
+                </View>
+
+                <View className="flex-row justify-between items-center p-3">
+                  <AppText bold className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "وضع القيادة" : "Driving Mode")}
+                  </AppText>
+                  <View>
+                    <AppText className="text-xs text-[#46194F]">
+                      {truncateText(locale === "ar" ? "عادي" : "Normal")}
+                    </AppText>
+                    <AppText className="text-xs text-[#46194F]">
+                      {truncateText(locale === "ar" ? "الرمال الطين" : "Sand & Mud")}
+                    </AppText>
                   </View>
                 </View>
               </View>
-            ))}
+            </View>
+
+            <View className="flex items-center justify-center my-4">
+              <VsIcon width={40} height={20} fill="#46194F" />
+            </View>
+
+            <View className="border border-[#46194F] mx-10 mb-10">
+              <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
+                <View className="items-start">
+                  <AppText bold className="text-[#46194F] text-xs">
+                    {truncateText(locale === "ar" ? "جيتور T2" : "Jetour T2")}
+                  </AppText>
+                  <AppText className="text-[8px] text-gray-500">
+                    {truncateText(locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine")}
+                  </AppText>
+                </View>
+                <View className="flex-row items-center">{BrandLogo2 && <BrandLogo2 width={60} height={15} />}</View>
+              </View>
+
+              <View>
+                <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
+                  <AppText bold className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "ناقل الحركة" : "Transmission")}
+                  </AppText>
+                  <AppText className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "أوتوماتيك" : "Automatic")}
+                  </AppText>
+                </View>
+
+                <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
+                  <AppText bold className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "نوع الجير" : "Gear Type")}
+                  </AppText>
+                  <AppText className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "دفع رباعي" : "Four-wheel Drive")}
+                  </AppText>
+                </View>
+
+                <View className="flex-row justify-between items-center p-3">
+                  <AppText bold className="text-xs text-[#46194F]">
+                    {truncateText(locale === "ar" ? "وضع القيادة" : "Driving Mode")}
+                  </AppText>
+                  <View>
+                    <AppText className="text-xs text-[#46194F]">
+                      {truncateText(locale === "ar" ? "عادي" : "Normal")}
+                    </AppText>
+                    <AppText className="text-xs text-[#46194F]">
+                      {truncateText(locale === "ar" ? "الرمال الطين" : "Sand & Mud")}
+                    </AppText>
+                  </View>
+                </View>
+              </View>
+            </View>
           </View>
-        ))}
-      </ScrollView>
-    </View>
+
+          {/* Additional Sections */}
+          <View className="border border-gray-200 rounded-lg mb-4">
+            <View className="flex-row justify-between items-center p-3">
+              <View className="flex-row items-center">
+                <SeatsIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <AppText bold className="text-base text-[#46194F] ml-2">
+                  {truncateText(locale === "ar" ? "المقاعد" : "Seats")}
+                </AppText>
+              </View>
+              <TouchableOpacity>
+                <Icon name="chevron-down" size={24} color="#46194F" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View className="border border-gray-200 rounded-lg mb-4">
+            <View className="flex-row justify-between items-center p-3">
+              <View className="flex-row items-center">
+                <SoundIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <AppText bold className="text-base text-[#46194F] ml-2">
+                  {truncateText(locale === "ar" ? "النظام الصوتي والاتصال" : "Audio & Communication")}
+                </AppText>
+              </View>
+              <TouchableOpacity>
+                <Icon name="chevron-down" size={24} color="#46194F" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View className="border border-gray-200 rounded-lg mb-4">
+            <View className="flex-row justify-between items-center p-3">
+              <View className="flex-row items-center">
+                <ProtectIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <AppText bold className="text-base text-[#46194F] ml-2">
+                  {truncateText(locale === "ar" ? "السلامة" : "Safety")}
+                </AppText>
+              </View>
+              <TouchableOpacity>
+                <Icon name="chevron-down" size={24} color="#46194F" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Duplicate Sections */}
+            <View className="border border-gray-200 rounded-lg mb-4">
+            <View className="flex-row justify-between items-center p-3">
+              <View className="flex-row items-center">
+                <SeatsIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <AppText bold className="text-base text-[#46194F] ml-2">
+                  {truncateText(locale === "ar" ? "المقاعد" : "Seats")}
+                </AppText>
+              </View>
+              <TouchableOpacity>
+                <Icon name="chevron-down" size={24} color="#46194F" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View className="border border-gray-200 rounded-lg mb-4">
+            <View className="flex-row justify-between items-center p-3">
+              <View className="flex-row items-center">
+                <SoundIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <AppText bold className="text-base text-[#46194F] ml-2">
+                  {truncateText(locale === "ar" ? "النظام الصوتي والاتصال" : "Audio & Communication")}
+                </AppText>
+              </View>
+              <TouchableOpacity>
+                <Icon name="chevron-down" size={24} color="#46194F" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View className="border border-gray-200 rounded-lg mb-28">
+            <View className="flex-row justify-between items-center p-3">
+              <View className="flex-row items-center">
+                <ProtectIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <AppText bold className="text-base text-[#46194F] ml-2">
+                  {truncateText(locale === "ar" ? "السلامة" : "Safety")}
+                </AppText>
+              </View>
+              <TouchableOpacity>
+                <Icon name="chevron-down" size={24} color="#46194F" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
   )
 }

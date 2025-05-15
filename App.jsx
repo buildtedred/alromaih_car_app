@@ -5,7 +5,7 @@ import "./src/utils/globalText" // ✅ Global Almarai font patch
 
 import { useEffect } from "react"
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native"
-import { SafeAreaView, I18nManager, LogBox } from "react-native"
+import { SafeAreaView, I18nManager, LogBox, BackHandler } from "react-native"
 import { ErrorBoundary } from "./src/components/common/ErrorBoundary"
 
 import "./global.css"
@@ -19,11 +19,13 @@ import { CompareProvider } from "./src/contexts/CompareContext" // ✅ Added Com
 
 import StackNavigator from "./src/components/navigation/StackNavigator"
 import FinanceFlowNavigator from "./src/components/Financials/FinanceFlowNavigator"
+import { navigationRef } from "./src/utils/navigationUtils"
 
 // Ignore specific harmless warnings
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
   "Sending `onAnimatedValueUpdate` with no listeners registered",
+  "The action 'GO_BACK' was not handled by any navigator",
 ])
 
 // Create a custom theme with proper back behavior
@@ -47,6 +49,21 @@ function AppWithLocale() {
     }
   }, [isRTL])
 
+  // Handle hardware back button globally
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
+      // Check if we can go back in the navigation stack
+      if (navigationRef.current?.canGoBack()) {
+        navigationRef.current.goBack()
+        return true
+      }
+      // If we can't go back, let the default behavior happen (usually exits the app)
+      return false
+    })
+
+    return () => backHandler.remove()
+  }, [])
+
   return (
     <SafeAreaView
       style={{
@@ -54,7 +71,7 @@ function AppWithLocale() {
         direction: isRTL ? "rtl" : "ltr",
       }}
     >
-      <NavigationContainer theme={MyTheme}>
+      <NavigationContainer ref={navigationRef} theme={MyTheme}>
         <StackNavigator />
         <FinanceFlowNavigator />
       </NavigationContainer>

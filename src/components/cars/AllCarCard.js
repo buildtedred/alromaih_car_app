@@ -39,12 +39,9 @@ export default function AllCarCard({ car, onPress, isSelectingForComparison = fa
 
   const handleCardPress = () => {
     if (isSelectingForComparison) {
-      // Add this car to comparison and return to previous screen
-      console.log("Adding car to comparison:", car.name || car.id)
       addCarToCompare(car)
-      navigation.goBack()
+      navigation.navigate('AllCarsScreen')
     } else {
-      // Normal flow - go to gallery
       addToRecentlyViewed(car)
       if (onPress) {
         onPress(car)
