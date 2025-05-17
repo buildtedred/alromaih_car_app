@@ -20,8 +20,6 @@ import { CompareProvider } from "./src/contexts/CompareContext"
 
 // Navigation
 import StackNavigator from "./src/components/navigation/StackNavigator"
-import FinanceFlowNavigator from "./src/components/Financials/FinanceFlowNavigator"
-import { navigationRef } from "./src/utils/navigationUtils"
 
 // Ignore harmless warnings
 LogBox.ignoreLogs([
