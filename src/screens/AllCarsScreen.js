@@ -25,6 +25,8 @@ import AlmaraiFonts from "../constants/fonts"
 import CompareCarModal from "../components/cars/CompareCarModal"
 import { useCompare } from "../contexts/CompareContext"
 import CompareResultModal from "../components/cars/CompareResultModal"
+import SortIcon from "../../src/assets/Icon/SortIcon.svg"
+import FilterIcon from "../../src/assets/Icon/FilterIcon.svg"
 
 const sliderImages = [
   require("../assets/images/allcar_slide1.png"),
@@ -656,7 +658,7 @@ export default function AllCarsScreen() {
             }}
           >
             <View className="flex-row items-center justify-center">
-              <Icon name="sort" size={20} color="#46194F" />
+              <SortIcon name="sort" size={20} color="#46194F" />
               <Text
                 style={{
                   color: "#46194F",
@@ -682,7 +684,7 @@ export default function AllCarsScreen() {
             }}
           >
             <View className="flex-row items-center justify-center">
-              <Icon name="filter-variant" size={20} color="#46194F" />
+              <FilterIcon name="filter-variant" size={20} color="#46194F" />
               <Text
                 style={{
                   color: "#46194F",

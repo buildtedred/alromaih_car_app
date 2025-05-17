@@ -29,44 +29,52 @@ const PersonalInformation = ({ info, onChange, onSubmit, locale }) => {
 
   const handleChange = (field, value) => {
     onChange({ ...info, [field]: value })
-    // Clear error when user types
     if (errors[field]) {
       setErrors({ ...errors, [field]: null })
     }
   }
 
-  const inputStyle = "border border-gray-300 rounded-lg p-3 mb-4 text-right"
-  const labelStyle = "text-[#46194F] font-bold mb-1 text-right"
+  const direction = locale === "ar" ? "flex-row-reverse" : "flex-row"
+  const textAlign = locale === "ar" ? "right" : "left"
+  const iconMargin = {
+    marginLeft: locale === "ar" ? 0 : 6,
+    marginRight: locale === "ar" ? 6 : 0,
+  }
+
+  const inputStyle = `border border-gray-300 rounded-l px-4 py-2.5 text-sm`
 
   return (
-    <View className="px-4 py-6">
-      <View className="mb-4">
-        <View className="flex-row justify-end items-center mb-1">
-          <Text style={{ fontFamily: AlmaraiFonts.bold }} className={labelStyle}>
+    <View className="px-4 py-4">
+
+      {/* Name */}
+      <View className="mb-3">
+        <View className={`items-center mb-0.5 gap-1 ${direction}`}>
+          <FontAwesome name="user" size={12} color="#46194F" style={iconMargin} />
+          <Text className="text-[#46194F] text-sm font-bold" style={{ fontFamily: AlmaraiFonts.bold }}>
             {locale === "ar" ? "الاسم" : "Name"}
           </Text>
-          <FontAwesome name="user" size={16} color="#46194F" style={{ marginLeft: 8 }} />
         </View>
         <TextInput
           value={info.name}
           onChangeText={(text) => handleChange("name", text)}
           placeholder={locale === "ar" ? "أدخل اسمك الكامل" : "Enter your full name"}
           className={`${inputStyle} ${errors.name ? "border-red-500" : ""}`}
-          style={{ fontFamily: AlmaraiFonts.regular, textAlign: locale === "ar" ? "right" : "left" }}
+          style={{ fontFamily: AlmaraiFonts.regular, textAlign }}
         />
         {errors.name && (
-          <Text className="text-red-500 text-right mb-2" style={{ fontFamily: AlmaraiFonts.regular }}>
+          <Text className="text-red-500 text-sm mt-0.5" style={{ fontFamily: AlmaraiFonts.regular, textAlign }}>
             {errors.name}
           </Text>
         )}
       </View>
 
-      <View className="mb-4">
-        <View className="flex-row justify-end items-center mb-1">
-          <Text style={{ fontFamily: AlmaraiFonts.bold }} className={labelStyle}>
+      {/* Email */}
+      <View className="mb-3">
+        <View className={`items-center mb-0.5 gap-1 ${direction}`}>
+          <FontAwesome name="envelope" size={12} color="#46194F" style={iconMargin} />
+          <Text className="text-[#46194F] text-sm font-bold" style={{ fontFamily: AlmaraiFonts.bold }}>
             {locale === "ar" ? "البريد الإلكتروني" : "Email"}
           </Text>
-          <FontAwesome name="envelope" size={16} color="#46194F" style={{ marginLeft: 8 }} />
         </View>
         <TextInput
           value={info.email}
@@ -74,21 +82,22 @@ const PersonalInformation = ({ info, onChange, onSubmit, locale }) => {
           placeholder={locale === "ar" ? "أدخل بريدك الإلكتروني" : "Enter your email"}
           keyboardType="email-address"
           className={`${inputStyle} ${errors.email ? "border-red-500" : ""}`}
-          style={{ fontFamily: AlmaraiFonts.regular, textAlign: locale === "ar" ? "right" : "left" }}
+          style={{ fontFamily: AlmaraiFonts.regular, textAlign }}
         />
         {errors.email && (
-          <Text className="text-red-500 text-right mb-2" style={{ fontFamily: AlmaraiFonts.regular }}>
+          <Text className="text-red-500 text-sm mt-0.5" style={{ fontFamily: AlmaraiFonts.regular, textAlign }}>
             {errors.email}
           </Text>
         )}
       </View>
 
-      <View className="mb-4">
-        <View className="flex-row justify-end items-center mb-1">
-          <Text style={{ fontFamily: AlmaraiFonts.bold }} className={labelStyle}>
+      {/* ID Number */}
+      <View className="mb-3">
+        <View className={`items-center mb-0.5 gap-1 ${direction}`}>
+          <FontAwesome name="id-card" size={12} color="#46194F" style={iconMargin} />
+          <Text className="text-[#46194F] text-sm font-bold" style={{ fontFamily: AlmaraiFonts.bold }}>
             {locale === "ar" ? "رقم الهوية الوطنية" : "ID Number"}
           </Text>
-          <FontAwesome name="id-card" size={16} color="#46194F" style={{ marginLeft: 8 }} />
         </View>
         <TextInput
           value={info.idNumber}
@@ -96,21 +105,22 @@ const PersonalInformation = ({ info, onChange, onSubmit, locale }) => {
           placeholder={locale === "ar" ? "أدخل رقم الهوية الوطنية" : "Enter your ID number"}
           keyboardType="numeric"
           className={`${inputStyle} ${errors.idNumber ? "border-red-500" : ""}`}
-          style={{ fontFamily: AlmaraiFonts.regular, textAlign: locale === "ar" ? "right" : "left" }}
+          style={{ fontFamily: AlmaraiFonts.regular, textAlign }}
         />
         {errors.idNumber && (
-          <Text className="text-red-500 text-right mb-2" style={{ fontFamily: AlmaraiFonts.regular }}>
+          <Text className="text-red-500 text-sm mt-0.5" style={{ fontFamily: AlmaraiFonts.regular, textAlign }}>
             {errors.idNumber}
           </Text>
         )}
       </View>
 
-      <View className="mb-4">
-        <View className="flex-row justify-end items-center mb-1">
-          <Text style={{ fontFamily: AlmaraiFonts.bold }} className={labelStyle}>
+      {/* Phone */}
+      <View className="mb-3">
+        <View className={`items-center mb-0.5 gap-1 ${direction}`}>
+          <FontAwesome name="phone" size={12} color="#46194F" style={iconMargin} />
+          <Text className="text-[#46194F] text-sm font-bold" style={{ fontFamily: AlmaraiFonts.bold }}>
             {locale === "ar" ? "رقم الهاتف" : "Phone Number"}
           </Text>
-          <FontAwesome name="phone" size={16} color="#46194F" style={{ marginLeft: 8 }} />
         </View>
         <TextInput
           value={info.phone}
@@ -118,21 +128,33 @@ const PersonalInformation = ({ info, onChange, onSubmit, locale }) => {
           placeholder={locale === "ar" ? "أدخل رقم هاتفك" : "Enter your phone number"}
           keyboardType="phone-pad"
           className={`${inputStyle} ${errors.phone ? "border-red-500" : ""}`}
-          style={{ fontFamily: AlmaraiFonts.regular, textAlign: locale === "ar" ? "right" : "left" }}
+          style={{ fontFamily: AlmaraiFonts.regular, textAlign }}
         />
         {errors.phone && (
-          <Text className="text-red-500 text-right mb-2" style={{ fontFamily: AlmaraiFonts.regular }}>
+          <Text className="text-red-500 text-sm mt-0.5" style={{ fontFamily: AlmaraiFonts.regular, textAlign }}>
             {errors.phone}
           </Text>
         )}
       </View>
 
-      <View className="flex-row justify-end items-center mb-4">
-        <FontAwesome name="check-circle" size={16} color="#00C853" />
+      {/* Success Check Icon + Text */}
+      <View className={`flex-row items-center mb-3 ${locale === "ar" ? "justify-end" : "justify-start"}`}>
+        <FontAwesome
+          name="check-circle"
+          size={12}
+          color="#00C853"
+          style={{
+            marginLeft: locale === "ar" ? 0 : 6,
+            marginRight: locale === "ar" ? 6 : 0,
+          }}
+        />
+        <Text className="text-[#00C853] text-xs" style={{ fontFamily: AlmaraiFonts.regular }}>
+        </Text>
       </View>
 
-      <TouchableOpacity className="bg-[#46194F] rounded-lg py-3 items-center mt-4" onPress={handleSubmit}>
-        <Text className="text-white font-bold" style={{ fontFamily: AlmaraiFonts.bold }}>
+      {/* Submit Button */}
+      <TouchableOpacity className="bg-[#46194F] rounded-xl py-2 px-6 items-center self-start" onPress={handleSubmit}>
+        <Text className="text-white font-bold text-base" style={{ fontFamily: AlmaraiFonts.bold }}>
           {locale === "ar" ? "التالي" : "Next"}
         </Text>
       </TouchableOpacity>

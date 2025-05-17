@@ -10,25 +10,25 @@ import { ErrorBoundary } from "./src/components/common/ErrorBoundary"
 
 import "./global.css"
 
+// Context Providers
 import { LocaleProvider, useLocale } from "./src/contexts/LocaleContext"
 import { RecentlyViewedProvider } from "./src/contexts/RecentlyViewedContext"
 import { FinanceFlowProvider } from "./src/contexts/FinanceFlowContext"
-import { FilterProvider } from "./src/contexts/FilterContext" // ✅ Added FilterProvider
-import { WishlistProvider } from "./src/contexts/WishlistContext" // ✅ Added WishlistProvider
-import { CompareProvider } from "./src/contexts/CompareContext" // ✅ Added CompareProvider
+import { FilterProvider } from "./src/contexts/FilterContext"
+import { WishlistProvider } from "./src/contexts/WishlistContext"
+import { CompareProvider } from "./src/contexts/CompareContext"
 
+// Navigation
 import StackNavigator from "./src/components/navigation/StackNavigator"
-import FinanceFlowNavigator from "./src/components/Financials/FinanceFlowNavigator"
-import { navigationRef } from "./src/utils/navigationUtils"
 
-// Ignore specific harmless warnings
+// Ignore harmless warnings
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
   "Sending `onAnimatedValueUpdate` with no listeners registered",
   "The action 'GO_BACK' was not handled by any navigator",
 ])
 
-// Create a custom theme with proper back behavior
+// Custom theme
 const MyTheme = {
   ...DefaultTheme,
   colors: {
@@ -68,12 +68,11 @@ function AppWithLocale() {
     <SafeAreaView
       style={{
         flex: 1,
-        direction: isRTL ? "rtl" : "ltr",
+        direction: isRTL ? "rtl" : "ltr", // Ensures global layout direction
       }}
     >
       <NavigationContainer ref={navigationRef} theme={MyTheme}>
         <StackNavigator />
-        <FinanceFlowNavigator />
       </NavigationContainer>
     </SafeAreaView>
   )

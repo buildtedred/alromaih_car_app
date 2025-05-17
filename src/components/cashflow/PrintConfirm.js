@@ -1,140 +1,144 @@
 "use client"
 
-import { View, TouchableOpacity, Text } from "react-native"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
+import { View, Text, TouchableOpacity } from "react-native"
 import AlmaraiFonts from "../../constants/fonts"
+import CarIcon from "../../assets/Icon/CarIcon.svg"
+import DoubleRiyal from "../../assets/Icon/DoubleRiyal.svg"
+import Men from "../../assets/Icon/Men.svg"
+import MenUser from "../../assets/Icon/MenUser.svg"
 
 const PrintConfirm = ({ buyerType, personalInfo, financialInfo, onPrint, locale }) => {
-  const labelStyle = "text-[#46194F] font-bold"
-  const valueStyle = "text-gray-700 mb-2"
+  const isArabic = locale === "ar"
 
   return (
-    <View className="px-4 py-6">
-      <View className="mb-6">
-        <View className="flex-row justify-between items-center mb-4">
-          <View className="flex-row items-center">
-            <FontAwesome name="car" size={20} color="#46194F" />
-            <Text className="text-[#46194F] font-bold ml-2" style={{ fontFamily: AlmaraiFonts.bold }}>
-              {locale === "ar" ? "السيارة: جيتور للذكرى T1 2025" : "Car: Jetour T1 2025"}
-            </Text>
-          </View>
-
-          <View className="flex-row items-center">
-            <FontAwesome name="user" size={20} color="#46194F" />
-            <Text className="text-[#46194F] font-bold mr-2" style={{ fontFamily: AlmaraiFonts.bold }}>
-              {locale === "ar"
-                ? `نوع المشتري: ${buyerType === "individual" ? "للأفراد" : "للشركات"}`
-                : `Buyer Type: ${buyerType === "individual" ? "For Individuals" : "For Companies"}`}
-            </Text>
-          </View>
-        </View>
-
-        <View className="border-b border-gray-200 pb-4 mb-4">
-          <View className="flex-row items-center mb-2">
-            <FontAwesome name="user-circle" size={20} color="#46194F" />
-            <Text className="text-[#46194F] font-bold mr-2 ml-2" style={{ fontFamily: AlmaraiFonts.bold }}>
-              {locale === "ar" ? "المعلومات الشخصية" : "Personal Information"}
-            </Text>
-          </View>
-
-          <View className="flex-row justify-between mb-1">
-            <Text className={valueStyle} style={{ fontFamily: AlmaraiFonts.regular }}>
-              {personalInfo.name || "---"}
-            </Text>
-            <Text className={labelStyle} style={{ fontFamily: AlmaraiFonts.bold }}>
-              {locale === "ar" ? "الاسم" : "Name"}
-            </Text>
-          </View>
-
-          <View className="flex-row justify-between mb-1">
-            <Text className={valueStyle} style={{ fontFamily: AlmaraiFonts.regular }}>
-              {personalInfo.email || "---"}
-            </Text>
-            <Text className={labelStyle} style={{ fontFamily: AlmaraiFonts.bold }}>
-              {locale === "ar" ? "البريد الإلكتروني" : "Email"}
-            </Text>
-          </View>
-
-          <View className="flex-row justify-between mb-1">
-            <Text className={valueStyle} style={{ fontFamily: AlmaraiFonts.regular }}>
-              {personalInfo.phone || "---"}
-            </Text>
-            <Text className={labelStyle} style={{ fontFamily: AlmaraiFonts.bold }}>
-              {locale === "ar" ? "رقم الهاتف" : "Phone Number"}
-            </Text>
-          </View>
-
-          <View className="flex-row justify-between mb-1">
-            <Text className={valueStyle} style={{ fontFamily: AlmaraiFonts.regular }}>
-              {personalInfo.idNumber || "---"}
-            </Text>
-            <Text className={labelStyle} style={{ fontFamily: AlmaraiFonts.bold }}>
-              {locale === "ar" ? "رقم الهوية الوطنية" : "ID Number"}
-            </Text>
-          </View>
-        </View>
-
-        {buyerType === "individual" && (
-          <View className="border-b border-gray-200 pb-4 mb-4">
-            <View className="flex-row items-center mb-2">
-              <FontAwesome name="money" size={20} color="#46194F" />
-              <Text className="text-[#46194F] font-bold mr-2 ml-2" style={{ fontFamily: AlmaraiFonts.bold }}>
-                {locale === "ar" ? "القسم المالي" : "Financial Section"}
-              </Text>
-            </View>
-
-            <View className="flex-row justify-between mb-1">
-              <Text className={valueStyle} style={{ fontFamily: AlmaraiFonts.regular }}>
-                {financialInfo.salary || "---"}
-              </Text>
-              <Text className={labelStyle} style={{ fontFamily: AlmaraiFonts.bold }}>
-                {locale === "ar" ? "مبلغ الراتب" : "Salary Amount"}
-              </Text>
-            </View>
-
-            <View className="flex-row justify-between mb-1">
-              <Text className={valueStyle} style={{ fontFamily: AlmaraiFonts.regular }}>
-                {financialInfo.bank || "---"}
-              </Text>
-              <Text className={labelStyle} style={{ fontFamily: AlmaraiFonts.bold }}>
-                {locale === "ar" ? "اسم البنك والشركة التمويل" : "Bank and Finance Company Name"}
-              </Text>
-            </View>
-
-            <View className="flex-row justify-between mb-1">
-              <Text className={valueStyle} style={{ fontFamily: AlmaraiFonts.regular }}>
-                {financialInfo.hasObligations === true
-                  ? locale === "ar"
-                    ? "نعم"
-                    : "Yes"
-                  : financialInfo.hasObligations === false
-                    ? locale === "ar"
-                      ? "لا"
-                      : "No"
-                    : "---"}
-              </Text>
-              <Text className={labelStyle} style={{ fontFamily: AlmaraiFonts.bold }}>
-                {locale === "ar" ? "التزامات" : "Obligations"}
-              </Text>
-            </View>
-
-            <View className="flex-row justify-between mb-1">
-              <Text className={valueStyle} style={{ fontFamily: AlmaraiFonts.regular }}>
-                {financialInfo.job || "---"}
-              </Text>
-              <Text className={labelStyle} style={{ fontFamily: AlmaraiFonts.bold }}>
-                {locale === "ar" ? "الوظيفة" : "Job"}
-              </Text>
-            </View>
-          </View>
-        )}
+    <View className="bg-white px-6 py-8 rounded-xl shadow-md">
+      {/* Step Tracker (Optional Top Bar) */}
+      <View className="flex-row justify-center mb-6">
+      
       </View>
 
-      <TouchableOpacity className="bg-[#46194F] rounded-lg py-3 items-center mt-4" onPress={onPrint}>
-        <Text className="text-white font-bold" style={{ fontFamily: AlmaraiFonts.bold }}>
-          {locale === "ar" ? "طباعة الورق" : "Print Paper"}
-        </Text>
-      </TouchableOpacity>
+      {/* Header Row */}
+      <View className="flex-row-reverse justify-between items-center mb-6">
+        {/* Buyer Type */}
+        <View className="flex-row items-center gap-1">
+          <Men width={18} height={18} />
+          <Text
+            className="text-sm font-bold text-[#46194F] "
+            style={{ fontFamily: AlmaraiFonts.bold }}
+          >
+            نوع المشتري: {buyerType === "individual" ? "للأفراد" : "للشركات"}
+          </Text>
+        </View>
+
+        {/* Car Info */}
+        <View className="flex-row items-center gap-2">
+          <CarIcon width={18} height={18} />
+          <Text
+            className="text-sm font-bold text-[#46194F] mr-2"
+            style={{ fontFamily: AlmaraiFonts.bold }}
+          >
+            السيارة: جيتور للذكرى ....
+          </Text>
+        </View>
+      </View>
+
+      {/* Two Column Layout */}
+      <View className="flex-row-reverse justify-between gap-20">
+        {/* Left Column: Financial Section */}
+        <View className="flex-1">
+          <View className="flex-row items-center mb-3 ml-1 ">
+            <DoubleRiyal width={18} height={18} />
+            <Text
+              className="text-sm font-bold text-[#46194F]  ml-2"
+              style={{ fontFamily: AlmaraiFonts.bold }}
+            >
+              القسم المالي
+            </Text>
+          </View>
+
+          {[
+            { key: "salary", label: "مبلغ الراتب" },
+            { key: "bank", label: "اسم البنك و الشركة للتمويل" },
+            { key: "hasObligations", label: "إلتزامات" },
+            { key: "job", label: "الوظيفة" }
+          ].map((item, idx) => {
+            const value =
+              item.key === "hasObligations"
+                ? financialInfo.hasObligations === true
+                  ? "نعم"
+                  : financialInfo.hasObligations === false
+                    ? "لا"
+                    : "......."
+                : financialInfo[item.key] || "......."
+
+            return (
+              <View className="mb-3" key={idx}>
+                <Text
+                  className="text-xs font-bold text-[#46194F] mb-1 text-left ml-8 "
+                  style={{ fontFamily: AlmaraiFonts.bold }}
+                >
+                  {item.label}:
+                </Text>
+                <Text
+                  className="text-xs text-gray-700 text-left ml-8"
+                  style={{ fontFamily: AlmaraiFonts.regular }}
+                >
+                  {value}
+                </Text>
+              </View>
+            )
+          })}
+        </View>
+
+        {/* Right Column: Personal Info */}
+        <View className="flex-1">
+          <View className="flex-row items-center mb-3 gap-2">
+            <MenUser width={18} height={18} />
+            <Text
+              className="text-sm font-bold text-[#46194F]  "
+              style={{ fontFamily: AlmaraiFonts.bold }}
+            >
+              المعلومات الشخصية
+            </Text>
+          </View>
+
+          {[
+            { key: "name", label: "الاسم" },
+            { key: "email", label: "البريد الإلكتروني" },
+            { key: "phone", label: "رقم الهاتف" },
+            { key: "idNumber", label: "رقم الهوية الوطنية" }
+          ].map((item, idx) => (
+            <View className="mb-3" key={idx}>
+              <Text
+                className="text-xs font-bold text-[#46194F] mb-1 text-left ml-6"
+                style={{ fontFamily: AlmaraiFonts.bold }}
+              >
+                {item.label}:
+              </Text>
+              <Text
+                className="text-xs text-gray-700 text-left ml-6"
+                style={{ fontFamily: AlmaraiFonts.regular }}
+              >
+                {personalInfo[item.key] || "......."}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
+<View className="items-center mt-6">
+  <TouchableOpacity
+    onPress={onPrint}
+    className="bg-[#46194F] px-6 py-3 rounded-[5px] items-center justify-center"
+  >
+    <Text
+      className="text-white text-sm"
+      style={{ fontFamily: AlmaraiFonts.bold }}
+    >
+      طباعة الورق
+    </Text>
+  </TouchableOpacity>
+</View>
+
     </View>
   )
 }
