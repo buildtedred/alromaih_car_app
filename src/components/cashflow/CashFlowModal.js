@@ -203,12 +203,23 @@ const CashFlowModal = ({ isVisible, onClose, locale, navigation, sizeClass }) =>
       hideModalContentWhileAnimating
       onBackdropPress={onClose}
     >
-      <View className="w-full bg-white rounded-t-2xl" style={{ height: MODAL_HEIGHT }}>
+     <View 
+  className="w-full bg-white"
+  style={{
+    height: MODAL_HEIGHT,
+    borderTopLeftRadius: 24,  // More rounded top-left corner (increased from 16)
+    borderTopRightRadius: 24, // More rounded top-right corner
+    borderTopWidth: 1,        // Only top border
+    borderTopColor: '#e2e8f0', // Light gray border color
+    overflow: 'hidden',       // Ensures rounded corners work properly
+    // No shadow properties as per request
+  }}
+>
         {/* Header */}
         <View className="flex-row items-center justify-between px-6 py-3">
           <TouchableOpacity onPress={prevStep}>
             <Text
-              className="text-2xl font-bold text-[#46194F]"
+              className="text-2xl font-bold text-[#46194F] "
               style={{
                 transform: [{ scaleX: locale === "ar" ? -1 : 1 }],
                 fontFamily: AlmaraiFonts.bold,
@@ -219,7 +230,7 @@ const CashFlowModal = ({ isVisible, onClose, locale, navigation, sizeClass }) =>
           </TouchableOpacity>
 
           <Text
-            className="text-lg font-bold text-[#46194F] flex-1 text-center"
+            className="text-lg font-bold text-[#46194F] flex-1 text-start ml-4"
             style={{ fontFamily: AlmaraiFonts.bold }}
           >
             {getCurrentStepTitle()}
@@ -227,7 +238,7 @@ const CashFlowModal = ({ isVisible, onClose, locale, navigation, sizeClass }) =>
 
           <TouchableOpacity
             onPress={onClose}
-            className="w-8 h-8 border border-gray-300 rounded-md items-center justify-center"
+            className="w-8 h-8  rounded-md items-center justify-center"
           >
             <FontAwesome name="times-circle-o" size={20} color="#46194F" />
           </TouchableOpacity>
@@ -271,20 +282,7 @@ const CashFlowModal = ({ isVisible, onClose, locale, navigation, sizeClass }) =>
           {renderStepContent()}
         </ScrollView>
 
-        {/* Footer - Only show if not handled by the step component */}
-        {currentStep !== 1 && currentStep !== 2 && currentStep !== 3 && (
-          <View className="px-4 py-3 border-t border-gray-200">
-            <TouchableOpacity
-              className="bg-[#46194F] rounded-lg py-3 items-center"
-              onPress={nextStep}
-              disabled={currentStep === 0 && !buyerType}
-            >
-              <Text className="text-white font-bold" style={{ fontFamily: AlmaraiFonts.bold }}>
-                {locale === "ar" ? "التالي" : "Next"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+    
       </View>
     </Modal>
   )
