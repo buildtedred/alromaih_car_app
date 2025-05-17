@@ -52,15 +52,12 @@ export default function AdvancedSearchScreen() {
   const [selectedTransmission, setSelectedTransmission] = useState(null)
   const [selectedEngine, setSelectedEngine] = useState(null)
 
-  // Initialize form with existing filters when component mounts
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
-      // Set brand if it exists
       if (filters.brand) {
         setSelectedBrand(filters.brand)
       }
 
-      // Set models if they exist
       if (filters.models) {
         if (Array.isArray(filters.models)) {
           setSelectedModels(filters.models)
@@ -69,33 +66,27 @@ export default function AdvancedSearchScreen() {
         }
       }
 
-      // Set body type if it exists
       if (filters.bodyType) {
         setSelectedBodyType(filters.bodyType)
       }
 
-      // Set category if it exists
       if (filters.category) {
         setSelectedCategory(filters.category)
       }
 
-      // Set transmission if it exists
       if (filters.transmission) {
         setSelectedTransmission(filters.transmission)
       }
 
-      // Set engine/fuel if it exists
       if (filters.fuel) {
         setSelectedEngine(filters.fuel)
       }
 
-      // Set price range if it exists
       if (filters.price) {
         const [min, max] = filters.price.split("-").map((v) => Number.parseInt(v.replace(/,/g, "")))
         setPriceRange([min, max])
       }
 
-      // Set year range if it exists
       if (filters.year) {
         const [min, max] = filters.year.split("-").map((v) => Number.parseInt(v.trim()))
         setMinYear(min)
@@ -151,18 +142,8 @@ export default function AdvancedSearchScreen() {
 
     // Clear filters in context
     clearFilters()
-
-    // Set isFiltered to false to ensure AllCarsScreen knows filters are cleared
     setIsFiltered(false)
-
-    // Set filteredCars to empty array to reset the filtered cars list
     setFilteredCars([])
-
-    // Navigate back to AllCarsScreen with a flag indicating filters were cleared
-    navigation.navigate("Main", {
-      screen: "CarsTab",
-      params: { filtersCleared: true },
-    })
   }
 
   const handleSearch = () => {
@@ -223,12 +204,9 @@ export default function AdvancedSearchScreen() {
       )
     })
 
-    // Update the filter context
     setFilters(filterParams)
     setFilteredCars(filteredCars)
     setIsFiltered(true)
-
-    // Navigate back to AllCarsScreen
     navigation.goBack()
   }
 
@@ -303,16 +281,15 @@ export default function AdvancedSearchScreen() {
           {/* 7. Transmission */}
           <TransmissionSelector selected={selectedTransmission} setSelected={setSelectedTransmission} />
 
-         {/* 8. Engine */}
-<View className="mb-10">
-  <EngineSelector
-    selected={selectedEngine}
-    setSelected={setSelectedEngine}
-    engineOptions={engineOptions}
-    locale={locale}
-  />
-</View>
-
+          {/* 8. Engine */}
+          <View className="mb-10">
+            <EngineSelector
+              selected={selectedEngine}
+              setSelected={setSelectedEngine}
+              engineOptions={engineOptions}
+              locale={locale}
+            />
+          </View>
         </View>
       </ScrollView>
 

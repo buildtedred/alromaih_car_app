@@ -1,227 +1,262 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { getAllSpecGroups, brandLogos } from '../mock-data';
-import { useLocale } from '../contexts/LocaleContext';
-import { useTranslation } from 'react-i18next';
-import LinearGradient from 'react-native-linear-gradient';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import RNFS from 'react-native-fs';
+"use client"
+import { View, ScrollView, TouchableOpacity, Image, StyleSheet } from "react-native"
+import { useNavigation, useRoute } from "@react-navigation/native"
+import { useLocale } from "../contexts/LocaleContext"
+import { useCompare } from "../contexts/CompareContext"
+import AppText from "../components/common/AppText"
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import useBackHandler from "../hooks/useBackHandler"
+import { useCallback, useEffect, useState } from "react"
+import { brandLogos } from "../mock-data"
+import LinearGradient from "react-native-linear-gradient"
 
-export default function CompareScreen() {
-  const route = useRoute();
-  const { selectedCars = [] } = route.params || {};
-  const { language } = useLocale();
-  const { t } = useTranslation();
-  const [expandedGroups, setExpandedGroups] = useState({});
+export default function CompareDetailsScreen() {
+  const { locale } = useLocale()
+  const navigation = useNavigation()
+  const route = useRoute()
+  const { clearComparison } = useCompare()
+  const { cars = [] } = route.params || {}
+  const [expandedGroups, setExpandedGroups] = useState({})
 
-  if (!selectedCars.length || selectedCars.length < 2) {
+  // Handle back button press
+  const handleGoBack = useCallback(() => {
+    if (navigation && navigation.canGoBack()) {
+      navigation.goBack()
+      return true
+    } else {
+      navigation.navigate("AllCarsScreen")
+      return true
+    }
+  }, [navigation])
+
+  useBackHandler(handleGoBack, [handleGoBack])
+
+  useEffect(() => {
+    return () => {
+      // Cleanup if needed
+    }
+  }, [])
+
+  if (cars.length !== 2) {
     return (
-      <View className="flex-1 items-center justify-center bg-white px-4">
-        <Text className="text-lg font-semibold text-gray-600">
-          {t('compare.select_two_cars')}
-        </Text>
+      <View className="flex-1 justify-center items-center bg-white">
+        <AppText className="text-[#46194F] text-lg">
+          {locale === "ar" ? "لا توجد سيارات للمقارنة" : "No cars to compare"}
+        </AppText>
+        <TouchableOpacity className="mt-4 px-4 py-2 bg-[#46194F] rounded-lg" onPress={handleGoBack}>
+          <AppText className="text-white">{locale === "ar" ? "العودة" : "Go Back"}</AppText>
+        </TouchableOpacity>
       </View>
-    );
+    )
   }
 
-  const specGroups = getAllSpecGroups(selectedCars[0], language);
+  const car1 = cars[0]
+  const car2 = cars[1]
 
-  const getMaxValue = (groupIndex, specIndex) => {
-    const values = selectedCars.map(
-      (car) => getAllSpecGroups(car, language)[groupIndex]?.specs[specIndex]?.value
-    );
-    const numericValues = values
-      .map((val) => parseFloat((typeof val === 'object' ? val?.[language] : val)?.toString().replace(/[^0-9.]/g, '')))
-      .filter((val) => !isNaN(val));
-    return numericValues.length ? Math.max(...numericValues) : null;
-  };
+  const getLang = (field) => (typeof field === "object" ? field?.[locale] : field)
 
   const toggleGroup = (groupKey) => {
-    setExpandedGroups((prev) => ({
+    setExpandedGroups(prev => ({
       ...prev,
-      [groupKey]: !prev[groupKey],
-    }));
-  };
+      [groupKey]: !prev[groupKey]
+    }))
+  }
 
-  const generateComparePDF = async () => {
-    try {
-      const carImages = selectedCars.map(
-        (car) => Image.resolveAssetSource(car.image)?.uri
-      );
+  // Define comparison categories
+  const categories = [
+    {
+      key: "general",
+      title: locale === "ar" ? "المواصفات العامة" : "General Specifications",
+      items: [
+        {
+          label: locale === "ar" ? "السنة" : "Year",
+          car1Value: car1.specs?.year,
+          car2Value: car2.specs?.year,
+        },
+        {
+          label: locale === "ar" ? "ناقل الحركة" : "Transmission",
+          car1Value: getLang(car1.specs?.transmission),
+          car2Value: getLang(car2.specs?.transmission),
+        },
+        {
+          label: locale === "ar" ? "نوع الوقود" : "Fuel Type",
+          car1Value: getLang(car1.specs?.fuelType),
+          car2Value: getLang(car2.specs?.fuelType),
+        },
+      ],
+    },
+    {
+      key: "pricing",
+      title: locale === "ar" ? "الأسعار" : "Pricing",
+      items: [
+        {
+          label: locale === "ar" ? "سعر الكاش" : "Cash Price",
+          car1Value: car1.cashPrice?.toLocaleString(),
+          car2Value: car2.cashPrice?.toLocaleString(),
+          isPrice: true,
+        },
+        {
+          label: locale === "ar" ? "القسط الشهري" : "Monthly Installment",
+          car1Value: car1.installmentPrice?.toLocaleString(),
+          car2Value: car2.installmentPrice?.toLocaleString(),
+          isPrice: true,
+        },
+      ],
+    },
+  ]
 
-      const htmlContent = `
-        <html>
-          <head>
-            <style>
-              body { font-family: Arial; padding: 15px; }
-              h1, h2 { color: #46194F; }
-              .car { margin-bottom: 20px; text-align: center; }
-              img { width: 90%; height: auto; margin-top: 10px; }
-              .spec-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-              .spec-table th, .spec-table td { border: 1px solid #ccc; padding: 8px; font-size: 12px; }
-              .spec-table th { background: #46194F; color: white; }
-              .group-title { margin-top: 20px; font-size: 18px; color: #46194F; }
-            </style>
-          </head>
-          <body>
-            <h1>${t('compare.pdf_title')}</h1>
+  const getMaxValue = (items, itemIndex) => {
+    const values = items.map(item => {
+      const val1 = parseFloat(item.car1Value?.toString().replace(/[^0-9.]/g, '')) || 0
+      const val2 = parseFloat(item.car2Value?.toString().replace(/[^0-9.]/g, '')) || 0
+      return Math.max(val1, val2)
+    })
+    return values[itemIndex] || 1
+  }
 
-            ${selectedCars.map((car, idx) => `
-              <div class="car">
-                <h2>${car.name?.[language]}</h2>
-                <img src="${carImages[idx]}" />
-              </div>
-            `).join('')}
-
-            ${specGroups.map(group => `
-              <div class="group">
-                <h3 class="group-title">${group.groupName}</h3>
-                <table class="spec-table">
-                  <tr>
-                    <th>${t('compare.specification')}</th>
-                    ${selectedCars.map(car => `<th>${car.name?.[language]}</th>`).join('')}
-                  </tr>
-                  ${group.specs.map((spec, specIdx) => `
-                    <tr>
-                      <td>${spec.name}</td>
-                      ${selectedCars.map(car => {
-                        const specData = getAllSpecGroups(car, language)[specGroups.indexOf(group)]?.specs[specIdx];
-                        let value = specData?.value ?? '—';
-                        if (typeof value === 'object') value = value[language] ?? '—';
-                        return `<td>${value}</td>`;
-                      }).join('')}
-                    </tr>
-                  `).join('')}
-                </table>
-              </div>
-            `).join('')}
-          </body>
-        </html>
-      `;
-
-      const pdf = await RNHTMLtoPDF.convert({
-        html: htmlContent,
-        fileName: 'Car-Comparison-Details',
-        directory: 'Documents',
-        base64: false,
-      });
-
-      const downloadsPath = `${RNFS.DownloadDirectoryPath}/Car-Comparison-Details.pdf`;
-      await RNFS.moveFile(pdf.filePath, downloadsPath);
-
-      Alert.alert(t('compare.success'), t('compare.pdf_saved'));
-    } catch (error) {
-      console.error('PDF Generation Error:', error);
-      Alert.alert(t('compare.error'), t('compare.pdf_failed'));
-    }
-  };
+  const BrandLogo1 = brandLogos[car1.brand]
+  const BrandLogo2 = brandLogos[car2.brand]
 
   return (
     <View className="flex-1 bg-gray-50">
+      {/* Header with cars */}
       <View className="bg-white pt-4 pb-2 shadow-md z-20">
-        <Text className="text-xl font-bold text-center text-brand-primary mb-2">
-          {t('compare.title')}
-        </Text>
+        <AppText bold className="text-xl text-center text-[#46194F] mb-2">
+          {locale === "ar" ? "مقارنة السيارات" : "Car Comparison"}
+        </AppText>
+        
         <View className="flex-row justify-around items-center px-2">
-          {selectedCars.map((car, idx) => {
-            const BrandLogo = brandLogos[car.brand];
-            return (
-              <View key={idx} className="items-center w-[45%] bg-white py-3 rounded-xl border border-gray-100 shadow-sm">
-                {car.image && (
-                  <Image source={car.image} className="w-28 h-20 rounded-lg mb-1" resizeMode="contain" />
-                )}
-                {BrandLogo && <BrandLogo width={60} height={20} style={{ marginBottom: 4 }} />}
-                <Text className="text-sm font-bold text-brand-primary capitalize">{car.brand}</Text>
-                <Text className="text-xs text-gray-500 mt-1 text-center px-1">{car.name?.[language]}</Text>
-              </View>
-            );
-          })}
+          {/* Car 1 */}
+          <View className="items-center w-[45%] bg-white py-3 rounded-xl border border-gray-100 shadow-sm">
+            <Image source={car1.image} className="w-28 h-20 rounded-lg mb-1" resizeMode="contain" />
+            {BrandLogo1 && <BrandLogo1 width={60} height={20} style={{ marginBottom: 4 }} />}
+            <AppText bold className="text-sm text-[#46194F] capitalize">{car1.brand}</AppText>
+            <AppText className="text-xs text-gray-500 mt-1 text-center px-1">
+              {getLang(car1.name)}
+            </AppText>
+          </View>
+
+          {/* Car 2 */}
+          <View className="items-center w-[45%] bg-white py-3 rounded-xl border border-gray-100 shadow-sm">
+            <Image source={car2.image} className="w-28 h-20 rounded-lg mb-1" resizeMode="contain" />
+            {BrandLogo2 && <BrandLogo2 width={60} height={20} style={{ marginBottom: 4 }} />}
+            <AppText bold className="text-sm text-[#46194F] capitalize">{car2.brand}</AppText>
+            <AppText className="text-xs text-gray-500 mt-1 text-center px-1">
+              {getLang(car2.name)}
+            </AppText>
+          </View>
         </View>
+
+        {/* VS separator */}
         <View className="flex-row justify-center items-center mt-3 mb-2">
           <View className="flex-1 h-px bg-gray-200" />
-          <View className="mx-3 bg-brand-primary rounded-full w-8 h-8 items-center justify-center">
-            <Text className="text-white font-bold">{t('compare.vs')}</Text>
+          <View className="mx-3 bg-[#46194F] rounded-full w-8 h-8 items-center justify-center">
+            <AppText bold className="text-white">VS</AppText>
           </View>
           <View className="flex-1 h-px bg-gray-200" />
         </View>
       </View>
 
+      {/* Comparison sections */}
       <ScrollView className="flex-1 px-4 pt-2" contentContainerStyle={{ paddingBottom: 20 }}>
-        {specGroups.map((group, gIndex) => (
-          <View key={gIndex} className="mb-4 bg-white rounded-xl shadow-sm overflow-hidden">
+        {categories.map((category, categoryIndex) => (
+          <View key={categoryIndex} className="mb-4 bg-white rounded-xl shadow-sm overflow-hidden">
             <TouchableOpacity
-              onPress={() => toggleGroup(group.groupKey)}
+              onPress={() => toggleGroup(category.key)}
               className="flex-row justify-between items-center px-4 py-3 bg-gray-50"
               activeOpacity={0.7}
             >
-              <Text className="text-sm font-bold text-brand-primary">{group.groupName}</Text>
-              <Ionicons
-                name={expandedGroups[group.groupKey] ? 'chevron-up' : 'chevron-down'}
-                size={18}
+              <AppText bold className="text-sm text-[#46194F]">
+                {category.title}
+              </AppText>
+              <Icon
+                name={expandedGroups[category.key] ? "chevron-up" : "chevron-down"}
+                size={20}
                 color="#46194F"
               />
             </TouchableOpacity>
 
-            {expandedGroups[group.groupKey] && (
+            {expandedGroups[category.key] && (
               <View className="px-4 pt-3 pb-4">
-                {group.specs.map((spec, sIndex) => {
-                  const max = getMaxValue(gIndex, sIndex);
+                {category.items.map((item, itemIndex) => {
+                  const max = getMaxValue(category.items, itemIndex)
+                  const val1 = parseFloat(item.car1Value?.toString().replace(/[^0-9.]/g, '')) || 0
+                  const val2 = parseFloat(item.car2Value?.toString().replace(/[^0-9.]/g, '')) || 0
+                  const percentage1 = max ? Math.min((val1 / max) * 100, 100) : 100
+                  const percentage2 = max ? Math.min((val2 / max) * 100, 100) : 100
+
                   return (
-                    <View key={sIndex} className="mb-4">
-                      <Text className="text-xs font-medium text-gray-500 mb-2">{spec.name}</Text>
+                    <View key={itemIndex} className="mb-4">
+                      <AppText className="text-xs text-gray-500 mb-2">
+                        {item.label}
+                      </AppText>
                       <View className="flex-row items-center justify-between">
-                        {selectedCars.map((car, index) => {
-                          const specData = getAllSpecGroups(car, language)[gIndex]?.specs[sIndex];
-                          let value = specData?.value ?? '—';
-                          if (typeof value === 'object') value = value[language] ?? '—';
-                          const numeric = parseFloat(value?.toString().replace(/[^0-9.]/g, ''));
-                          const percentage = max && !isNaN(numeric) ? Math.min((numeric / max) * 100, 100) : 100;
-                          return (
-                            <View key={index} className="w-[48%]">
-                              <View className="h-1.5 rounded-full bg-gray-100 mb-1 overflow-hidden">
-                                <LinearGradient
-                                  colors={['#46194F', '#C6AECC']}
-                                  start={{ x: 0, y: 0 }}
-                                  end={{ x: 1, y: 0 }}
-                                  style={{ width: `${percentage}%`, height: '100%', borderRadius: 9999 }}
-                                />
-                              </View>
-                              <Text className="text-xs text-center font-medium text-brand-primary mt-1">
-                                {value}
-                              </Text>
-                            </View>
-                          );
-                        })}
+                        {/* Car 1 Value */}
+                        <View className="w-[48%]">
+                          <View className="h-1.5 rounded-full bg-gray-100 mb-1 overflow-hidden">
+                            <LinearGradient
+                              colors={['#46194F', '#C6AECC']}
+                              start={{ x: 0, y: 0 }}
+                              end={{ x: 1, y: 0 }}
+                              style={{ 
+                                width: `${percentage1}%`, 
+                                height: '100%', 
+                                borderRadius: 9999 
+                              }}
+                            />
+                          </View>
+                          <View className="flex-row items-center justify-center mt-1">
+                            {item.isPrice && <Icon name="currency-riyal" size={14} color="#46194F" />}
+                            <AppText className="text-xs text-center text-[#46194F] ml-1">
+                              {item.car1Value || "-"}
+                            </AppText>
+                          </View>
+                        </View>
+
+                        {/* Car 2 Value */}
+                        <View className="w-[48%]">
+                          <View className="h-1.5 rounded-full bg-gray-100 mb-1 overflow-hidden">
+                            <LinearGradient
+                              colors={['#46194F', '#C6AECC']}
+                              start={{ x: 0, y: 0 }}
+                              end={{ x: 1, y: 0 }}
+                              style={{ 
+                                width: `${percentage2}%`, 
+                                height: '100%', 
+                                borderRadius: 9999 
+                              }}
+                            />
+                          </View>
+                          <View className="flex-row items-center justify-center mt-1">
+                            {item.isPrice && <Icon name="currency-riyal" size={14} color="#46194F" />}
+                            <AppText className="text-xs text-center text-[#46194F] ml-1">
+                              {item.car2Value || "-"}
+                            </AppText>
+                          </View>
+                        </View>
                       </View>
                     </View>
-                  );
+                  )
                 })}
               </View>
             )}
           </View>
         ))}
 
+        {/* Download PDF Button */}
         <TouchableOpacity
-          onPress={generateComparePDF}
           className="bg-[#46194F] p-4 rounded-xl mt-6 mb-8 mx-8"
+          onPress={() => {
+            // Add your PDF generation logic here
+          }}
         >
-          <Text className="text-white font-bold text-lg text-center">
-            {t('compare.download_pdf')}
-          </Text>
+          <AppText bold className="text-white text-lg text-center">
+            {locale === "ar" ? "تحميل PDF" : "Download PDF"}
+          </AppText>
         </TouchableOpacity>
       </ScrollView>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -231,4 +266,4 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-});
+})
