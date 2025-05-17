@@ -1,4 +1,5 @@
 "use client"
+import { useState, useCallback, useEffect } from "react"
 import { View, TouchableOpacity, Image, ScrollView } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native"
 import { useLocale } from "../contexts/LocaleContext"
@@ -6,7 +7,6 @@ import { useCompare } from "../contexts/CompareContext"
 import AppText from "../components/common/AppText"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import useBackHandler from "../hooks/useBackHandler"
-import { useCallback } from "react"
 import { brandLogos } from "../mock-data"
 import VsIcon from "../assets/Icon/vs.svg"
 import RiyalIcon from "../assets/Icon/riyal_icon.svg"
@@ -14,6 +14,7 @@ import SpecificIcon from "../assets/Icon/specific_icon.svg"
 import SeatsIcon from "../assets/Icon/seats_icon.svg"
 import SoundIcon from "../assets/Icon/sound_icon.svg"
 import ProtectIcon from "../assets/Icon/protect_icon.svg"
+import CarSelectionModal from "../components/cars/CarSelectionModal"
 
 export default function CompareDetailsScreen() {
   const { locale } = useLocale()
@@ -21,14 +22,23 @@ export default function CompareDetailsScreen() {
   const route = useRoute()
   const { clearComparison } = useCompare()
   const { cars = [] } = route.params || {}
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [displayedCars, setDisplayedCars] = useState(cars)
+
+  // Update displayed cars when route params change
+  useEffect(() => {
+    if (route.params?.cars && route.params.cars.length === 2) {
+      setDisplayedCars(route.params.cars)
+    }
+  }, [route.params?.cars])
 
   const truncateText = (text, maxLength = 14) => {
-    if (!text) return "";
+    if (!text) return ""
     if (text.length > maxLength) {
-      return text.substring(0, maxLength) + "...";
+      return text.substring(0, maxLength) + "..."
     }
-    return text;
-  };
+    return text
+  }
 
   const handleGoBack = useCallback(() => {
     if (navigation && navigation.canGoBack()) {
@@ -42,7 +52,20 @@ export default function CompareDetailsScreen() {
 
   useBackHandler(handleGoBack, [handleGoBack])
 
-  if (cars.length !== 2) {
+  const handleCompareAnotherCar = () => {
+    setIsModalVisible(true)
+  }
+
+  const handleSelectCars = (selectedCars) => {
+    setIsModalVisible(false)
+
+    // Instead of using navigation.replace, update the local state
+    if (selectedCars && selectedCars.length === 2) {
+      setDisplayedCars(selectedCars)
+    }
+  }
+
+  if (displayedCars.length !== 2) {
     return (
       <View className="flex-1 justify-center items-center bg-white">
         <AppText className="text-[#46194F] text-lg">
@@ -55,12 +78,8 @@ export default function CompareDetailsScreen() {
     )
   }
 
-  const car1 = cars[0]
-  const car2 = cars[1]
-
-  const handleCompareAnotherCar = () => {
-    navigation.navigate("CompareScreen")
-  }
+  const car1 = displayedCars[0]
+  const car2 = displayedCars[1]
 
   const BrandLogo1 = brandLogos[car1.brand]
   const BrandLogo2 = brandLogos[car2.brand]
@@ -73,7 +92,7 @@ export default function CompareDetailsScreen() {
           <Icon name="close" size={24} color="#46194F" />
         </TouchableOpacity>
         <AppText bold className="text-base text-center text-[#46194F]">
-          {truncateText(locale === "ar" ? "قارن بين السيارات" : "Compare Cars")}
+          {locale === "ar" ? "قارن بين السيارات" : "Compare Cars"}
         </AppText>
       </View>
 
@@ -86,9 +105,7 @@ export default function CompareDetailsScreen() {
               <Image source={car1.image} className="w-[90%] h-[50px]" resizeMode="contain" />
             </View>
 
-            <View className="items-center my-1">
-              {BrandLogo1 && <BrandLogo1 width={40} height={12} />}
-            </View>
+            <View className="items-center my-1">{BrandLogo1 && <BrandLogo1 width={40} height={12} />}</View>
 
             <View className="flex-row justify-between items-start mt-1">
               <View className="items-start">
@@ -101,14 +118,12 @@ export default function CompareDetailsScreen() {
               </View>
 
               <View className="items-start">
-                <AppText className="text-[8px] text-gray-500">
-                  {truncateText(locale === "ar" ? "سعر الكاش" : "Cash Price")}
-                </AppText>
+                <AppText className="text-[8px] text-gray-500">{locale === "ar" ? "سعر الكاش" : "Cash Price"}</AppText>
                 <View className="flex-row items-center">
                   <AppText bold className="text-[#46194F] text-xs">
-                    {truncateText("146,000")}
+                    {"146,000"}
                   </AppText>
-                  <RiyalIcon width={10} height={10} fill="#46194F" className="ml-1" />
+                  <RiyalIcon width={10} height={10} fill="#46194F" style={{ marginLeft: 4 }} />
                 </View>
               </View>
             </View>
@@ -124,9 +139,7 @@ export default function CompareDetailsScreen() {
               <Image source={car2.image} className="w-[90%] h-[50px]" resizeMode="contain" />
             </View>
 
-            <View className="items-center my-1">
-              {BrandLogo2 && <BrandLogo2 width={40} height={12} />}
-            </View>
+            <View className="items-center my-1">{BrandLogo2 && <BrandLogo2 width={40} height={12} />}</View>
 
             <View className="flex-row justify-between items-start mt-1">
               <View className="items-start">
@@ -139,14 +152,12 @@ export default function CompareDetailsScreen() {
               </View>
 
               <View className="items-start">
-                <AppText className="text-[8px] text-gray-500">
-                  {truncateText(locale === "ar" ? "سعر الكاش" : "Cash Price")}
-                </AppText>
+                <AppText className="text-[8px] text-gray-500">{locale === "ar" ? "سعر الكاش" : "Cash Price"}</AppText>
                 <View className="flex-row items-center">
                   <AppText bold className="text-[#46194F] text-xs">
-                    {truncateText("146,000")}
+                    {"146,000"}
                   </AppText>
-                  <RiyalIcon width={8} height={8} fill="#46194F" className="ml-1" />
+                  <RiyalIcon width={8} height={8} fill="#46194F" style={{ marginLeft: 4 }} />
                 </View>
               </View>
             </View>
@@ -154,32 +165,29 @@ export default function CompareDetailsScreen() {
         </View>
 
         <View className="mt-4 flex items-center justify-center">
-          <TouchableOpacity
-            className="bg-[#46194F] py-1.5 px-4 w-[45%] rounded-xl"
-            onPress={handleCompareAnotherCar}
-          >
+          <TouchableOpacity className="bg-[#46194F] py-1.5 px-4 w-[45%] rounded-xl" onPress={handleCompareAnotherCar}>
             <AppText bold className="text-white text-center text-base">
-              {(locale === "ar" ? "قارن بسيارة أخرى" : "Compare Another Car")}
+              {locale === "ar" ? "قارن بسيارة أخرى" : "Compare Another Car"}
             </AppText>
           </TouchableOpacity>
         </View>
 
         <View className="mt-6">
           <AppText bold className="text-base text-[#46194F] mb-4">
-            {truncateText(locale === "ar" ? "صفات السيارة" : "Car Specifications")}
+            {locale === "ar" ? "صفات السيارة" : "Car Specifications"}
           </AppText>
 
           {/* Transmission Section */}
           <View className="border border-gray-200 rounded-md mx-2 mb-4">
             <View className="flex-row justify-between items-center p-3">
               <View className="flex-row items-center">
-                <SpecificIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <SpecificIcon width={24} height={24} fill="#46194F" style={{ marginLeft: 8 }} />
                 <AppText bold className="text-base text-[#46194F] ml-2">
-                  {truncateText(locale === "ar" ? "ناقل الحركة" : "Transmission")}
+                  {locale === "ar" ? "ناقل الحركة" : "Transmission"}
                 </AppText>
               </View>
               <TouchableOpacity>
-                <Icon name="chevron-up" size={22} color="#46194F" />
+                <Icon name="chevron-up" size={22} color="#46194F" style={{ marginRight: 8 }} />
               </TouchableOpacity>
             </View>
 
@@ -187,10 +195,10 @@ export default function CompareDetailsScreen() {
               <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
                 <View className="items-start">
                   <AppText bold className="text-[#46194F] text-xs">
-                    {truncateText(locale === "ar" ? "جيتور T2" : "Jetour T2")}
+                    {locale === "ar" ? "جيتور T2" : "Jetour T2"}
                   </AppText>
                   <AppText className="text-[8px] text-gray-500">
-                    {truncateText(locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine")}
+                    {locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine"}
                   </AppText>
                 </View>
                 <View className="flex-row items-center">{BrandLogo1 && <BrandLogo1 width={60} height={15} />}</View>
@@ -199,32 +207,28 @@ export default function CompareDetailsScreen() {
               <View>
                 <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
                   <AppText bold className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "ناقل الحركة" : "Transmission")}
+                    {locale === "ar" ? "ناقل الحركة" : "Transmission"}
                   </AppText>
-                  <AppText className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "أوتوماتيك" : "Automatic")}
-                  </AppText>
+                  <AppText className="text-xs text-[#46194F]">{locale === "ar" ? "أوتوماتيك" : "Automatic"}</AppText>
                 </View>
 
                 <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
                   <AppText bold className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "نوع الجير" : "Gear Type")}
+                    {locale === "ar" ? "نوع الجير" : "Gear Type"}
                   </AppText>
                   <AppText className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "دفع رباعي" : "Four-wheel Drive")}
+                    {locale === "ar" ? "دفع رباعي" : "Four-wheel Drive"}
                   </AppText>
                 </View>
 
                 <View className="flex-row justify-between items-center p-3">
                   <AppText bold className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "وضع القيادة" : "Driving Mode")}
+                    {locale === "ar" ? "وضع القيادة" : "Driving Mode"}
                   </AppText>
                   <View>
+                    <AppText className="text-xs text-[#46194F]">{locale === "ar" ? "عادي" : "Normal"}</AppText>
                     <AppText className="text-xs text-[#46194F]">
-                      {truncateText(locale === "ar" ? "عادي" : "Normal")}
-                    </AppText>
-                    <AppText className="text-xs text-[#46194F]">
-                      {truncateText(locale === "ar" ? "الرمال الطين" : "Sand & Mud")}
+                      {locale === "ar" ? "الرمال الطين" : "Sand & Mud"}
                     </AppText>
                   </View>
                 </View>
@@ -239,10 +243,10 @@ export default function CompareDetailsScreen() {
               <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
                 <View className="items-start">
                   <AppText bold className="text-[#46194F] text-xs">
-                    {truncateText(locale === "ar" ? "جيتور T2" : "Jetour T2")}
+                    {locale === "ar" ? "جيتور T2" : "Jetour T2"}
                   </AppText>
                   <AppText className="text-[8px] text-gray-500">
-                    {truncateText(locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine")}
+                    {locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine"}
                   </AppText>
                 </View>
                 <View className="flex-row items-center">{BrandLogo2 && <BrandLogo2 width={60} height={15} />}</View>
@@ -251,32 +255,28 @@ export default function CompareDetailsScreen() {
               <View>
                 <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
                   <AppText bold className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "ناقل الحركة" : "Transmission")}
+                    {locale === "ar" ? "ناقل الحركة" : "Transmission"}
                   </AppText>
-                  <AppText className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "أوتوماتيك" : "Automatic")}
-                  </AppText>
+                  <AppText className="text-xs text-[#46194F]">{locale === "ar" ? "أوتوماتيك" : "Automatic"}</AppText>
                 </View>
 
                 <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
                   <AppText bold className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "نوع الجير" : "Gear Type")}
+                    {locale === "ar" ? "نوع الجير" : "Gear Type"}
                   </AppText>
                   <AppText className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "دفع رباعي" : "Four-wheel Drive")}
+                    {locale === "ar" ? "دفع رباعي" : "Four-wheel Drive"}
                   </AppText>
                 </View>
 
                 <View className="flex-row justify-between items-center p-3">
                   <AppText bold className="text-xs text-[#46194F]">
-                    {truncateText(locale === "ar" ? "وضع القيادة" : "Driving Mode")}
+                    {locale === "ar" ? "وضع القيادة" : "Driving Mode"}
                   </AppText>
                   <View>
+                    <AppText className="text-xs text-[#46194F]">{locale === "ar" ? "عادي" : "Normal"}</AppText>
                     <AppText className="text-xs text-[#46194F]">
-                      {truncateText(locale === "ar" ? "عادي" : "Normal")}
-                    </AppText>
-                    <AppText className="text-xs text-[#46194F]">
-                      {truncateText(locale === "ar" ? "الرمال الطين" : "Sand & Mud")}
+                      {locale === "ar" ? "الرمال الطين" : "Sand & Mud"}
                     </AppText>
                   </View>
                 </View>
@@ -288,13 +288,13 @@ export default function CompareDetailsScreen() {
           <View className="border border-gray-200 rounded-lg mb-4">
             <View className="flex-row justify-between items-center p-3">
               <View className="flex-row items-center">
-                <SeatsIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <SeatsIcon width={24} height={24} fill="#46194F" style={{ marginLeft: 8 }} />
                 <AppText bold className="text-base text-[#46194F] ml-2">
-                  {truncateText(locale === "ar" ? "المقاعد" : "Seats")}
+                  {locale === "ar" ? "المقاعد" : "Seats"}
                 </AppText>
               </View>
               <TouchableOpacity>
-                <Icon name="chevron-down" size={24} color="#46194F" />
+                <Icon name="chevron-down" size={24} color="#46194F" style={{ marginRight: 8 }} />
               </TouchableOpacity>
             </View>
           </View>
@@ -302,13 +302,13 @@ export default function CompareDetailsScreen() {
           <View className="border border-gray-200 rounded-lg mb-4">
             <View className="flex-row justify-between items-center p-3">
               <View className="flex-row items-center">
-                <SoundIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <SoundIcon width={24} height={24} fill="#46194F" style={{ marginLeft: 8 }} />
                 <AppText bold className="text-base text-[#46194F] ml-2">
-                  {truncateText(locale === "ar" ? "النظام الصوتي والاتصال" : "Audio & Communication")}
+                  {locale === "ar" ? "النظام الصوتي والاتصال" : "Audio & Communication"}
                 </AppText>
               </View>
               <TouchableOpacity>
-                <Icon name="chevron-down" size={24} color="#46194F" />
+                <Icon name="chevron-down" size={24} color="#46194F" style={{ marginRight: 8 }} />
               </TouchableOpacity>
             </View>
           </View>
@@ -316,28 +316,28 @@ export default function CompareDetailsScreen() {
           <View className="border border-gray-200 rounded-lg mb-4">
             <View className="flex-row justify-between items-center p-3">
               <View className="flex-row items-center">
-                <ProtectIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <ProtectIcon width={24} height={24} fill="#46194F" style={{ marginLeft: 8 }} />
                 <AppText bold className="text-base text-[#46194F] ml-2">
-                  {truncateText(locale === "ar" ? "السلامة" : "Safety")}
+                  {locale === "ar" ? "السلامة" : "Safety"}
                 </AppText>
               </View>
               <TouchableOpacity>
-                <Icon name="chevron-down" size={24} color="#46194F" />
+                <Icon name="chevron-down" size={24} color="#46194F" style={{ marginRight: 8 }} />
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Duplicate Sections */}
-            <View className="border border-gray-200 rounded-lg mb-4">
+          <View className="border border-gray-200 rounded-lg mb-4">
             <View className="flex-row justify-between items-center p-3">
               <View className="flex-row items-center">
-                <SeatsIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <SeatsIcon width={24} height={24} fill="#46194F" style={{ marginLeft: 8 }} />
                 <AppText bold className="text-base text-[#46194F] ml-2">
-                  {truncateText(locale === "ar" ? "المقاعد" : "Seats")}
+                  {locale === "ar" ? "المقاعد" : "Seats"}
                 </AppText>
               </View>
               <TouchableOpacity>
-                <Icon name="chevron-down" size={24} color="#46194F" />
+                <Icon name="chevron-down" size={24} color="#46194F" style={{ marginRight: 8 }} />
               </TouchableOpacity>
             </View>
           </View>
@@ -345,13 +345,13 @@ export default function CompareDetailsScreen() {
           <View className="border border-gray-200 rounded-lg mb-4">
             <View className="flex-row justify-between items-center p-3">
               <View className="flex-row items-center">
-                <SoundIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <SoundIcon width={24} height={24} fill="#46194F" style={{ marginLeft: 8 }} />
                 <AppText bold className="text-base text-[#46194F] ml-2">
-                  {truncateText(locale === "ar" ? "النظام الصوتي والاتصال" : "Audio & Communication")}
+                  {locale === "ar" ? "النظام الصوتي والاتصال" : "Audio & Communication"}
                 </AppText>
               </View>
               <TouchableOpacity>
-                <Icon name="chevron-down" size={24} color="#46194F" />
+                <Icon name="chevron-down" size={24} color="#46194F" style={{ marginRight: 8 }} />
               </TouchableOpacity>
             </View>
           </View>
@@ -359,18 +359,26 @@ export default function CompareDetailsScreen() {
           <View className="border border-gray-200 rounded-lg mb-28">
             <View className="flex-row justify-between items-center p-3">
               <View className="flex-row items-center">
-                <ProtectIcon width={24} height={24} fill="#46194F" className="ml-2" />
+                <ProtectIcon width={24} height={24} fill="#46194F" style={{ marginLeft: 8 }} />
                 <AppText bold className="text-base text-[#46194F] ml-2">
-                  {truncateText(locale === "ar" ? "السلامة" : "Safety")}
+                  {locale === "ar" ? "السلامة" : "Safety"}
                 </AppText>
               </View>
               <TouchableOpacity>
-                <Icon name="chevron-down" size={24} color="#46194F" />
+                <Icon name="chevron-down" size={24} color="#46194F" style={{ marginRight: 8 }} />
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </View>
+
+      {/* Car Selection Modal */}
+      <CarSelectionModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onSelectCars={handleSelectCars}
+        initialSelectedCars={displayedCars}
+      />
     </ScrollView>
   )
 }
