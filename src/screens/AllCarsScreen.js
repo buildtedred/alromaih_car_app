@@ -25,6 +25,7 @@ import AlmaraiFonts from "../constants/fonts"
 import CompareCarModal from "../components/cars/CompareCarModal"
 import { useCompare } from "../contexts/CompareContext"
 import CompareResultModal from "../components/cars/CompareResultModal"
+import CompareDetailsScreen from "./CompareDetailsScreen"
 
 const sliderImages = [
   require("../assets/images/allcar_slide1.png"),
@@ -55,7 +56,7 @@ export default function AllCarsScreen() {
     clearFilters,
   } = useFilters()
 
-  const { isCompareModalVisible, closeCompareModal, selectedCarForComparison, addCarToCompare } = useCompare()
+  const { isCompareModalVisible, closeCompareModal, selectedCarForComparison, addCarToCompare, carsToCompare } = useCompare()
 
   const [activePair, setActivePair] = useState(0)
   const autoScrollTimer = useRef(null)
@@ -95,6 +96,8 @@ export default function AllCarsScreen() {
       imagePairs.push([sliderImages[i], sliderImages[0]])
     }
   }
+
+  const [isCompareDetailsModalVisible, setCompareDetailsModalVisible] = useState(false)
 
   useEffect(() => {
     startAutoScroll()
@@ -795,7 +798,12 @@ export default function AllCarsScreen() {
         </View>
       )}
       <CompareCarModal />
-      <CompareResultModal />
+      <CompareResultModal onCompareNow={() => setCompareDetailsModalVisible(true)} />
+      <CompareDetailsScreen
+        visible={isCompareDetailsModalVisible}
+        onClose={() => setCompareDetailsModalVisible(false)}
+        cars={carsToCompare}
+      />
     </SafeAreaView>
   )
 }

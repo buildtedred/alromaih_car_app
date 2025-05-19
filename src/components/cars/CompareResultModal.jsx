@@ -1,32 +1,26 @@
 "use client"
 import { View, TouchableOpacity, Image, Dimensions } from "react-native"
-import { useNavigation } from "@react-navigation/native"
 import { useLocale } from "../../contexts/LocaleContext"
 import { useCompare } from "../../contexts/CompareContext"
 import AppText from "../common/AppText"
 import useBackHandler from "../../hooks/useBackHandler"
 import CompareVsIcon from "../../assets/Icon/campar_vs.svg"
 
-export default function CompareResultModal() {
+export default function CompareResultModal({ onCompareNow }) {
   const { locale } = useLocale()
-  const navigation = useNavigation()
   const { isCompareResultModalVisible, closeCompareResultModal, carsToCompare, clearComparison } = useCompare()
   const screenWidth = Dimensions.get("window").width
 
   const handleGoBack = () => {
     closeCompareResultModal()
     clearComparison()
-    navigation.navigate("AllCarsScreen")
   }
 
   useBackHandler(handleGoBack, [handleGoBack])
 
   const handleComparePress = () => {
     closeCompareResultModal()
-    navigation.navigate("CompareDetails", { 
-      cars: carsToCompare,
-      onGoBack: handleGoBack 
-    })
+    if (onCompareNow) onCompareNow()
   }
 
   if (carsToCompare.length !== 2 || !isCompareResultModalVisible) return null
