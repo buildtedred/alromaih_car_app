@@ -8,22 +8,27 @@ import CompareVsIcon from "../../assets/Icon/campar_vs.svg"
 
 export default function CompareResultModal({ onCompareNow }) {
   const { locale } = useLocale()
-  const { isCompareResultModalVisible, closeCompareResultModal, carsToCompare, clearComparison } = useCompare()
+  const { isResultModalVisible, closeResultModal, carsToCompare } = useCompare()
   const screenWidth = Dimensions.get("window").width
 
   const handleGoBack = () => {
-    closeCompareResultModal()
-    clearComparison()
+    closeResultModal()
   }
 
   useBackHandler(handleGoBack, [handleGoBack])
 
   const handleComparePress = () => {
-    closeCompareResultModal()
-    if (onCompareNow) onCompareNow()
+    // Just close the result modal without clearing the comparison
+    // This ensures the cars remain selected when opening the details screen
+    closeResultModal()
+
+    // Call the onCompareNow callback to open the CompareDetailsScreen
+    if (onCompareNow) {
+      onCompareNow()
+    }
   }
 
-  if (carsToCompare.length !== 2 || !isCompareResultModalVisible) return null
+  if (carsToCompare.length !== 2 || !isResultModalVisible) return null
 
   return (
     <View className="absolute bottom-0 left-0 right-0 flex items-center p-4 mb-24">

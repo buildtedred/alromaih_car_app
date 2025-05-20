@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import { View, ScrollView, Dimensions } from "react-native"
-import AppHeader from "../components/common/AppHeader"
+import { View, ScrollView, Dimensions, TouchableOpacity, Text } from "react-native"
 import BrandSelector from "../components/AdvancedSearch/BrandSelector"
 import PopularCars from "../components/cars/PopularCars"
 import FeaturedCars from "../components/cars/FeaturedCars"
@@ -12,13 +11,23 @@ import CarComparisonNew from "../components/Home/CarComparisonNew"
 import carsData from "../mock-data"
 import { useNavigation } from "@react-navigation/native"
 import { useLocale } from "../contexts/LocaleContext"
+import { useCompare } from "../contexts/CompareContext"
+import CompareCarModal from "../components/cars/CompareCarModal"
+import CompareResultModal from "../components/cars/CompareResultModal"
+import CompareDetailsScreen from "./CompareDetailsScreen"
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import AlmaraiFonts from "../constants/fonts"
 
 export default function HomeScreen() {
   const navigation = useNavigation()
-  const { direction } = useLocale()
+  const { direction, locale } = useLocale()
   const isRTL = direction === "rtl"
   const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width)
   const [screenHeight, setScreenHeight] = useState(Dimensions.get("window").height)
+  const { carsToCompare, isSelectingSecondCar, cancelSelectingSecondCar, clearComparison } = useCompare()
+
+  // Add state for the CompareDetailsScreen modal
+  const [isCompareDetailsModalVisible, setCompareDetailsModalVisible] = useState(false)
 
   useEffect(() => {
     const dimensionsHandler = ({ window }) => {
@@ -31,14 +40,12 @@ export default function HomeScreen() {
     return () => subscription.remove()
   }, [])
 
-  
   const sizeClass = useMemo(() => {
     if (screenWidth < 360) return "small"
     if (screenWidth < 480) return "medium"
     return "large"
   }, [screenWidth])
 
- 
   const sizes = useMemo(() => {
     switch (sizeClass) {
       case "small":
@@ -93,20 +100,35 @@ export default function HomeScreen() {
 
   return (
     <View className="flex-1 bg-white">
+      {/* Selection Mode Indicator */}
+      {isSelectingSecondCar && (
+        <View className="absolute top-0 left-0 right-0 z-50 bg-[#46194F] py-2 px-4 flex-row justify-between items-center">
+          <View className="flex-row items-center">
+            <View className="bg-white rounded-full p-1 mr-2">
+              <Icon name="check" size={16} color="black" />
+            </View>
+            <Text style={{ fontFamily: AlmaraiFonts.bold }} className="text-white">
+              {locale === "ar" ? "اختر السيارة الثانية للمقارنة" : "Select second car to compare"}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={cancelSelectingSecondCar}>
+            <Icon name="close" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      )}
 
-      <View className="z-10 bg-white">
-     
-      </View>
+      <View className="z-10 bg-white"></View>
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: Number.parseInt(sizes.containerPadding.replace("pb-", "")) }}
+        contentContainerStyle={{
+          paddingBottom: Number.parseInt(sizes.containerPadding.replace("pb-", "")),
+          paddingTop: isSelectingSecondCar ? 40 : 0, // Add padding when selection indicator is visible
+        }}
         showsVerticalScrollIndicator={false}
-        style={{ writingDirection: isRTL ? "rtl" : "ltr" }} 
+        style={{ writingDirection: isRTL ? "rtl" : "ltr" }}
       >
-       
         <SliderBanner />
 
-       
         <View
           className={sizes.sectionSpacing}
           style={{
@@ -126,7 +148,6 @@ export default function HomeScreen() {
           />
         </View>
 
-    
         <View className={sizes.sectionSpacing}>
           <FeaturedCars
             cars={featuredCars}
@@ -135,7 +156,6 @@ export default function HomeScreen() {
           />
         </View>
 
-        
         <View className={sizes.sectionSpacing}>
           <CarComparisonNew
             isRTL={isRTL}
@@ -143,7 +163,6 @@ export default function HomeScreen() {
           />
         </View>
 
-       
         <View className={sizes.sectionSpacing}>
           <PopularCars
             cars={popularCars}
@@ -152,7 +171,6 @@ export default function HomeScreen() {
           />
         </View>
 
-      
         <View className={`${sizes.sectionSpacing} ${sizes.bottomSpacing}`}>
           <FinancingPartners
             isRTL={isRTL}
@@ -160,6 +178,24 @@ export default function HomeScreen() {
           />
         </View>
       </ScrollView>
+
+      {/* Add the comparison modals */}
+      <CompareCarModal />
+      <CompareResultModal
+        onCompareNow={() => {
+          // Make sure we're passing the cars to the CompareDetailsScreen
+          setCompareDetailsModalVisible(true)
+        }}
+      />
+      <CompareDetailsScreen
+        visible={isCompareDetailsModalVisible}
+        onClose={() => {
+          setCompareDetailsModalVisible(false)
+          // Clear the comparison when the details screen is closed
+          clearComparison()
+        }}
+        cars={carsToCompare}
+      />
     </View>
   )
 }
