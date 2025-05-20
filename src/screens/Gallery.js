@@ -26,10 +26,9 @@ import CarFeatureIcon2 from '../assets/icons/CarFeatureIcon2.svg';
 import CarFeatureIcon3 from '../assets/icons/CarFeatureIcon3.svg';
 import CarFeatureIcon4 from '../assets/icons/CarFeatureIcon4.svg';
 import CarFeatureIcon5 from '../assets/icons/CarFeatureIcon5.svg';
-import RiyalIcon from '../assets/icons/RiyalIcon.svg'; // Add this at top
+import RiyalIcon from '../assets/icons/RiyalIcon.svg';
 import JetourLogo from "../assets/brands/jetour_logo.svg";
-
-
+import CarCard from '../components/cars/CarCard'; // Import CarCard component
 
 const limitWords = (text, maxWords) => {
   const words = text.trim().split(/\s+/);
@@ -60,9 +59,9 @@ export default function GalleryScreen({ route }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [currentImages, setCurrentImages] = useState([]);
   const [expanded, setExpanded] = useState('transmission');
-  const [selectedColor, setSelectedColor] = useState(null); // ✅ Declare selectedColor here
+  const [selectedColor, setSelectedColor] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState('cash');
-
+  const [similarCars, setSimilarCars] = useState([]);
 
   const fullCar = useMemo(() => {
     const fromData = carsData.find((c) => c.id === car.id);
@@ -80,7 +79,14 @@ export default function GalleryScreen({ route }) {
     setCurrentImages(
       activeTab === 'interior' ? fullCar.interiorImages : fullCar.exteriorImages
     );
-  }, [activeTab, fullCar]);
+    
+    // Find similar cars (same brand or similar price range)
+    const similar = carsData
+      .filter(c => c.id !== car.id && (c.brand === car.brand || 
+        Math.abs(c.cashPrice - car.cashPrice) < 20000))
+      .slice(0, 4);
+    setSimilarCars(similar);
+  }, [activeTab, fullCar, car.id, car.brand, car.cashPrice]);
 
   const getLang = (field) =>
     typeof field === 'object' ? field?.[locale] : field;
@@ -253,9 +259,6 @@ export default function GalleryScreen({ route }) {
   </View>
 </View>
 
-
-
-
       {/* Car Quick Info Section */}
       <View className="px-4 mt-6 mb-4">
         <Text className="text-[#46194F] text-sm font-bold mb-3 text-right">معلومات السيارة</Text>
@@ -341,6 +344,29 @@ export default function GalleryScreen({ route }) {
     </View>
   ))}
 </View>
+
+      {/* Similar Cars Section */}
+      <View className="px-4 pb-8">
+        <Text className="text-[#46194F] text-lg font-bold mb-4 text-right">
+          {locale === "ar" ? "سيارات مشابهة" : "Similar Cars"}
+        </Text>
+        
+        <FlatList
+          data={similarCars}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 4 }}
+          renderItem={({ item }) => <CarCard car={item} />}
+          ListEmptyComponent={
+            <View className="items-center justify-center p-4 w-full">
+              <Text className="text-gray-500">
+                {locale === "ar" ? "لا توجد سيارات مشابهة" : "No similar cars found"}
+              </Text>
+            </View>
+          }
+        />
+      </View>
     </ScrollView>
   );
 }

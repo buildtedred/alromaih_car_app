@@ -1,4 +1,5 @@
 "use client"
+import { useState, useEffect, useMemo } from "react"
 import { View, TouchableOpacity, Text, Dimensions } from "react-native"
 import { useLocale } from "../../contexts/LocaleContext"
 import { useNavigation } from "@react-navigation/native"
@@ -8,7 +9,7 @@ import FavoriteIcon from "../../assets/Icon/FavoriteIcon.svg"
 import SearchIcon1 from "../../assets/Icon/SearchIcon1.svg"
 import UserIcon from "../../assets/Icon/UserIcon.svg"
 import LogoSvg from "../../assets/Icon/logo.svg"
-import { useState, useEffect, useMemo } from "react"
+import SearchScreen from "../../screens/SearchScreen"
 
 export default function AppHeader() {
   const { locale, toggleLocale } = useLocale()
@@ -16,6 +17,7 @@ export default function AppHeader() {
   const { wishlist } = useWishlist()
   const [favoriteCount, setFavoriteCount] = useState(0) // Will be updated from wishlist
   const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width)
+  const [searchModalVisible, setSearchModalVisible] = useState(false)
 
   // Update favorite count when wishlist changes
   useEffect(() => {
@@ -96,60 +98,76 @@ export default function AppHeader() {
     navigation.navigate("Wishlist")
   }
 
+  const handleSearchPress = () => {
+    console.log("Search icon pressed, opening modal...")
+    setSearchModalVisible(true)
+  }
+
+  const handleCloseSearch = () => {
+    console.log("Closing search modal...")
+    setSearchModalVisible(false)
+  }
+
   return (
-    <View className={`bg-white shadow-md ${sizes.containerPadding}`}>
-      {/* Header row: logo and icons */}
-      <View className="flex-row items-center justify-between">
-        {/* Logo on the left */}
-        <View className="flex-1 max-w-[50%] justify-center">
-          <LogoSvg width={sizes.logoWidth} height={sizes.logoHeight} />
-        </View>
+    <>
+      <View className={`bg-white shadow-md ${sizes.containerPadding}`}>
+        {/* Header row: logo and icons */}
+        <View className="flex-row items-center justify-between">
+          {/* Logo on the left */}
+          <View className="flex-1 max-w-[50%] justify-center">
+            <LogoSvg width={sizes.logoWidth} height={sizes.logoHeight} />
+          </View>
 
-        {/* Icons container on the right */}
-        <View className="flex-row items-center">
-          <TouchableOpacity
-            className={`${sizes.iconContainer} rounded-full justify-center items-center ${sizes.iconSpacing}`}
-            onPress={() => navigation.navigate("Search")}
-          >
-            <SearchIcon1 width={sizes.iconSize} height={sizes.iconSize} />
-          </TouchableOpacity>
+          {/* Icons container on the right */}
+          <View className="flex-row items-center">
+            <TouchableOpacity
+              className={`${sizes.iconContainer} rounded-full justify-center items-center ${sizes.iconSpacing}`}
+              onPress={handleSearchPress}
+              activeOpacity={0.7}
+            >
+              <SearchIcon1 width={sizes.iconSize} height={sizes.iconSize} />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            className={`${sizes.iconContainer} rounded-full justify-center items-center ${sizes.iconSpacing}`}
-            onPress={() => navigation.navigate("Notifications")}
-          >
-            <BellIcon width={sizes.iconSize} height={sizes.iconSize} />
-          </TouchableOpacity>
+            <TouchableOpacity
+              className={`${sizes.iconContainer} rounded-full justify-center items-center ${sizes.iconSpacing}`}
+              onPress={() => navigation.navigate("Notifications")}
+            >
+              <BellIcon width={sizes.iconSize} height={sizes.iconSize} />
+            </TouchableOpacity>
 
-          {/* Favorite icon with badge */}
-          <TouchableOpacity
-            className={`${sizes.iconContainer} rounded-full justify-center items-center ${sizes.iconSpacing} relative`}
-            onPress={navigateToWishlist}
-          >
-            <FavoriteIcon width={sizes.iconSize} height={sizes.iconSize} />
+            {/* Favorite icon with badge */}
+            <TouchableOpacity
+              className={`${sizes.iconContainer} rounded-full justify-center items-center ${sizes.iconSpacing} relative`}
+              onPress={navigateToWishlist}
+            >
+              <FavoriteIcon width={sizes.iconSize} height={sizes.iconSize} />
 
-            {/* Badge showing favorite count */}
-            {favoriteCount > 0 && (
-              <View
-                className={`absolute bg-[#46194F] rounded-full flex items-center justify-center ${sizes.badgeClasses}`}
-              >
-                <Text className={`text-white font-bold ${sizes.badgeText}`}>{favoriteCount}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
+              {/* Badge showing favorite count */}
+              {favoriteCount > 0 && (
+                <View
+                  className={`absolute bg-[#46194F] rounded-full flex items-center justify-center ${sizes.badgeClasses}`}
+                >
+                  <Text className={`text-white font-bold ${sizes.badgeText}`}>{favoriteCount}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
 
-          {/* Gap before user icon */}
-          <View className="w-2" />
+            {/* Gap before user icon */}
+            <View className="w-2" />
 
-          {/* Larger user icon */}
-          <TouchableOpacity
-            className={`${sizes.userIconContainer} rounded-full justify-center items-center ml-1.5`}
-            onPress={handleUserIconPress}
-          >
-            <UserIcon width={sizes.userIconSize} height={sizes.userIconSize} />
-          </TouchableOpacity>
+            {/* Larger user icon */}
+            <TouchableOpacity
+              className={`${sizes.userIconContainer} rounded-full justify-center items-center ml-1.5`}
+              onPress={handleUserIconPress}
+            >
+              <UserIcon width={sizes.userIconSize} height={sizes.userIconSize} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+
+      {/* Search Modal */}
+      <SearchScreen isVisible={searchModalVisible} onClose={handleCloseSearch} />
+    </>
   )
 }

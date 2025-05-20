@@ -7,15 +7,20 @@ import AlmaraiFonts from "../../constants/fonts"
 import JetourLogo from "../../assets/brands/jetour_logo.svg"
 import CompareCarIcon from "../../assets/Icon/campare_car.svg"
 import { useWishlist } from "../../contexts/WishlistContext"
+import { useCompare } from "../../contexts/CompareContext"
 
 export default function PopularCarCard({ car, onPress }) {
   const { locale } = useLocale()
   const { width } = useWindowDimensions()
   const [scale] = useState(new Animated.Value(1))
   const { isInWishlist, toggleWishlist } = useWishlist()
+  const { openCompareModal, isSelectingSecondCar, addCarToCompare, carsToCompare } = useCompare()
 
   // Check if this car is in the wishlist
   const inWishlist = isInWishlist(car.id)
+
+  // Check if this car is already selected for comparison
+  const isSelectedForComparison = carsToCompare.some((c) => c.id === car.id)
 
   const getLocalized = (value) => {
     if (!value) return ""
@@ -41,6 +46,23 @@ export default function PopularCarCard({ car, onPress }) {
     toggleWishlist(car)
   }
 
+  const handleComparePress = (e) => {
+    e.stopPropagation() // Prevent triggering the parent TouchableOpacity
+    openCompareModal(car)
+  }
+
+  const handleCardPress = () => {
+    // If we're in selection mode, add this car to comparison
+    if (isSelectingSecondCar) {
+      addCarToCompare(car)
+    } else {
+      // Otherwise, handle normal card press
+      if (onPress) {
+        onPress(car)
+      }
+    }
+  }
+
   return (
     <Animated.View
       style={{
@@ -48,32 +70,41 @@ export default function PopularCarCard({ car, onPress }) {
         margin: 2,
         transform: [{ scale }],
       }}
-      className="bg-white border-2 border-[#46194F] rounded-xl"
+      className={`bg-white border-2 ${isSelectedForComparison ? "border-[#46194F]" : "border-[#46194F]"} ${isSelectingSecondCar ? "opacity-90" : "opacity-100"} rounded-xl`}
     >
       <TouchableOpacity
-        onPress={onPress}
+        onPress={handleCardPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         activeOpacity={0.95}
         className="overflow-hidden rounded-2xl flex-row items-center relative py-2"
       >
+        {/* Selection Indicator - Changed to white background with black check */}
+        {isSelectedForComparison && (
+          <View className="absolute top-0 right-0 bg-white px-2 py-1 rounded-bl-lg z-10 shadow-sm border border-gray-200">
+            <Icon name="check" size={16} color="black" />
+          </View>
+        )}
+
         {/* Top Left Heart Icon */}
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={handleWishlistToggle}
           className="absolute top-2 left-2"
           style={{ zIndex: 1 }} // Ensure it's above other elements
         >
-          <Icon 
-            name={inWishlist ? "heart" : "heart-outline"} 
-            size={18} 
-            color="#46194F" 
-          />
+          <Icon name={inWishlist ? "heart" : "heart-outline"} size={18} color="#46194F" />
         </TouchableOpacity>
 
         {/* Top Right Custom Compare Icon */}
-        <View className="absolute top-2 right-2">
-          <CompareCarIcon width={18} height={18} />
-        </View>
+        {!isSelectingSecondCar && (
+          <TouchableOpacity
+            onPress={handleComparePress}
+            className="absolute top-2 right-2"
+            style={{ zIndex: 1 }} // Ensure it's above other elements
+          >
+            <CompareCarIcon width={18} height={18} />
+          </TouchableOpacity>
+        )}
 
         {/* Text Info */}
         <View className="flex-1 ml-2 mr-1 mt-8">

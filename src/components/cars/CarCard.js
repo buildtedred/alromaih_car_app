@@ -8,6 +8,7 @@ import { useLocale } from "../../contexts/LocaleContext"
 import { brands, brandLogos } from "../../mock-data"
 import { useRecentlyViewed } from "../../contexts/RecentlyViewedContext"
 import { useWishlist } from "../../contexts/WishlistContext"
+import { useCompare } from "../../contexts/CompareContext" // Import useCompare
 import AppText from "../common/AppText"
 import CompareCarIcon from "../../assets/Icon/campare_car.svg"
 import RiyalIcon from "../../assets/Icon/riyal_icon.svg"
@@ -17,11 +18,15 @@ export default function CarCard({ car }) {
   const navigation = useNavigation()
   const { addToRecentlyViewed } = useRecentlyViewed()
   const { isInWishlist, toggleWishlist } = useWishlist()
+  const { openCompareModal, isSelectingSecondCar, addCarToCompare, carsToCompare } = useCompare() // Get compare functions
   const [scale] = useState(new Animated.Value(1))
   const { width } = useWindowDimensions()
 
   // Check if this car is in the wishlist
   const inWishlist = isInWishlist(car.id)
+
+  // Check if this car is already selected for comparison
+  const isSelectedForComparison = carsToCompare.some((c) => c.id === car.id)
 
   // Function to truncate text after 10 characters
   const truncateText = (text, maxLength = 10) => {
@@ -49,6 +54,17 @@ export default function CarCard({ car }) {
     }).start()
   }
 
+  const handleCardPress = () => {
+    // If we're in selection mode for the second car
+    if (isSelectingSecondCar) {
+      addCarToCompare(car)
+      return
+    }
+
+    // Normal card press behavior
+    goToGallery()
+  }
+
   const goToGallery = () => {
     addToRecentlyViewed(car)
 
@@ -74,6 +90,11 @@ export default function CarCard({ car }) {
     toggleWishlist(car)
   }
 
+  const handleComparePress = (e) => {
+    e.stopPropagation() // Prevent triggering the parent TouchableOpacity
+    openCompareModal(car)
+  }
+
   return (
     <Animated.View
       style={{
@@ -82,21 +103,32 @@ export default function CarCard({ car }) {
         minWidth: 180,
         transform: [{ scale }],
       }}
-      className="bg-white border-2 border-[#46194F] rounded-xl"
+      className={`bg-white border-2 ${isSelectedForComparison ? "border-[#46194F]" : "border-[#46194F]"} ${isSelectingSecondCar ? "opacity-90" : "opacity-100"} rounded-xl`}
     >
       <TouchableOpacity
-        onPress={goToGallery}
+        onPress={handleCardPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         activeOpacity={0.95}
         className="overflow-hidden rounded-2xl"
       >
+        {/* Selection Indicator - White background with black check */}
+        {isSelectedForComparison && (
+          <View className="absolute top-0 right-0 bg-white px-2 py-1 rounded-bl-lg z-10 shadow-sm border border-gray-200">
+            <Icon name="check" size={16} color="black" />
+          </View>
+        )}
+
         {/* Top Icons Row */}
         <View className="flex-row justify-between items-center px-3 pt-1">
           <TouchableOpacity onPress={handleWishlistToggle}>
             <Icon name={inWishlist ? "heart" : "heart-outline"} size={18} color="#46194F" />
           </TouchableOpacity>
-          <CompareCarIcon width={18} height={18} />
+          {!isSelectingSecondCar && (
+            <TouchableOpacity onPress={handleComparePress}>
+              <CompareCarIcon width={18} height={18} />
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Car Image */}

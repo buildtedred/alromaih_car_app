@@ -1,8 +1,12 @@
 "use client"
 
+import React from "react"
+
 import { useState } from "react"
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView } from "react-native"
 import { useTranslation } from "react-i18next"
+// Import ScreenLayout if it's not already imported
+// import ScreenLayout from "../common/ScreenLayout"
 
 // Icons
 import BackArrow from "../../assets/icons/Arrow.svg"
@@ -24,7 +28,17 @@ export default function AccountScreen({ navigation }) {
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState("account")
 
+  // If you're using React Navigation, you can set options to hide the header
+  // This is a more direct approach that doesn't rely on ScreenLayout
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false, // Hide the navigation header
+    })
+  }, [navigation])
+
   return (
+    // If you're using ScreenLayout, use it with hideHeader={true}
+    // <ScreenLayout hideHeader={true}>
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="px-4" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 80 }}>
         {/* Header – Text left, Back arrow right */}
@@ -37,25 +51,24 @@ export default function AccountScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-      {/* Profile Info – Text right, Icon left */}
-<TouchableOpacity 
-  onPress={() => navigation.navigate("PersonalInfo")} 
-  className="flex-row items-center mt-12 px-12 w-full"
-  activeOpacity={0.8}
->
-  <View className="mr-2">
-    <ProfileIcon width={50} height={50} />
-  </View>
-  <View className="items-end">
-    <Text className="text-2xl font-bold text-[#46194F]" style={{ fontFamily: "Almarai-Regular" }}>
-      محمد محمد
-    </Text>
-    <Text className="text-sm text-gray-500" style={{ fontFamily: "Almarai-Regular" }}>
-      @mohammedmoh
-    </Text>
-  </View>
-</TouchableOpacity>
-
+        {/* Profile Info – Text right, Icon left */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("PersonalInfo")}
+          className="flex-row items-center mt-12 px-12 w-full"
+          activeOpacity={0.8}
+        >
+          <View className="mr-2">
+            <ProfileIcon width={50} height={50} />
+          </View>
+          <View className="items-end">
+            <Text className="text-2xl font-bold text-[#46194F]" style={{ fontFamily: "Almarai-Regular" }}>
+              محمد محمد
+            </Text>
+            <Text className="text-sm text-gray-500" style={{ fontFamily: "Almarai-Regular" }}>
+              @mohammedmoh
+            </Text>
+          </View>
+        </TouchableOpacity>
 
         {/* Contact Info */}
         <View className="flex-row-reverse items-center justify-center gap-x-4 mt-3">
@@ -158,45 +171,46 @@ export default function AccountScreen({ navigation }) {
         ) : (
           /* Activities Section */
           <View className="bg-white mt-6 p-4 ml-4 mr-4 rounded-2xl border border-gray-200">
-          <Text className="text-right font-bold text-[#46194F] mb-4" style={{ fontFamily: "Almarai-Bold" }}>
-            إعدادات الحساب
-          </Text>
+            <Text className="text-right font-bold text-[#46194F] mb-4" style={{ fontFamily: "Almarai-Bold" }}>
+              إعدادات الحساب
+            </Text>
 
-          {/* My Orders Row */}
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-gray-200">
-            <View className="flex-row items-center gap-x-2">
-              <AccountSettingMyOrder width={18} height={18} />
-              <Text className="text-[#46194F] font-bold text-base" style={{ fontFamily: "Almarai-Regular" }}>
-                طلباتي
-              </Text>
-            </View>
-            <ArrowIcon width={12} height={14} />
-          </TouchableOpacity>
+            {/* My Orders Row */}
+            <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-gray-200">
+              <View className="flex-row items-center gap-x-2">
+                <AccountSettingMyOrder width={18} height={18} />
+                <Text className="text-[#46194F] font-bold text-base" style={{ fontFamily: "Almarai-Regular" }}>
+                  طلباتي
+                </Text>
+              </View>
+              <ArrowIcon width={12} height={14} />
+            </TouchableOpacity>
 
-          {/* Financing Requests Row */}
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-gray-200">
-            <View className="flex-row items-center gap-x-2">
-              <AccountSettingDolar width={18} height={18} />
-              <Text className="text-[#46194F] font-bold text-base" style={{ fontFamily: "Almarai-Regular" }}>
-                طلبات التمويل
-              </Text>
-            </View>
-            <ArrowIcon width={12} height={12} />
-          </TouchableOpacity>
+            {/* Financing Requests Row */}
+            <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-gray-200">
+              <View className="flex-row items-center gap-x-2">
+                <AccountSettingDolar width={18} height={18} />
+                <Text className="text-[#46194F] font-bold text-base" style={{ fontFamily: "Almarai-Regular" }}>
+                  طلبات التمويل
+                </Text>
+              </View>
+              <ArrowIcon width={12} height={12} />
+            </TouchableOpacity>
 
-          {/* Delivery Status Row */}
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-gray-200">
-            <View className="flex-row items-center gap-x-2">
-              <AccountSettingCar width={18} height={18} />
-              <Text className="text-[#46194F] font-bold text-base" style={{ fontFamily: "Almarai-Regular" }}>
-                حالة التوصيل
-              </Text>
-            </View>
-            <ArrowIcon width={12} height={12} />
-          </TouchableOpacity>
-        </View>
+            {/* Delivery Status Row */}
+            <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-gray-200">
+              <View className="flex-row items-center gap-x-2">
+                <AccountSettingCar width={18} height={18} />
+                <Text className="text-[#46194F] font-bold text-base" style={{ fontFamily: "Almarai-Regular" }}>
+                  حالة التوصيل
+                </Text>
+              </View>
+              <ArrowIcon width={12} height={12} />
+            </TouchableOpacity>
+          </View>
         )}
       </ScrollView>
     </SafeAreaView>
+    // </ScreenLayout>
   )
 }

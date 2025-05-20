@@ -1,140 +1,81 @@
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
-import { Slider } from "@miblanchard/react-native-slider";
-import { useLocale } from "../../contexts/LocaleContext";
-import AlmaraiFonts from "../../constants/fonts";
+import { useState, useEffect } from "react"
+import { View, Text, TouchableOpacity, ScrollView } from "react-native"
+import { useLocale } from "../../contexts/LocaleContext"
+import AlmaraiFonts from "../../constants/fonts"
 
-export default function ModelYearRangeSlider({
-  min = 1970,
-  max = 2025,
-  value = [2018, 2024],
-  onValueChange,
-}) {
-  const [localValue, setLocalValue] = useState(value);
-  const { locale } = useLocale();
+export default function YearSelector({ min = 1970, max = 2025, value = null, onValueChange }) {
+  const [selectedYear, setSelectedYear] = useState(value)
+  const { locale } = useLocale()
 
+  // Generate years array dynamically based on min and max
+  const generateYears = () => {
+    const yearsArray = []
+    // Generate years in descending order (newest first)
+    for (let year = max; year >= min; year--) {
+      yearsArray.push(year)
+    }
+    return yearsArray
+  }
+
+  const years = generateYears()
+
+  // Update selected year when value prop changes (for reset functionality)
   useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
+    setSelectedYear(value)
+  }, [value])
 
-  const handleChange = (val) => {
-    setLocalValue(val);
-    if (onValueChange) onValueChange(val);
-  };
+  const handleYearSelect = (year) => {
+    // If the year is already selected, deselect it
+    const newValue = selectedYear === year ? null : year
+    setSelectedYear(newValue)
+
+    // For compatibility with the existing code, pass an array [year, year] if a year is selected
+    // or [min, max] if no year is selected (to show all years)
+    if (onValueChange) {
+      if (newValue === null) {
+        onValueChange([min, max])
+      } else {
+        onValueChange([newValue, newValue])
+      }
+    }
+  }
 
   return (
-    <View
-      style={{
-        marginBottom: 24,
-        marginTop: 24,
-        padding: 24,
-        paddingHorizontal: 8,
-        backgroundColor: "white",
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: "#D1D5DB",
-      }}
-    >
+    <View className="mb-6 mt-6 p-6 px-4 bg-white rounded-xl border border-gray-300">
       {/* Title */}
-      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
-        <Text
-          style={{
-            fontSize: 18,
-            fontFamily: AlmaraiFonts.bold,
-            color: "#46194F",
-          }}
-        >
-          {locale === "ar" ? "نطاق سنة الموديل" : "Model Year Range"}
+      <View className="flex-row items-center mb-4">
+        <Text style={{ fontFamily: AlmaraiFonts.bold }} className="text-lg text-[#46194F]">
+          {locale === "ar" ? "السنة" : "Year"}
         </Text>
       </View>
 
-      {/* Value Boxes */}
-      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "white",
-            paddingVertical: 8,
-            paddingHorizontal: 16,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: "#D1D5DB",
-            alignItems: "center",
-            marginRight: 4,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: AlmaraiFonts.regular,
-              color: "#4B5563",
-            }}
+      {/* Year Options - Horizontal Scrollable Row */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingRight: 16,
+          paddingBottom: 8,
+        }}
+        className="flex-row"
+      >
+        {years.map((year) => (
+          <TouchableOpacity
+            key={year}
+            onPress={() => handleYearSelect(year)}
+            className="flex-row items-center bg-white py-2 px-4 rounded-[10px] border border-gray-300 mr-3 min-w-[90px] justify-between"
           >
-            {localValue[0]}
-          </Text>
-        </View>
-        <Text
-          style={{
-            marginHorizontal: 8,
-            fontSize: 14,
-            color: "#6B7280",
-            fontFamily: AlmaraiFonts.regular,
-          }}
-        >
-          {locale === "ar" ? "إلى" : "to"}
-        </Text>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "white",
-            paddingVertical: 8,
-            paddingHorizontal: 16,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: "#D1D5DB",
-            alignItems: "center",
-            marginLeft: 4,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: AlmaraiFonts.regular,
-              color: "#4B5563",
-            }}
-          >
-            {localValue[1]}
-          </Text>
-        </View>
-      </View>
-
-      {/* Slider */}
-      <View style={{ marginTop: 12, paddingHorizontal: 8 }}>
-        <Slider
-          value={localValue}
-          minimumValue={min}
-          maximumValue={max}
-          step={1}
-          onValueChange={handleChange}
-          animateTransitions
-          thumbTintColor="#46194F"
-          minimumTrackTintColor="#46194F"
-          maximumTrackTintColor="#E5E7EB"
-          containerStyle={{ height: 50, justifyContent: "center" }}
-          trackStyle={{ height: 4, borderRadius: 2 }}
-          thumbStyle={{
-            width: 24,
-            height: 24,
-            borderRadius: 12,
-            backgroundColor: "#fff",
-            borderWidth: 2,
-            borderColor: "#003366",
-            elevation: 2,
-          }}
-        />
-      </View>
+            <Text style={{ fontFamily: AlmaraiFonts.regular }} className="text-sm text-[#46194F]">
+              {year}
+            </Text>
+            <View className="w-5 h-5 rounded-full border border-[#46194F] justify-center items-center ml-2">
+              {selectedYear === year && <View className="w-3 h-3 rounded-full bg-[#46194F]" />}
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
-  );
+  )
 }

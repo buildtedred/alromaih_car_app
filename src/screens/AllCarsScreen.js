@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import {
   View,
   Text,
@@ -56,7 +56,16 @@ export default function AllCarsScreen() {
     clearFilters,
   } = useFilters()
 
-  const { isCompareModalVisible, closeCompareModal, selectedCarForComparison, addCarToCompare, carsToCompare } = useCompare()
+  const {
+    isCompareModalVisible,
+    closeCompareModal,
+    selectedCarForComparison,
+    addCarToCompare,
+    carsToCompare,
+    isSelectingSecondCar,
+    cancelSelectingSecondCar,
+    clearComparison,
+  } = useCompare()
 
   const [activePair, setActivePair] = useState(0)
   const autoScrollTimer = useRef(null)
@@ -108,14 +117,14 @@ export default function AllCarsScreen() {
     useCallback(() => {
       // Show the popup when the screen is focused
       setShowComparePop(true)
-      
+
       // Hide after 5 seconds
       const timer = setTimeout(() => {
         setShowComparePop(false)
       }, 20000000)
-      
+
       return () => clearTimeout(timer)
-    }, [])
+    }, []),
   )
 
   const startAutoScroll = () => {
@@ -635,10 +644,30 @@ export default function AllCarsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
+      {/* Selection Mode Indicator */}
+      {isSelectingSecondCar && (
+        <View className="absolute top-0 left-0 right-0 z-50 bg-[#46194F] py-2 px-4 flex-row justify-between items-center">
+          <View className="flex-row items-center">
+            <View className="bg-white rounded-full p-1 mr-2">
+              <Icon name="check" size={16} color="black" />
+            </View>
+            <Text style={{ fontFamily: AlmaraiFonts.bold }} className="text-white">
+              {locale === "ar" ? "اختر السيارة الثانية للمقارنة" : "Select second car to compare"}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={cancelSelectingSecondCar}>
+            <Icon name="close" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      )}
+
       <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 80 }}
+        contentContainerStyle={{
+          paddingBottom: 80,
+          paddingTop: isSelectingSecondCar ? 40 : 0, // Add padding when selection indicator is visible
+        }}
       >
         <View className="mb-4 flex-row justify-center">
           {imagePairs[activePair].map((img, index) => renderSlideCard(img, index))}
@@ -798,10 +827,19 @@ export default function AllCarsScreen() {
         </View>
       )}
       <CompareCarModal />
-      <CompareResultModal onCompareNow={() => setCompareDetailsModalVisible(true)} />
+      <CompareResultModal
+        onCompareNow={() => {
+          // Make sure we're passing the cars to the CompareDetailsScreen
+          setCompareDetailsModalVisible(true)
+        }}
+      />
       <CompareDetailsScreen
         visible={isCompareDetailsModalVisible}
-        onClose={() => setCompareDetailsModalVisible(false)}
+        onClose={() => {
+          setCompareDetailsModalVisible(false)
+          // Clear the comparison when the details screen is closed
+          clearComparison()
+        }}
         cars={carsToCompare}
       />
     </SafeAreaView>

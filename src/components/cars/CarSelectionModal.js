@@ -7,6 +7,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import PlusIcon from "../../assets/Icon/plus.svg"
+import CompareCarIcon from "../../assets/Icon/compare_car.svg" // Import the compare car icon
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -114,9 +115,13 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
         }
       }
     }
+    
     if (selectedCars.length === 2) {
+      // Call onSelectCars with the selected cars
       onSelectCars(selectedCars)
-      onClose()
+      
+      // Don't close the modal here - let CompareDetailsScreen handle it
+      // The CompareDetailsScreen will hide this modal by setting showCarSelection to false
     }
   }
 
@@ -125,17 +130,18 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
     const isActive = activeCarIndex === index
 
     return (
-      <View className={`bg-white rounded-xl p-4 border border-gray-200 justify-between${index === 0 ? '' : ' mb-4'}`}>
+      <View className={`bg-white rounded-xl p-1 border border-gray-200 justify-between`}>
+        {/* Header with icon and text side by side */}
         <TouchableOpacity
-          className="flex-row justify-center items-center mb-4"
+          className={`flex-row ${isRTL ? "flex-row-reverse" : ""} items-center justify-between mb-3 px-2 py-1`}
           onPress={() => setActiveCarIndex(index)}
         >
-          <MaterialCommunityIcons
-            name="car"
-            size={13}
-            color="#46194F"
-            style={{ marginRight: isRTL ? 0 : 8, marginLeft: isRTL ? 8 : 0 }}
+          <CompareCarIcon
+            width={30}
+            height={30}
+            fill="#46194F"
           />
+          
           <AppText className="text-[#46194F] text-base font-almarai-bold" style={{ fontSize: 9 }}>
             {locale === "ar"
               ? `أضف السيارة ${index === 0 ? "الأولى" : "الثانية"}`
@@ -143,6 +149,7 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
           </AppText>
         </TouchableOpacity>
 
+        {/* Brand dropdown with icon and text on opposite sides */}
         <View className="w-full mb-3 relative">
           <TouchableOpacity
             className={`flex-row ${isRTL ? "flex-row-reverse" : ""} justify-between items-center border border-gray-300 rounded-[10px] p-1 bg-white`}
@@ -154,15 +161,17 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
               setShowYearDropdown(false)
             }}
           >
+            {/* Text on one side */}
+            <AppText className={`text-gray-800 ${isRTL ? "text-right" : "text-left"} flex-1 font-almarai`} style={{ fontSize: 9 }}>
+              {currentSelection.brand || (locale === "ar" ? "الشركة المصنعة" : "Manufacturing Company")}
+            </AppText>
+            
+            {/* Icon on the other side */}
             <FontAwesome
               name="chevron-down"
               size={13}
               color="#46194F"
-              style={{ marginLeft: isRTL ? 8 : 0, marginRight: isRTL ? 0 : 8 }}
             />
-            <AppText className={`text-gray-800 ${isRTL ? "text-right" : "text-left"} flex-1 font-almarai`} style={{ fontSize: 9 }}>
-              {currentSelection.brand || (locale === "ar" ? "الشركة المصنعة" : "Manufacturing Company")}
-            </AppText>
           </TouchableOpacity>
 
           {isActive && showBrandDropdown && (
@@ -184,6 +193,7 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
           )}
         </View>
 
+        {/* Model dropdown with icon and text on opposite sides */}
         <View className="w-full mb-3 relative">
           <TouchableOpacity
             className={`flex-row ${isRTL ? "flex-row-reverse" : ""} justify-between items-center border rounded-[10px] p-1 ${
@@ -198,18 +208,20 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
             }}
             disabled={!currentSelection.brand}
           >
-            <FontAwesome
-              name="chevron-down"
-              size={13}
-              color={currentSelection.brand ? "white" : "#AAAAAA"}
-              style={{ marginLeft: isRTL ? 8 : 0, marginRight: isRTL ? 0 : 8 }}
-            />
+            {/* Text on one side */}
             <AppText
               className={`${isRTL ? "text-right" : "text-left"} flex-1 font-almarai ${currentSelection.brand ? "text-white" : "text-gray-400"}`}
               style={{ fontSize: 9 }}
             >
               {currentSelection.model || (locale === "ar" ? "الطراز" : "Model")}
             </AppText>
+            
+            {/* Icon on the other side */}
+            <FontAwesome
+              name="chevron-down"
+              size={13}
+              color={currentSelection.brand ? "white" : "#AAAAAA"}
+            />
           </TouchableOpacity>
 
           {isActive && showModelDropdown && (
@@ -231,6 +243,7 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
           )}
         </View>
 
+        {/* Year dropdown with icon and text on opposite sides */}
         <View className="w-full mb-3 relative">
           <TouchableOpacity
             className={`flex-row ${isRTL ? "flex-row-reverse" : ""} justify-between items-center border border-gray-300 rounded-[10px] p-1 bg-white`}
@@ -242,15 +255,17 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
               setShowModelDropdown(false)
             }}
           >
+            {/* Text on one side */}
+            <AppText className={`text-gray-800 ${isRTL ? "text-right" : "text-left"} flex-1 font-almarai`} style={{ fontSize: 9 }}>
+              {currentSelection.year || (locale === "ar" ? "السنة" : "Year")}
+            </AppText>
+            
+            {/* Icon on the other side */}
             <FontAwesome
               name="chevron-down"
               size={13}
               color="#46194F"
-              style={{ marginLeft: isRTL ? 8 : 0, marginRight: isRTL ? 0 : 8 }}
             />
-            <AppText className={`text-gray-800 ${isRTL ? "text-right" : "text-left"} flex-1 font-almarai`} style={{ fontSize: 9 }}>
-              {currentSelection.year || (locale === "ar" ? "السنة" : "Year")}
-            </AppText>
           </TouchableOpacity>
 
           {isActive && showYearDropdown && (
@@ -326,9 +341,15 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
             contentContainerStyle={{ padding: 16 }}
             showsVerticalScrollIndicator={false}
           >
-            {renderCarSelectionSection(0)}
+            {/* First car selection */}
+            <View className="mb-6">
+              {renderCarSelectionSection(0)}
+            </View>
 
-            {renderCarSelectionSection(1)}
+            {/* Second car selection */}
+            <View className="mb-1">
+              {renderCarSelectionSection(1)}
+            </View>
 
             <View className="items-center">
               <TouchableOpacity className="w-7 h-7 rounded-full justify-center items-center">
@@ -341,12 +362,12 @@ const CarSelectionModal = ({ visible, onClose, onSelectCars, initialSelectedCars
                 className={`rounded-[10px] items-center justify-center ${
                   areAllSelectionsComplete() ? "bg-[#46194F]" : "bg-gray-300"
                 }`}
-                style={{ height: 32, width: 100, padding: 8 }}
+                style={{padding: 6, width: 100, borderRadius: 10}}
                 onPress={handleShowComparison}
                 disabled={!areAllSelectionsComplete()}
               >
                 <AppText className="text-white font-almarai-bold" style={{ fontSize: 11 }}>
-                  {locale === "ar" ? "عرض المقارنة" : "Show Comparison"}
+                  {locale === "ar" ? "قارن الآن" : "Compare Now"}
                 </AppText>
               </TouchableOpacity>
             </View>

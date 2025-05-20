@@ -7,54 +7,55 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
-  StatusBar,
-  Image,
   ActivityIndicator,
   Dimensions,
+  StatusBar,
 } from "react-native"
-import { useNavigation, CommonActions } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
 import Feather from "react-native-vector-icons/Feather"
-import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import Modal from "react-native-modal"
 import carsData from "../mock-data"
 import { useLocale } from "../contexts/LocaleContext"
 import { useTranslation } from "react-i18next"
 import { brandLogos } from "../mock-data"
 import AlmaraiFonts from "../constants/fonts"
 import { useFilters } from "../contexts/FilterContext"
+import LogoSvg from "../assets/Icon/logo.svg"
 
-export default function SearchScreen() {
+const SearchScreen = ({ isVisible, onClose }) => {
+  console.log("SearchScreen rendered, isVisible:", isVisible)
   const navigation = useNavigation()
   const { locale, direction } = useLocale()
   const { filters, setFilters, setFilteredCars, setIsFiltered, clearFilters } = useFilters()
   const isRTL = direction === "rtl"
   const { t } = useTranslation()
-  const [searchStep, setSearchStep] = useState("brands") // "brands", "models", "results"
   const [isLoading, setIsLoading] = useState(false)
   const [selectedBrand, setSelectedBrand] = useState(null)
-  const [selectedModel, setSelectedModel] = useState(null)
   const [query, setQuery] = useState("")
   const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width)
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get("window").height)
+  const [currentView, setCurrentView] = useState("brands") // "brands" or "models"
+  const [backButtonPressed, setBackButtonPressed] = useState(false) // New state for back button
 
   // Listen for dimension changes
   useEffect(() => {
     const dimensionsHandler = ({ window }) => {
       setScreenWidth(window.width)
+      setScreenHeight(window.height)
     }
 
     const subscription = Dimensions.addEventListener("change", dimensionsHandler)
     return () => subscription.remove()
   }, [])
 
-  // Clear filters when component unmounts
+  // Reset state when modal is closed
   useEffect(() => {
-    return () => {
-      // This ensures filters are cleared when navigating away from search screen
-      if (navigation.isFocused()) {
-        clearFilters()
-      }
+    if (!isVisible) {
+      setSelectedBrand(null)
+      setQuery("")
+      setCurrentView("brands")
     }
-  }, [])
+  }, [isVisible])
 
   // Determine size class based on screen width
   const sizeClass = useMemo(() => {
@@ -147,139 +148,152 @@ export default function SearchScreen() {
     return models
   }, [selectedBrand])
 
+  // Filtered brands based on search query
+  const filteredBrands = useMemo(() => {
+    return brandGroups.filter((group) => query.length === 0 || group.brand.toLowerCase().includes(query.toLowerCase()))
+  }, [brandGroups, query])
+
+  // Filtered models based on search query
+  const filteredModels = useMemo(() => {
+    return brandModels.filter((model) => query.length === 0 || model.name.toLowerCase().includes(query.toLowerCase()))
+  }, [brandModels, query])
+
   // Handle brand selection
   const handleSelectBrand = (brand) => {
-    setIsLoading(true)
     setSelectedBrand(brand)
-
-    // Simulate loading
-    setTimeout(() => {
-      setSearchStep("models")
-      setIsLoading(false)
-    }, 500)
+    setQuery("")
+    setCurrentView("models")
   }
 
   // Handle model selection
- const handleSelectModel = (model) => {
-  setIsLoading(true)
-  setSelectedModel(model)
+  const handleSelectModel = (model) => {
+    setIsLoading(true)
 
-  // Simulate loading
-  setTimeout(() => {
-    try {
-      // First clear any existing filters
-      clearFilters()
+    // Simulate loading
+    setTimeout(() => {
+      try {
+        // First clear any existing filters
+        clearFilters()
 
-      // Filter cars by brand and model
-      const filteredCars = carsData.filter(
-        (car) =>
-          car.brand === selectedBrand.brand &&
-          (car.model === model.name || car.name?.en === model.name || car.name === model.name),
-      )
+        // Filter cars by brand and model
+        const filteredCars = carsData.filter(
+          (car) =>
+            car.brand === selectedBrand.brand &&
+            (car.model === model.name || car.name?.en === model.name || car.name === model.name),
+        )
 
-      // Set filters in context
-      const filterParams = {
-        brand: selectedBrand.brand,
-        models: [model.name], // Always use array
+        // Set filters in context
+        const filterParams = {
+          brand: selectedBrand.brand,
+          models: [model.name], // Always use array
+        }
+
+        // Update filter context
+        setFilters(filterParams)
+        setFilteredCars(filteredCars)
+        setIsFiltered(true)
+
+        // Close the modal
+        onClose()
+
+        // ✅ Navigate directly to AllCarsScreen inside CarsTab
+        navigation.navigate("CarsTab", {
+          screen: "AllCarsScreen",
+          params: { selectedFilters: filterParams },
+        })
+      } catch (error) {
+        console.error("Error applying filters:", error)
+      } finally {
+        setIsLoading(false)
+        setSelectedBrand(null)
+        setCurrentView("brands")
       }
-
-      // Update filter context
-      setFilters(filterParams)
-      setFilteredCars(filteredCars)
-      setIsFiltered(true)
-
-      // ✅ Navigate directly to AllCarsScreen inside CarsTab
-      navigation.navigate("CarsTab", {
-        screen: "AllCarsScreen",
-        params: { selectedFilters: filterParams },
-      })
-    } catch (error) {
-      console.error("Error applying filters:", error)
-    } finally {
-      setIsLoading(false)
-      setSearchStep("brands")
-      setSelectedBrand(null)
-      setSelectedModel(null)
-    }
-  }, 500)
-}
-
+    }, 500)
+  }
 
   // Handle back button
   const handleBack = () => {
-    if (searchStep === "models") {
-      setSearchStep("brands")
+    if (currentView === "models") {
+      setCurrentView("brands")
       setSelectedBrand(null)
+      setQuery("")
     } else {
-      // Clear filters when navigating back
-      clearFilters()
-      navigation.goBack()
+      onClose()
     }
   }
 
-  // Render brand card
-  const renderBrandCard = ({ item }) => (
+  // Popular car categories
+  const carCategories = [
+    { id: 1, name: locale === "ar" ? "فورد إكسبلورر" : "Ford Explorer" },
+    { id: 2, name: locale === "ar" ? "هوندا أكورد" : "Honda Accord" },
+    { id: 3, name: locale === "ar" ? "كيا سبورتاج" : "Kia Sportage" },
+    { id: 4, name: locale === "ar" ? "هيونداي سوناتا" : "Hyundai Sonata" },
+    { id: 5, name: locale === "ar" ? "نيسان التيما" : "Nissan Altima" },
+    { id: 6, name: locale === "ar" ? "شيفروليه تاهو" : "Chevrolet Tahoe" },
+  ]
+
+  // Calculate pill width to fit 4 in a row with spacing
+  const pillWidth = (screenWidth - 32 - 24) / 4 // 32 for container padding, 24 for gaps (8px × 3)
+
+  // Render brand grid item
+  const renderBrandGridItem = ({ item, index }) => (
     <TouchableOpacity
       onPress={() => handleSelectBrand(item)}
       style={{
-        height: sizes.cardHeight,
-        padding: sizes.cardPadding,
-        borderRadius: 10,
+        width: (screenWidth - 56) / 2,
+        marginBottom: 12,
+        padding: 8,
         borderWidth: 1,
         borderColor: "#E5E7EB",
-        marginBottom: 12,
+        borderRadius: 8,
+        backgroundColor: "white",
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "white",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
       }}
     >
-      <View style={{ width: sizes.logoSize, height: sizes.logoSize, marginRight: 12 }}>
+      {/* Logo on the left */}
+      <View style={{ marginRight: 6 }}>
         {item.logo ? (
-          <item.logo width={sizes.logoSize} height={sizes.logoSize} />
+          <item.logo width={40} height={22} />
         ) : (
           <View
             style={{
-              width: sizes.logoSize,
-              height: sizes.logoSize,
-              borderRadius: sizes.logoSize / 2,
+              width: 40,
+              height: 22,
               backgroundColor: "#F3F4F6",
               alignItems: "center",
               justifyContent: "center",
+              borderRadius: 4,
             }}
           >
-            <Text style={{ fontSize: sizes.brandNameSize, color: "#46194F" }}>{item.brand?.charAt(0)}</Text>
+            <Text style={{ fontSize: 12, color: "#46194F" }}>{item.brand?.charAt(0)}</Text>
           </View>
         )}
       </View>
 
+      {/* Brand name and model count on the right */}
       <View style={{ flex: 1 }}>
         <Text
           style={{
-            fontSize: sizes.brandNameSize,
+            fontSize: 12,
             fontFamily: AlmaraiFonts.bold,
-            color: "#46194F",
-            marginBottom: 4,
+            color: "#333",
           }}
+          numberOfLines={1}
         >
           {item.brand}
         </Text>
         <Text
           style={{
-            fontSize: sizes.brandCountSize,
+            fontSize: 10,
             fontFamily: AlmaraiFonts.regular,
-            color: "#6B7280",
+            color: "#666",
           }}
+          numberOfLines={1}
         >
-          {item.count} {locale === "ar" ? "سيارة" : "cars"}
+          {locale === "ar" ? "عدد الموديلات" : "no. of models"} {item.count}
         </Text>
       </View>
-
-      <MaterialIcons name={isRTL ? "chevron-left" : "chevron-right"} size={24} color="#46194F" />
     </TouchableOpacity>
   )
 
@@ -288,227 +302,360 @@ export default function SearchScreen() {
     <TouchableOpacity
       onPress={() => handleSelectModel(item)}
       style={{
-        height: sizes.cardHeight,
-        padding: sizes.cardPadding,
-        borderRadius: 10,
+        width: (screenWidth - 64) / 3,
+        marginBottom: 10,
+        marginRight: 8,
+        padding: 6,
         borderWidth: 1,
         borderColor: "#E5E7EB",
-        marginBottom: 12,
-        flexDirection: "row",
-        alignItems: "center",
+        borderRadius: 8,
         backgroundColor: "white",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Image
-        source={item.image}
+      <Text
         style={{
-          width: sizes.logoSize,
-          height: sizes.logoSize,
-          borderRadius: sizes.logoSize / 2,
-          marginRight: 12,
+          fontSize: 11,
+          fontFamily: AlmaraiFonts.bold,
+          color: "#333",
+          marginBottom: 2,
+          textAlign: "center",
         }}
-        resizeMode="cover"
-      />
-
-      <View style={{ flex: 1 }}>
-        <Text
-          style={{
-            fontSize: sizes.brandNameSize,
-            fontFamily: AlmaraiFonts.bold,
-            color: "#46194F",
-            marginBottom: 4,
-          }}
-        >
-          {item.name}
-        </Text>
-        <Text
-          style={{
-            fontSize: sizes.brandCountSize,
-            fontFamily: AlmaraiFonts.regular,
-            color: "#6B7280",
-          }}
-        >
-          {item.price?.toLocaleString()} {locale === "ar" ? "ريال" : "SAR"}
-        </Text>
-      </View>
-
-      <MaterialIcons name={isRTL ? "chevron-left" : "chevron-right"} size={24} color="#46194F" />
+        numberOfLines={1}
+      >
+        {item.name}
+      </Text>
+      <Text
+        style={{
+          fontSize: 11,
+          fontFamily: AlmaraiFonts.bold,
+          color: "#46194F",
+          textAlign: "center",
+        }}
+        numberOfLines={1}
+      >
+        {item.price?.toLocaleString()} {locale === "ar" ? "ريال" : "SAR"}
+      </Text>
     </TouchableOpacity>
   )
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <StatusBar hidden />
-
-      {/* Header */}
+    <Modal
+      isVisible={isVisible}
+      style={{
+        margin: 0,
+        padding: 0,
+        flex: 1,
+        justifyContent: "flex-start",
+        alignItems: "stretch",
+      }}
+      animationIn="fadeIn"
+      animationOut="fadeOut"
+      backdropOpacity={1}
+      backdropColor="white"
+      coverScreen={true}
+      deviceHeight={screenHeight}
+      deviceWidth={screenWidth}
+      statusBarTranslucent={true}
+      hasBackdrop={false}
+      useNativeDriver={true}
+    >
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingHorizontal: sizes.headerPadding,
-          paddingVertical: 16,
-          borderBottomWidth: 1,
-          borderBottomColor: "#E5E7EB",
+          flex: 1,
+          width: screenWidth,
+          height: screenHeight,
+          backgroundColor: "white",
+          margin: 0,
+          padding: 0,
         }}
       >
-        <TouchableOpacity
-          onPress={handleBack}
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 20,
-            borderWidth: 1,
-            borderColor: "#E5E7EB",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Feather name={isRTL ? "chevron-right" : "chevron-left"} size={sizes.backIconSize} color="#46194F" />
-        </TouchableOpacity>
+        <StatusBar backgroundColor="white" barStyle="dark-content" />
 
-        <Text
-          style={{
-            fontSize: sizes.titleSize,
-            fontFamily: AlmaraiFonts.bold,
-            color: "#46194F",
-          }}
-        >
-          {searchStep === "brands"
-            ? locale === "ar"
-              ? "اختر العلامة التجارية"
-              : "Select Brand"
-            : locale === "ar"
-              ? "اختر الموديل"
-              : "Select Model"}
-        </Text>
+        {/* Logo */}
+        <View style={{ alignItems: "center", paddingVertical: 10, marginTop: 10 }}>
+          <LogoSvg width={100} height={35} />
+        </View>
 
-        <View style={{ width: 40 }} />
-      </View>
-
-      {/* Search Input */}
-      <View
-        style={{
-          paddingHorizontal: sizes.headerPadding,
-          paddingVertical: 12,
-          borderBottomWidth: 1,
-          borderBottomColor: "#E5E7EB",
-        }}
-      >
+        {/* Search Bar */}
         <View
           style={{
+            paddingHorizontal: 16,
+            paddingBottom: 8,
             flexDirection: "row",
             alignItems: "center",
-            borderWidth: 2,
-            borderColor: "#46194F",
-            borderRadius: 10,
-            paddingHorizontal: 12,
-            paddingVertical: 8,
           }}
         >
-          <Feather name="search" size={20} color="#46194F" />
-          <TextInput
+          {/* Back Button (Circular) with pressed state */}
+          <TouchableOpacity
+            onPress={handleBack}
+            onPressIn={() => setBackButtonPressed(true)}
+            onPressOut={() => setBackButtonPressed(false)}
+            activeOpacity={0.9}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 16,
+              backgroundColor: backButtonPressed ? "#46194F" : "#F9FAFB",
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 10,
+              borderWidth: 1,
+              borderColor: "#46194F",
+            }}
+          >
+            <Feather name="arrow-left" size={14} color={backButtonPressed ? "white" : "#46194F"} />
+          </TouchableOpacity>
+
+          {/* Search Input with Button */}
+          <View
             style={{
               flex: 1,
-              marginLeft: 8,
-              fontSize: sizes.subtitleSize,
-              fontFamily: AlmaraiFonts.regular,
-              color: "#46194F",
-              textAlign: isRTL ? "right" : "left",
+              flexDirection: "row",
+              alignItems: "center",
+              borderWidth: 1,
+              borderColor: "#46194F",
+              borderRadius: 20,
+              backgroundColor: "#F9FAFB",
+              overflow: "hidden",
+              height: 32,
             }}
-            placeholder={
-              searchStep === "brands"
-                ? locale === "ar"
-                  ? "ابحث عن العلامة التجارية..."
-                  : "Search for brands..."
-                : locale === "ar"
-                  ? "ابحث عن الموديل..."
-                  : "Search for models..."
-            }
-            placeholderTextColor="#46194F80"
-            value={query}
-            onChangeText={setQuery}
-          />
-          {query.length > 0 && (
-            <TouchableOpacity onPress={() => setQuery("")}>
-              <Feather name="x" size={20} color="#46194F" />
+          >
+            <TextInput
+              style={{
+                flex: 1,
+                fontSize: 12,
+                fontFamily: AlmaraiFonts.regular,
+                color: "#333",
+                textAlign: isRTL ? "right" : "left",
+                paddingVertical: 0,
+                paddingHorizontal: 16,
+                height: 32,
+              }}
+              placeholder={
+                currentView === "brands"
+                  ? locale === "ar"
+                    ? "اختر الموديل"
+                    : "Choose model"
+                  : locale === "ar"
+                    ? "اختر الموديل"
+                    : "Choose model"
+              }
+              placeholderTextColor="#999"
+              value={query}
+              onChangeText={setQuery}
+            />
+            <TouchableOpacity
+              style={{
+                width: 36,
+                height: 32,
+                backgroundColor: "#46194F",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Feather name="search" size={16} color="white" />
             </TouchableOpacity>
-          )}
-        </View>
-      </View>
-
-      {/* Content */}
-      <View style={{ flex: 1, paddingHorizontal: sizes.headerPadding, paddingTop: 12 }}>
-        {isLoading ? (
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <ActivityIndicator size="large" color="#46194F" />
           </View>
-        ) : searchStep === "brands" ? (
-          <FlatList
-            data={brandGroups.filter(
-              (group) => query.length === 0 || group.brand.toLowerCase().includes(query.toLowerCase()),
-            )}
-            renderItem={renderBrandCard}
-            keyExtractor={(item) => item.brand}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 20 }}
-          />
-        ) : (
-          <FlatList
-            data={brandModels.filter(
-              (model) => query.length === 0 || model.name.toLowerCase().includes(query.toLowerCase()),
-            )}
-            renderItem={renderModelCard}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 20 }}
-            ListHeaderComponent={
-              <View
+        </View>
+
+        {currentView === "brands" ? (
+          <>
+            {/* Popular Search Text */}
+            <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+              <Text
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginBottom: 16,
-                  paddingBottom: 8,
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#E5E7EB",
+                  fontSize: 14,
+                  fontFamily: AlmaraiFonts.bold,
+                  color: "#333",
+                  textAlign: isRTL ? "right" : "left",
+                  marginBottom: 12,
                 }}
               >
-                {selectedBrand.logo ? (
-                  <selectedBrand.logo width={40} height={40} />
-                ) : (
-                  <View
+                {locale === "ar" ? "السيارات الأكثر بحثاً" : "Popular Searches"}
+              </Text>
+
+              {/* Category Pills - Grid Layout */}
+              <View style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 8 }}>
+                {carCategories.map((category, index) => (
+                  <TouchableOpacity
+                    key={category.id}
                     style={{
-                      width: 40,
-                      height: 40,
+                      width: pillWidth,
+                      paddingHorizontal: 8,
+                      paddingVertical: 6,
+                      backgroundColor: "#F3E5F5",
                       borderRadius: 20,
-                      backgroundColor: "#F3F4F6",
+                      marginRight: index % 4 === 3 ? 0 : 8,
+                      marginBottom: 8,
                       alignItems: "center",
-                      justifyContent: "center",
                     }}
                   >
-                    <Text style={{ fontSize: 16, color: "#46194F" }}>{selectedBrand.brand?.charAt(0)}</Text>
-                  </View>
-                )}
-                <Text
-                  style={{
-                    marginLeft: 8,
-                    fontSize: sizes.brandNameSize,
-                    fontFamily: AlmaraiFonts.bold,
-                    color: "#46194F",
-                  }}
-                >
-                  {selectedBrand.brand}
-                </Text>
+                    <Text
+                      style={{
+                        fontSize: 11,
+                        fontFamily: AlmaraiFonts.regular,
+                        color: "#46194F",
+                        textAlign: "center",
+                      }}
+                      numberOfLines={1}
+                    >
+                      {category.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
               </View>
-            }
-          />
+            </View>
+
+            {/* Brands Content */}
+            <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 16 }}>
+              {isLoading ? (
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                  <ActivityIndicator size="large" color="#46194F" />
+                </View>
+              ) : (
+                <>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: AlmaraiFonts.bold,
+                      color: "#333",
+                      textAlign: isRTL ? "right" : "left",
+                      marginBottom: 16,
+                    }}
+                  >
+                    {locale === "ar" ? "اختر حسب العلامة التجارية" : "Choose by Brand"}
+                  </Text>
+                  <FlatList
+                    key="brands-grid"
+                    data={filteredBrands}
+                    renderItem={renderBrandGridItem}
+                    keyExtractor={(item) => item.brand}
+                    numColumns={2}
+                    columnWrapperStyle={{ justifyContent: "space-between" }}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 16 }}
+                  />
+                </>
+              )}
+            </View>
+          </>
+        ) : (
+          <>
+            {/* Models Content */}
+            <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 16 }}>
+              {isLoading ? (
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                  <ActivityIndicator size="large" color="#46194F" />
+                </View>
+              ) : (
+                <>
+                  {/* Brand Header */}
+                  <View style={{ marginBottom: 16 }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontFamily: AlmaraiFonts.bold,
+                        color: "#333",
+                        textAlign: isRTL ? "right" : "left",
+                        marginBottom: 12,
+                      }}
+                    >
+                      {locale === "ar" ? "اختر حسب العلامة التجارية" : "Choose by Brand"}
+                    </Text>
+
+                    {/* Brand Info Row */}
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      {/* Brand Logo with Border */}
+                      <View
+                        style={{
+                          width: 80,
+                          height: 45,
+                          borderWidth: 1,
+                          borderColor: "#E5E7EB",
+                          borderRadius: 6,
+                          padding: 4,
+                          backgroundColor: "white",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginRight: 10,
+                        }}
+                      >
+                        {selectedBrand?.logo ? (
+                          <selectedBrand.logo width={70} height={35} />
+                        ) : (
+                          <View
+                            style={{
+                              width: 70,
+                              height: 35,
+                              backgroundColor: "#F3F4F6",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              borderRadius: 4,
+                            }}
+                          >
+                            <Text style={{ fontSize: 16, color: "#46194F" }}>{selectedBrand?.brand?.charAt(0)}</Text>
+                          </View>
+                        )}
+                      </View>
+
+                      {/* Brand Name and Model Count */}
+                      <View>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontFamily: AlmaraiFonts.bold,
+                            color: "#46194F",
+                          }}
+                        >
+                          {selectedBrand?.brand}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            fontFamily: AlmaraiFonts.regular,
+                            color: "#666",
+                            marginTop: 2,
+                          }}
+                        >
+                          {locale === "ar" ? "عدد الموديلات" : "no. of models"} {selectedBrand?.count}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Models Grid */}
+                  <FlatList
+                    key="models-grid"
+                    data={filteredModels}
+                    renderItem={renderModelCard}
+                    keyExtractor={(item) => item.id.toString()}
+                    numColumns={3}
+                    columnWrapperStyle={{ justifyContent: "flex-start" }}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 16 }}
+                    ListEmptyComponent={
+                      <View style={{ padding: 20, alignItems: "center" }}>
+                        <Text style={{ fontFamily: AlmaraiFonts.regular, color: "#666" }}>
+                          {locale === "ar" ? "لا توجد موديلات متطابقة" : "No matching models found"}
+                        </Text>
+                      </View>
+                    }
+                  />
+                </>
+              )}
+            </View>
+          </>
         )}
       </View>
-    </SafeAreaView>
+    </Modal>
   )
 }
+
+export default SearchScreen

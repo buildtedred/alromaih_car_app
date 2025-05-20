@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react"
 import { View, TouchableOpacity, Image, ScrollView, Dimensions, Animated, Easing } from "react-native"
 import { useLocale } from "../contexts/LocaleContext"
+import { useCompare } from "../contexts/CompareContext"
 import AppText from "../components/common/AppText"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { brandLogos } from "../mock-data"
@@ -17,8 +18,13 @@ const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window")
 
 export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
   const { locale } = useLocale()
-  const [displayedCars, setDisplayedCars] = useState(cars)
-  const [showCarSelection, setShowCarSelection] = useState(!cars || cars.length !== 2)
+  const { clearComparison, carsToCompare } = useCompare()
+
+  // Use cars from props if provided, otherwise use cars from context
+  const carsToUse = cars.length === 2 ? cars : carsToCompare
+
+  const [displayedCars, setDisplayedCars] = useState(carsToUse)
+  const [showCarSelection, setShowCarSelection] = useState(false) // Don't show by default
   const [slideAnim] = useState(new Animated.Value(SCREEN_HEIGHT))
   const [isButtonPressed, setIsButtonPressed] = useState(false)
 
@@ -39,14 +45,13 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
   }
 
   useEffect(() => {
-    if (cars && cars.length === 2) {
-      setDisplayedCars(cars)
+    // Update displayed cars when props or context changes
+    if (carsToUse.length === 2) {
+      setDisplayedCars(carsToUse)
       setShowCarSelection(false)
       setIsButtonPressed(false)
-    } else {
-      setShowCarSelection(true)
     }
-  }, [cars])
+  }, [carsToUse])
 
   useEffect(() => {
     if (visible) {
@@ -62,9 +67,7 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
         duration: 1000,
         easing: Easing.in(Easing.exp),
         useNativeDriver: true,
-      }).start(() => {
-        // Optional callback when animation completes
-      })
+      }).start()
     }
   }, [visible])
 
@@ -106,7 +109,16 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
       pointerEvents="box-none"
     >
       {/* Car Selection Modal fallback */}
-      {showCarSelection && <CarSelectionModal visible={true} onClose={onClose} onSelectCars={handleSelectCars} />}
+      {showCarSelection && (
+        <CarSelectionModal
+          visible={true}
+          onClose={() => {
+            clearComparison()
+            onClose()
+          }}
+          onSelectCars={handleSelectCars}
+        />
+      )}
       {/* Only show comparison UI if we have two cars */}
       {!showCarSelection && (
         <Animated.View
@@ -146,10 +158,10 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                 <View className="flex-row justify-between items-start mt-1">
                   <View className="items-start">
                     <AppText bold className="text-[#46194F] text-xs">
-                      {truncateText(locale === "ar" ? "جيتور T2" : "Jetour T2")}
+                      {truncateText(car1.name ? car1.name[locale] || car1.name : "")}
                     </AppText>
                     <AppText className="text-[8px] text-gray-500 mt-0.5">
-                      {truncateText(locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine")}
+                      {truncateText(car1.subtext ? car1.subtext[locale] || car1.subtext : "")}
                     </AppText>
                   </View>
 
@@ -159,7 +171,7 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                     </AppText>
                     <View className="flex-row items-center">
                       <AppText bold className="text-[#46194F] text-xs">
-                        {"146,000"}
+                        {car1.cashPrice?.toLocaleString() || ""}
                       </AppText>
                       <RiyalIcon width={10} height={10} fill="#46194F" style={{ marginLeft: 4 }} />
                     </View>
@@ -182,10 +194,10 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                 <View className="flex-row justify-between items-start mt-1">
                   <View className="items-start">
                     <AppText bold className="text-[#46194F] text-xs">
-                      {truncateText(locale === "ar" ? "جيتور T2" : "Jetour T2")}
+                      {truncateText(car2.name ? car2.name[locale] || car2.name : "")}
                     </AppText>
                     <AppText className="text-[8px] text-gray-500 mt-0.5">
-                      {truncateText(locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine")}
+                      {truncateText(car2.subtext ? car2.subtext[locale] || car2.subtext : "")}
                     </AppText>
                   </View>
 
@@ -195,7 +207,7 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                     </AppText>
                     <View className="flex-row items-center">
                       <AppText bold className="text-[#46194F] text-xs">
-                        {"146,000"}
+                        {car2.cashPrice?.toLocaleString() || ""}
                       </AppText>
                       <RiyalIcon width={8} height={8} fill="#46194F" style={{ marginLeft: 4 }} />
                     </View>
@@ -211,10 +223,7 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                 } py-2 px-7 rounded-xl`}
                 onPress={handleCompareAnotherCar}
               >
-                <AppText
-                  bold
-                  className={`${isButtonPressed ? "text-white" : "text-[#46194F]"} text-center text-base`}
-                >
+                <AppText bold className={`${isButtonPressed ? "text-white" : "text-[#46194F]"} text-center text-base`}>
                   {locale === "ar" ? "قارن سيارة أخرى" : "Compare Another Car"}
                 </AppText>
               </TouchableOpacity>
@@ -243,10 +252,10 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                   <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
                     <View className="items-start">
                       <AppText bold className="text-[#46194F] text-xs">
-                        {locale === "ar" ? "جيتور T2" : "Jetour T2"}
+                        {car1.name ? car1.name[locale] || car1.name : ""}
                       </AppText>
                       <AppText className="text-[8px] text-gray-500">
-                        {locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine"}
+                        {car1.subtext ? car1.subtext[locale] || car1.subtext : ""}
                       </AppText>
                     </View>
                     <View className="flex-row items-center">{BrandLogo1 && <BrandLogo1 width={60} height={15} />}</View>
@@ -258,7 +267,13 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                         {locale === "ar" ? "ناقل الحركة" : "Transmission"}
                       </AppText>
                       <AppText className="text-xs text-[#46194F]">
-                        {locale === "ar" ? "أوتوماتيك" : "Automatic"}
+                        {car1.specs?.transmission
+                          ? typeof car1.specs.transmission === "object"
+                            ? car1.specs.transmission[locale]
+                            : car1.specs.transmission
+                          : locale === "ar"
+                            ? "أوتوماتيك"
+                            : "Automatic"}
                       </AppText>
                     </View>
 
@@ -267,7 +282,13 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                         {locale === "ar" ? "نوع الجير" : "Gear Type"}
                       </AppText>
                       <AppText className="text-xs text-[#46194F]">
-                        {locale === "ar" ? "دفع رباعي" : "Four-wheel Drive"}
+                        {car1.specs?.gearType
+                          ? typeof car1.specs.gearType === "object"
+                            ? car1.specs.gearType[locale]
+                            : car1.specs.gearType
+                          : locale === "ar"
+                            ? "دفع رباعي"
+                            : "Four-wheel Drive"}
                       </AppText>
                     </View>
 
@@ -293,10 +314,10 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                   <View className="flex-row justify-between items-center p-3 border-b border-[#46194F]">
                     <View className="items-start">
                       <AppText bold className="text-[#46194F] text-xs">
-                        {locale === "ar" ? "جيتور T2" : "Jetour T2"}
+                        {car2.name ? car2.name[locale] || car2.name : ""}
                       </AppText>
                       <AppText className="text-[8px] text-gray-500">
-                        {locale === "ar" ? "مكينة بنزين كامل" : "Full Gasoline Engine"}
+                        {car2.subtext ? car2.subtext[locale] || car2.subtext : ""}
                       </AppText>
                     </View>
                     <View className="flex-row items-center">{BrandLogo2 && <BrandLogo2 width={60} height={15} />}</View>
@@ -308,7 +329,13 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                         {locale === "ar" ? "ناقل الحركة" : "Transmission"}
                       </AppText>
                       <AppText className="text-xs text-[#46194F]">
-                        {locale === "ar" ? "أوتوماتيك" : "Automatic"}
+                        {car2.specs?.transmission
+                          ? typeof car2.specs.transmission === "object"
+                            ? car2.specs.transmission[locale]
+                            : car2.specs.transmission
+                          : locale === "ar"
+                            ? "أوتوماتيك"
+                            : "Automatic"}
                       </AppText>
                     </View>
 
@@ -317,7 +344,13 @@ export default function CompareDetailsScreen({ visible, onClose, cars = [] }) {
                         {locale === "ar" ? "نوع الجير" : "Gear Type"}
                       </AppText>
                       <AppText className="text-xs text-[#46194F]">
-                        {locale === "ar" ? "دفع رباعي" : "Four-wheel Drive"}
+                        {car2.specs?.gearType
+                          ? typeof car2.specs.gearType === "object"
+                            ? car2.specs.gearType[locale]
+                            : car2.specs.gearType
+                          : locale === "ar"
+                            ? "دفع رباعي"
+                            : "Four-wheel Drive"}
                       </AppText>
                     </View>
 
