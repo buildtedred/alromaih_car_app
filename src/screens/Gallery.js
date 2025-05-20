@@ -356,7 +356,7 @@ export default function GalleryScreen({ route }) {
           keyExtractor={(item) => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 4 }}
+           contentContainerStyle={{ paddingHorizontal: 4, paddingBottom: 70 }}
           renderItem={({ item }) => <CarCard car={item} />}
           ListEmptyComponent={
             <View className="items-center justify-center p-4 w-full">
