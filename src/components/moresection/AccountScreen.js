@@ -158,7 +158,7 @@ export default function AccountScreen({ navigation }) {
         ) : (
           /* Activities Section */
           <View className="bg-white mt-6 p-4 ml-4 mr-4 rounded-2xl border border-gray-200">
-          <Text className="text-right font-bold text-[#46194F] mb-4" style={{ fontFamily: "Almarai-Bold" }}>
+          <Text className="text-left font-bold text-[#46194F] mb-4" style={{ fontFamily: "Almarai-Bold" }}>
             إعدادات الحساب
           </Text>
 

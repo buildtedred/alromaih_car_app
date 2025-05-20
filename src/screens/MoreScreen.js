@@ -20,7 +20,7 @@ export default function MoreScreen({ navigation }) {
   // Row builder (icon and text on left, arrow on right)
   const renderRow = (IconComponent, label, navigateTo) => (
     <TouchableOpacity
-      className="flex-row justify-between items-center border-b border-gray-200 py-3"
+      className="flex-row justify-between items-center border-b border-gray-200 py-3 "
       onPress={() => navigateTo && navigation.navigate(navigateTo)}
     >
       {/* Icon + Text (left side) */}
@@ -75,7 +75,7 @@ export default function MoreScreen({ navigation }) {
       </View>
 
       {/* App Information Section */}
-      <View className="bg-white rounded-xl p-4 mb-6 shadow-sm">
+      <View className="bg-white rounded-xl p-4 mb-16 shadow-sm">
         <Text className="text-sm font-bold text-gray-500 mb-4 text-left" style={{ fontFamily: 'Almarai-Bold' }}>
           {t('screens.more.app_info')}
         </Text>
@@ -97,10 +97,10 @@ export default function MoreScreen({ navigation }) {
           {/* Switch on the right with styled container */}
           <View
             style={{
-              borderWidth: 1,
+              borderWidth: 2,
               borderColor: '#46194F',
-              borderRadius: 20,
-              padding: 2,
+              borderRadius: 14,
+              padding: 0,
               backgroundColor: '#E0CFE8',
             }}
           >
@@ -110,7 +110,7 @@ export default function MoreScreen({ navigation }) {
               thumbColor="#46194F"
               trackColor={{ false: '#E0CFE8', true: '#E0CFE8' }}
               ios_backgroundColor="#E0CFE8"
-              style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.6 }] }}
+              style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
             />
           </View>
         </View>
