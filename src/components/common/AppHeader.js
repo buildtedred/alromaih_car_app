@@ -10,6 +10,7 @@ import SearchIcon1 from "../../assets/Icon/SearchIcon1.svg"
 import UserIcon from "../../assets/Icon/UserIcon.svg"
 import LogoSvg from "../../assets/Icon/logo.svg"
 import SearchScreen from "../../screens/SearchScreen"
+import LoginModal from "../../components/common/LoginModal" // Import LoginModal
 
 export default function AppHeader() {
   const { locale, toggleLocale } = useLocale()
@@ -18,6 +19,7 @@ export default function AppHeader() {
   const [favoriteCount, setFavoriteCount] = useState(0) // Will be updated from wishlist
   const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width)
   const [searchModalVisible, setSearchModalVisible] = useState(false)
+  const [loginModalVisible, setLoginModalVisible] = useState(false) // State for LoginModal visibility
 
   // Update favorite count when wishlist changes
   useEffect(() => {
@@ -108,6 +110,18 @@ export default function AppHeader() {
     setSearchModalVisible(false)
   }
 
+  // New function to handle bell icon press
+  const handleBellIconPress = () => {
+    console.log("Bell icon pressed, opening login modal...")
+    setLoginModalVisible(true)
+  }
+
+  // Function to close login modal
+  const handleCloseLoginModal = () => {
+    console.log("Closing login modal...")
+    setLoginModalVisible(false)
+  }
+
   return (
     <>
       <View className={`bg-white shadow-md ${sizes.containerPadding}`}>
@@ -130,7 +144,7 @@ export default function AppHeader() {
 
             <TouchableOpacity
               className={`${sizes.iconContainer} rounded-full justify-center items-center ${sizes.iconSpacing}`}
-              onPress={() => navigation.navigate("Notifications")}
+              onPress={handleBellIconPress} // Changed to open login modal
             >
               <BellIcon width={sizes.iconSize} height={sizes.iconSize} />
             </TouchableOpacity>
@@ -168,6 +182,9 @@ export default function AppHeader() {
 
       {/* Search Modal */}
       <SearchScreen isVisible={searchModalVisible} onClose={handleCloseSearch} />
+
+      {/* Login Modal */}
+      <LoginModal isVisible={loginModalVisible} onClose={handleCloseLoginModal} />
     </>
   )
 }

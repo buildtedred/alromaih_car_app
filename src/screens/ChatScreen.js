@@ -1,8 +1,9 @@
 "use client"
 
-import React from "react"
-import { View, Text, ScrollView, StyleSheet, Animated, Easing } from "react-native"
-import { useLocale } from "../contexts/LocaleContext"
+import React, { useState } from "react"
+import { View, Text, ScrollView, Animated, Easing, TouchableOpacity, I18nManager } from "react-native"
+import CashVerification from "../components/chatsection/CashVerification"
+import Icon from "react-native-vector-icons/Ionicons"
 
 // Create a component for the circular loader (updated design)
 class CircularLoader extends React.Component {
@@ -31,7 +32,7 @@ class CircularLoader extends React.Component {
     Animated.loop(
       Animated.timing(this.centerRotateAnim, {
         toValue: 1,
-        duration: 1200, // Slightly faster than the outer circle
+        duration: 1200,
         easing: Easing.linear,
         useNativeDriver: true,
       }),
@@ -50,235 +51,179 @@ class CircularLoader extends React.Component {
     })
 
     return (
-      <View style={styles.loaderContainer}>
-        {/* Track Circle */}
-        <View style={styles.trackCircle} />
+      <TouchableOpacity onPress={this.props.onPress}>
+        <View className="w-[48px] h-[48px] ml-[16px] relative items-center justify-center">
+          {/* Track Circle */}
+          <View className="absolute w-[48px] h-[48px] rounded-[24px] border-[4px] border-[#f0f0f0]" />
 
-        {/* Animated Indicator */}
-        <Animated.View style={[styles.indicatorContainer, { transform: [{ rotate: spin }] }]}>
-          <View style={styles.indicator} />
-        </Animated.View>
+          {/* Animated Indicator */}
+          <Animated.View className="absolute w-[48px] h-[48px]" style={{ transform: [{ rotate: spin }] }}>
+            <View className="w-[48px] h-[48px] rounded-[24px] border-[4px] border-t-[#5D2D84] border-r-[#5D2D84] border-b-transparent border-l-transparent" />
+          </Animated.View>
 
-        {/* White center circle */}
-        <View style={styles.whiteCenter} />
+          {/* White center circle */}
+          <View className="absolute w-[32px] h-[32px] rounded-[16px] bg-white" />
 
-        {/* Center spinner with dashes */}
-        <Animated.View style={[styles.centerSpinner, { transform: [{ rotate: centerSpin }] }]}>
-          {/* 8 dashes positioned in a circle */}
-          <View style={[styles.dash, { top: 0, left: "50%", marginLeft: -1 }]} />
-          <View style={[styles.dash, { top: "14.6%", right: "14.6%", transform: [{ rotate: "45deg" }] }]} />
-          <View style={[styles.dash, { top: "50%", right: 0, marginTop: -1, transform: [{ rotate: "90deg" }] }]} />
-          <View style={[styles.dash, { bottom: "14.6%", right: "14.6%", transform: [{ rotate: "135deg" }] }]} />
-          <View style={[styles.dash, { bottom: 0, left: "50%", marginLeft: -1, transform: [{ rotate: "180deg" }] }]} />
-          <View style={[styles.dash, { bottom: "14.6%", left: "14.6%", transform: [{ rotate: "225deg" }] }]} />
-          <View style={[styles.dash, { top: "50%", left: 0, marginTop: -1, transform: [{ rotate: "270deg" }] }]} />
-          <View style={[styles.dash, { top: "14.6%", left: "14.6%", transform: [{ rotate: "315deg" }] }]} />
-        </Animated.View>
-      </View>
+          {/* Center spinner with dashes */}
+          <Animated.View
+            className="absolute w-[22px] h-[22px] items-center justify-center"
+            style={{ transform: [{ rotate: centerSpin }] }}
+          >
+            {/* 8 dashes positioned in a circle */}
+            <View
+              className="absolute w-[2px] h-[3px] bg-[#333] rounded-[1px]"
+              style={{ top: 0, left: "50%", marginLeft: -1 }}
+            />
+            <View
+              className="absolute w-[2px] h-[3px] bg-[#333] rounded-[1px]"
+              style={{ top: "14.6%", right: "14.6%", transform: [{ rotate: "45deg" }] }}
+            />
+            <View
+              className="absolute w-[2px] h-[3px] bg-[#333] rounded-[1px]"
+              style={{ top: "50%", right: 0, marginTop: -1, transform: [{ rotate: "90deg" }] }}
+            />
+            <View
+              className="absolute w-[2px] h-[3px] bg-[#333] rounded-[1px]"
+              style={{ bottom: "14.6%", right: "14.6%", transform: [{ rotate: "135deg" }] }}
+            />
+            <View
+              className="absolute w-[2px] h-[3px] bg-[#333] rounded-[1px]"
+              style={{ bottom: 0, left: "50%", marginLeft: -1, transform: [{ rotate: "180deg" }] }}
+            />
+            <View
+              className="absolute w-[2px] h-[3px] bg-[#333] rounded-[1px]"
+              style={{ bottom: "14.6%", left: "14.6%", transform: [{ rotate: "225deg" }] }}
+            />
+            <View
+              className="absolute w-[2px] h-[3px] bg-[#333] rounded-[1px]"
+              style={{ top: "50%", left: 0, marginTop: -1, transform: [{ rotate: "270deg" }] }}
+            />
+            <View
+              className="absolute w-[2px] h-[3px] bg-[#333] rounded-[1px]"
+              style={{ top: "14.6%", left: "14.6%", transform: [{ rotate: "315deg" }] }}
+            />
+          </Animated.View>
+        </View>
+      </TouchableOpacity>
     )
   }
 }
 
-// Create a component for the green checkmark that matches the image
+// Updated GreenCheckmark component with React Vector Icon
 const GreenCheckmark = () => {
   return (
-    <View style={styles.checkContainer}>
-      {/* Green circle */}
-      <View style={styles.greenCircle} />
+    <View className="w-[48px] h-[48px] ml-[16px] relative items-center justify-center">
+      {/* Green circle background */}
+      <View className="absolute w-[48px] h-[48px] rounded-[24px] bg-[#00C853]" />
 
       {/* White inner circle */}
-      <View style={styles.whiteInnerCircle} />
+      <View className="absolute w-[40px] h-[40px] rounded-[20px] bg-white" />
 
-      {/* Green checkmark */}
-      <View style={styles.greenCheckmark} />
+      {/* React Vector Icon Checkmark */}
+      <View className="absolute items-center justify-center">
+        <Icon name="checkmark" size={24} color="#00C853" />
+      </View>
     </View>
   )
 }
 
 export default function ChatScreen() {
-  const { locale } = useLocale()
-  const isRTL = locale === "ar"
+  const [showCashVerification, setShowCashVerification] = useState(false)
+  const isRTL = I18nManager.isRTL
+
+  const navigateToCashVerification = () => {
+    setShowCashVerification(true)
+  }
+
+  const navigateBack = () => {
+    setShowCashVerification(false)
+  }
+
+  const content = {
+    cashTitle: isRTL ? "كاش" : "Cash",
+    cashSubtitle: isRTL ? "استلام الطلب (بانتظار المراجعة)" : "Request Received (Awaiting Review)",
+    cashCarModel: isRTL ? "جيتور T2 لكجري فل كامل 2025" : "Jetour T2 Luxury Full Complete 2025",
+    financeTitle: isRTL ? "تمويل" : "Finance",
+    financeSubtitle: isRTL ? "القرار المالي (موافقة)" : "Financial Decision (Approved)",
+    financeCarModel: isRTL ? "جيتور T2 لكجري فل كامل 2025" : "Jetour T2 Luxury Full Complete 2025",
+    backButtonText: isRTL ? "العودة" : "Back",
+  }
+
+  if (showCashVerification) {
+    return (
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity
+          onPress={navigateBack}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 16,
+            backgroundColor: "#f8f8f8",
+          }}
+        >
+          <View
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 15,
+              backgroundColor: "#5D2D84",
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: 8,
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 16 }}>{isRTL ? "←" : "→"}</Text>
+          </View>
+          <Text style={{ color: "#5D2D84", fontSize: 16 }}>{content.backButtonText}</Text>
+        </TouchableOpacity>
+        <CashVerification />
+      </View>
+    )
+  }
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Cash Card */}
-        <View style={styles.card}>
-          <CircularLoader />
-
-          <View style={styles.cardContent}>
-            <Text style={styles.cardTitle}>كاش</Text>
-            <Text style={styles.cardSubtitle}>استلام الطلب (بانتظار المراجعة)</Text>
-            <View style={styles.carInfoContainer}>
-              <Text style={styles.carInfo}>جيتور T2 لكجري فل كامل 2025</Text>
-              <View style={styles.toyotaLogo} />
+    <View className="flex-1 bg-[#f8f8f8]">
+      <ScrollView className="p-[16px]">
+        <View
+          className="bg-white px-[16px] py-[8px] mb-[12px] flex-row items-center shadow-sm mx-auto w-[90%]"
+          style={{
+            borderTopRightRadius: 60,
+            borderBottomRightRadius: 60,
+            borderTopLeftRadius: 16,
+            borderBottomLeftRadius: 16,
+          }}
+        >
+          <View className="flex-1 items-start">
+            <Text className="text-[16px] font-bold text-[#5D2D84] mb-[1px]">{content.cashTitle}</Text>
+            <Text className="text-[12px] text-[#888888] mb-[1px]">{content.cashSubtitle}</Text>
+            <View className="flex-row items-center">
+              <View className="w-[14px] h-[14px] bg-[#EEEEEE] rounded-[7px]" />
+              <Text className="text-[12px] text-[#555555] ml-[4px]">{content.cashCarModel}</Text>
             </View>
           </View>
+          <CircularLoader onPress={navigateToCashVerification} />
         </View>
 
-        {/* Finance Card */}
-        <View style={styles.card}>
-          <GreenCheckmark />
-
-          <View style={styles.cardContent}>
-            <Text style={[styles.cardTitle, styles.greenText]}>تمويل</Text>
-            <Text style={styles.cardSubtitle}>القرار المالي (موافقة)</Text>
-            <View style={styles.carInfoContainer}>
-              <Text style={styles.carInfo}>جيتور T2 لكجري فل كامل 2025</Text>
-              <View style={styles.jetourLogo} />
+        <View
+          className="bg-white px-[16px] py-[8px] mb-[12px] flex-row items-center shadow-sm mx-auto w-[90%]"
+          style={{
+            borderTopRightRadius: 60,
+            borderBottomRightRadius: 60,
+            borderTopLeftRadius: 16,
+            borderBottomLeftRadius: 16,
+          }}
+        >
+          <View className="flex-1 items-start">
+            <Text className="text-[16px] font-bold text-[#00B74A] mb-[1px]">{content.financeTitle}</Text>
+            <Text className="text-[12px] text-[#888888] mb-[1px]">{content.financeSubtitle}</Text>
+            <View className="flex-row items-center">
+              <View className="w-[16px] h-[9px] bg-[#EEEEEE] rounded-[4px]" />
+              <Text className="text-[12px] text-[#555555] ml-[4px]">{content.financeCarModel}</Text>
             </View>
           </View>
+          <GreenCheckmark />
         </View>
       </ScrollView>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f8f8f8",
-  },
-  scrollContent: {
-    padding: 16,
-  },
-  card: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  // Loader styles
-  loaderContainer: {
-    width: 56,
-    height: 56,
-    marginRight: 16,
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  trackCircle: {
-    position: "absolute",
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    borderWidth: 5,
-    borderColor: "#f0f0f0",
-  },
-  indicatorContainer: {
-    position: "absolute",
-    width: 56,
-    height: 56,
-  },
-  indicator: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    borderWidth: 5,
-    borderTopColor: "#5D2D84",
-    borderRightColor: "#5D2D84",
-    borderBottomColor: "transparent",
-    borderLeftColor: "transparent",
-  },
-  whiteCenter: {
-    position: "absolute",
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "white",
-  },
-  centerSpinner: {
-    position: "absolute",
-    width: 24,
-    height: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  dash: {
-    position: "absolute",
-    width: 2,
-    height: 4,
-    backgroundColor: "#333",
-    borderRadius: 1,
-  },
-  // Green checkmark styles - updated to match the image
-  checkContainer: {
-    width: 56,
-    height: 56,
-    marginRight: 16,
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  greenCircle: {
-    position: "absolute",
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "#00C853", // Bright green color to match the image
-  },
-  whiteInnerCircle: {
-    position: "absolute",
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: "white",
-  },
-  greenCheckmark: {
-    position: "absolute",
-    width: 22,
-    height: 12,
-    borderRightWidth: 3,
-    borderBottomWidth: 3,
-    borderColor: "#00C853", // Green checkmark to match the image
-    transform: [{ rotate: "45deg" }],
-    top: 20,
-    left: 17,
-  },
-  cardContent: {
-    flex: 1,
-    alignItems: "flex-end",
-  },
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#5D2D84",
-    marginBottom: 4,
-  },
-  greenText: {
-    color: "#00B74A",
-  },
-  cardSubtitle: {
-    fontSize: 14,
-    color: "#888888",
-    marginBottom: 4,
-  },
-  carInfoContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  carInfo: {
-    fontSize: 14,
-    color: "#555555",
-    marginRight: 4,
-  },
-  toyotaLogo: {
-    width: 16,
-    height: 16,
-    backgroundColor: "#EEEEEE",
-    borderRadius: 8,
-  },
-  jetourLogo: {
-    width: 50,
-    height: 12,
-    backgroundColor: "#EEEEEE",
-    borderRadius: 4,
-  },
-})

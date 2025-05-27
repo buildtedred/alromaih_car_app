@@ -34,7 +34,7 @@ export default function SliderBanner({ sizeClass: propSizeClass }) {
     switch (sizeClass) {
       case "small":
         return {
-          height: 140, // Reduced height
+          height: 140,
           borderRadius: 8,
           paddingHorizontal: 8,
           marginTop: 2,
@@ -43,7 +43,7 @@ export default function SliderBanner({ sizeClass: propSizeClass }) {
         }
       case "medium":
         return {
-          height: 150, // Reduced height
+          height: 150,
           borderRadius: 10,
           paddingHorizontal: 10,
           marginTop: 3,
@@ -52,7 +52,7 @@ export default function SliderBanner({ sizeClass: propSizeClass }) {
         }
       default: // large
         return {
-          height: 160, // Reduced height
+          height: 160,
           borderRadius: 12,
           paddingHorizontal: 12,
           marginTop: 4,
@@ -66,22 +66,23 @@ export default function SliderBanner({ sizeClass: propSizeClass }) {
     fetch("https://67c7bf7cc19eb8753e7a9248.mockapi.io/api/alromaihCarousel")
       .then((res) => res.json())
       .then((data) => {
-        setSlides(data)
+        setSlides(Array.isArray(data) ? data : []) // Ensure data is an array
         setLoading(false)
       })
       .catch((error) => {
         console.error("Error fetching slides:", error)
+        setSlides([]) // Set to empty array on error
         setLoading(false)
       })
   }, [])
 
   useEffect(() => {
-    if (slides.length > 1) {
+    if (slides && slides.length > 1) {
       intervalRef.current = setInterval(() => {
         const nextIndex = (currentIndex + 1) % slides.length
         flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true })
         setCurrentIndex(nextIndex)
-      }, 3000) // change every 3 seconds
+      }, 3000)
 
       return () => clearInterval(intervalRef.current)
     }
@@ -89,6 +90,8 @@ export default function SliderBanner({ sizeClass: propSizeClass }) {
 
   // Pagination dots
   const renderPaginationDots = () => {
+    if (!Array.isArray(slides) || slides.length === 0) return null
+    
     return (
       <View className="flex-row justify-center items-center absolute bottom-2 left-0 right-0">
         {slides.map((_, index) => (
@@ -118,7 +121,7 @@ export default function SliderBanner({ sizeClass: propSizeClass }) {
     )
   }
 
-  if (!slides.length) {
+  if (!slides || slides.length === 0) {
     return (
       <View
         className="justify-center items-center"
@@ -146,7 +149,7 @@ export default function SliderBanner({ sizeClass: propSizeClass }) {
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
         onMomentumScrollEnd={(event) => {
           const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth)
           setCurrentIndex(index)

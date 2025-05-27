@@ -235,7 +235,7 @@ export default function PersonalInfo() {
             <View className="h-px bg-gray-300 mt-2" />
           </View>
 
-          {/* Gender */}
+          {/* Gender - Fixed with conditional icon colors */}
           <Text className="mb-3 text-[#46194F] text-left" style={{ fontFamily: "Almarai-Bold" }}>
             الجنس
           </Text>
@@ -243,11 +243,16 @@ export default function PersonalInfo() {
             {/* Female */}
             <TouchableOpacity
               className={`flex-row items-center px-3 py-2 rounded-full border ${
-                gender === "female" ? "bg-[#46194F]" : "border-[#46194F]"
+                gender === "female" ? "bg-[#46194F] border-[#46194F]" : "bg-white border-[#46194F]"
               }`}
               onPress={() => setGender("female")}
             >
-              <PersonalIcon1 width={16} height={16} />
+              <PersonalIcon1
+                width={16}
+                height={16}
+                color={gender === "female" ? "white" : "#46194F"}
+                fill={gender === "female" ? "white" : "#46194F"}
+              />
               <Text
                 className={`ml-2 text-sm ${gender === "female" ? "text-white" : "text-[#46194F]"}`}
                 style={{ fontFamily: "Almarai-Bold" }}
@@ -259,11 +264,16 @@ export default function PersonalInfo() {
             {/* Male */}
             <TouchableOpacity
               className={`flex-row items-center px-3 py-2 rounded-full border ${
-                gender === "male" ? "bg-[#46194F]" : "border-[#46194F]"
+                gender === "male" ? "bg-[#46194F] border-[#46194F]" : "bg-white border-[#46194F]"
               }`}
               onPress={() => setGender("male")}
             >
-              <PersonalIcon width={16} height={16} />
+              <PersonalIcon
+                width={16}
+                height={16}
+                color={gender === "male" ? "white" : "#46194F"}
+                fill={gender === "male" ? "white" : "#46194F"}
+              />
               <Text
                 className={`ml-2 text-sm ${gender === "male" ? "text-white" : "text-[#46194F]"}`}
                 style={{ fontFamily: "Almarai-Bold" }}
